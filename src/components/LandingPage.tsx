@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Star, Check, Images, BookOpen, TrendingUp, Wine, ChevronDown } from "lucide-react";
+import { Star, Check, Images, BookOpen, TrendingUp, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 
@@ -301,12 +301,13 @@ export default function LandingPage() {
 
                 <ul className="space-y-3 mb-6">
                   {(() => {
-                    const displayedFeatures = (billingCycle === "yearly" && (plan as any).annualUpfrontScans)
-                      ? [
-                          `Includes ${(plan as any).annualUpfrontScans.toLocaleString()} upfront scans`,
-                          ...plan.features.filter((f: string) => !/label\s*scans/i.test(f)),
-                        ]
-                      : plan.features;
+                    const displayedFeatures: string[] =
+                      billingCycle === "yearly" && typeof plan.annualUpfrontScans === "number"
+                        ? [
+                            `Includes ${plan.annualUpfrontScans.toLocaleString()} upfront scans`,
+                            ...plan.features.filter((f: string) => !/label\s*scans/i.test(f)),
+                          ]
+                        : plan.features;
                     return displayedFeatures.map((feature: string, featureIndex: number) => (
                       <li key={featureIndex} className="flex items-start gap-2">
                         <Check className="w-4 h-4 text-[#D2691E] mt-0.5 flex-shrink-0" />
@@ -344,8 +345,8 @@ export default function LandingPage() {
                 ))}
               </div>
               <p className="text-gray-300 mb-4">
-                "BarrelBook has completely transformed how I track my collection. The multi-angle scanning 
-                captures every detail, and the valuation data helps me make smart trading decisions."
+                &ldquo;BarrelBook has completely transformed how I track my collection. The multi-angle scanning 
+                captures every detail, and the valuation data helps me make smart trading decisions.&rdquo;
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-[#D2691E] rounded-full flex items-center justify-center">
@@ -365,8 +366,8 @@ export default function LandingPage() {
                 ))}
               </div>
               <p className="text-gray-300 mb-4">
-                "As a bourbon blogger, BarrelBook is essential. The detailed bottle information and 
-                private rating system help me write better reviews and track my tasting journey."
+                &ldquo;As a bourbon blogger, BarrelBook is essential. The detailed bottle information and 
+                private rating system help me write better reviews and track my tasting journey.&rdquo;
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-[#D2691E] rounded-full flex items-center justify-center">
