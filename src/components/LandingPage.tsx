@@ -414,6 +414,13 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Support Note */}
+      <div className="px-4 sm:px-6 lg:px-8">
+        <p className="max-w-4xl mx-auto text-center text-gray-400 text-sm">
+          For help or support, send an email to <a href="mailto:support@barrelbook.app" className="underline hover:text-white">support@barrelbook.app</a>
+        </p>
+      </div>
+
       {/* Download CTA */}
       <section id="download" className="py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
