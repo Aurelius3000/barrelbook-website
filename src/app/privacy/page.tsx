@@ -54,7 +54,7 @@ export default function PrivacyPage() {
             </aside>
 
             <article className="lg:col-span-8">
-              <div className="prose prose-invert prose-lg sm:prose-xl leading-8 prose-headings:text-white prose-strong:text-white prose-a:text-[#D2691E] prose-a:underline prose-p:text-gray-200 prose-li:marker:text-gray-500 prose-h2:scroll-mt-28 prose-h2:mt-20 md:prose-h2:mt-28 prose-h2:pt-10 md:prose-h2:pt-12 prose-h2:mb-6 prose-h2:border-t prose-h2:border-white/10 prose-h3:mt-6 prose-p:mt-4 prose-ul:mt-4 prose-ol:mt-4 tos">
+              <div className="prose prose-invert prose-lg sm:prose-xl leading-8 prose-headings:text-white prose-strong:text-white prose-a:text-[#D2691E] prose-a:underline prose-p:text-gray-200 prose-li:marker:text-gray-500 prose-li:my-2 prose-h2:scroll-mt-28 prose-h2:mt-20 md:prose-h2:mt-28 prose-h2:pt-10 md:prose-h2:pt-12 prose-h2:mb-6 prose-h2:border-t prose-h2:border-white/10 prose-h3:mt-6 prose-p:mt-4 prose-ul:mt-4 prose-ol:mt-4 tos">
                 <h2 id="introduction">1. Introduction</h2>
                 <p>This Privacy Policy explains how BarrelBook (“we,” “our,” or “us”) collects, uses, and protects your information when you use our mobile app (“the App”).</p>
                 <p>By using the App, you agree to the practices described here. BarrelBook is a collection and social sharing app only — it does not allow buying, selling, trading, or shipping of alcohol.</p>
