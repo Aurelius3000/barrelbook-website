@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Star, Check, Images, BookOpen, TrendingUp, ChevronDown } from "lucide-react";
+import { Star, Check, Images, BookOpen, TrendingUp, ChevronDown, Instagram, Twitter, Facebook } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 
@@ -458,6 +458,38 @@ export default function LandingPage() {
             <div className="flex gap-6 text-sm text-gray-400">
               <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
               <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
+            </div>
+          </div>
+
+          <div className="flex justify-center md:justify-end mt-6">
+            <div className="flex items-center gap-5 text-gray-400">
+              <a
+                href="https://www.instagram.com/barrelbook_app/"
+                aria-label="Instagram"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white"
+              >
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a
+                href="https://x.com/barrelbook_app"
+                aria-label="X (Twitter)"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white"
+              >
+                <Twitter className="w-5 h-5" />
+              </a>
+              <a
+                href="https://www.facebook.com/share/19tKbWea4A/?mibextid=wwXIfr"
+                aria-label="Facebook"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white"
+              >
+                <Facebook className="w-5 h-5" />
+              </a>
             </div>
           </div>
 
