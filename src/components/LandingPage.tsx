@@ -171,13 +171,7 @@ export default function LandingPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <a
-                href="https://apps.apple.com/us/app/barrelbook-whiskey-catalog/id6751737898"
-                aria-label="Download on the App Store"
-                className="inline-block"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="#" aria-label="Download on the App Store" className="inline-block">
                 <img src="/badges/app-store.svg" alt="Download on the App Store" width={180} height={60} />
               </a>
             </div>
@@ -438,13 +432,7 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 items-center">
-            <a
-              href="https://apps.apple.com/us/app/barrelbook-whiskey-catalog/id6751737898"
-              aria-label="Download on the App Store"
-              className="inline-block"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href="#" aria-label="Download on the App Store" className="inline-block">
               <img src="/badges/app-store.svg" alt="Download on the App Store" width={180} height={60} />
             </a>
           </div>
@@ -556,4 +544,5 @@ function PriceBlock({ plan, billingCycle }: { plan: Plan; billingCycle: "yearly"
     </div>
   );
 }
+
 
