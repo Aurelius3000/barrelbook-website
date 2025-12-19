@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Star, Check, Images, BookOpen, TrendingUp, ChevronDown, Instagram, Twitter, Facebook } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 
 export default function LandingPage() {
@@ -147,7 +146,21 @@ export default function LandingPage() {
               <a href="#pricing" className="text-gray-300 hover:text-white transition-colors">Pricing</a>
               <a href="#download" className="text-gray-300 hover:text-white transition-colors">Download</a>
             </nav>
-            <Button className="bg-[#D2691E] hover:bg-[#D2691E]/90 text-white">Download App</Button>
+            <a
+              href="https://apps.apple.com/us/app/barrelbook-whiskey-catalog/id6751737898"
+              aria-label="Download on the App Store"
+              className="inline-flex items-center"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="/badges/app-store.svg"
+                alt="Download on the App Store"
+                width={140}
+                height={46}
+                className="h-9 w-auto"
+              />
+            </a>
           </div>
         </div>
       </header>
@@ -171,7 +184,13 @@ export default function LandingPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <a href="#" aria-label="Download on the App Store" className="inline-block">
+              <a
+                href="https://apps.apple.com/us/app/barrelbook-whiskey-catalog/id6751737898"
+                aria-label="Download on the App Store"
+                className="inline-block"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src="/badges/app-store.svg" alt="Download on the App Store" width={180} height={60} />
               </a>
             </div>
@@ -432,7 +451,13 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 items-center">
-            <a href="#" aria-label="Download on the App Store" className="inline-block">
+            <a
+              href="https://apps.apple.com/us/app/barrelbook-whiskey-catalog/id6751737898"
+              aria-label="Download on the App Store"
+              className="inline-block"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <img src="/badges/app-store.svg" alt="Download on the App Store" width={180} height={60} />
             </a>
           </div>
@@ -544,5 +569,3 @@ function PriceBlock({ plan, billingCycle }: { plan: Plan; billingCycle: "yearly"
     </div>
   );
 }
-
-
