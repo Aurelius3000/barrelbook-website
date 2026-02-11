@@ -38,12 +38,6 @@ export const metadata: Metadata = {
     title: 'BarrelBook — AI-Powered Bourbon Collection App',
     description:
       'Catalog your bourbon and whiskey collection with AI-powered bottle recognition. Scan, organize, and track prices for every bottle in your collection.',
-    images: [
-      {
-        url: '/BarrelBook Logo Large.png',
-        alt: 'BarrelBook Logo',
-      },
-    ],
     locale: 'en_US',
   },
   twitter: {
@@ -51,7 +45,6 @@ export const metadata: Metadata = {
     title: 'BarrelBook — AI-Powered Bourbon Collection App',
     description:
       'Catalog your bourbon and whiskey collection with AI-powered bottle recognition.',
-    images: ['/BarrelBook Logo Large.png'],
   },
 };
 
