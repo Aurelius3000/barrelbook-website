@@ -42,72 +42,54 @@ export default function LandingPage() {
       period: "forever",
       description: "Perfect for getting started",
       features: [
-        "5 label scans / month",
-        "Owned-bottle library: 50",
-        "Basic bottle details",
-        "1 image per bottle",
+        "10-bottle library",
+        "Full AI-powered recognition",
+        "Up to 3 images per bottle",
       ],
       monthlyPrice: "$0/mo",
       cta: "Get Started",
       popular: false,
     },
     {
-      name: "Starter",
+      name: "Plus",
       price: "49",
       period: "year",
       monthlyPrice: "$4.99/mo",
-      description: "Great for casual collectors",
-      annualUpfrontScans: 120,
+      description: "Great for growing collections",
       features: [
-        "10 label scans / month",
-        "Owned-bottle library: 120",
-        "Collection tracking",
-        "1 image per bottle",
+        "100-bottle library",
+        "Enhanced AI recognition",
+        "Up to 3 images per bottle",
+        "Market pricing data",
       ],
       cta: "Start Free Trial",
       popular: false,
     },
     {
-      name: "Collector",
-      price: "69",
+      name: "Pro",
+      price: "99",
       period: "year",
-      monthlyPrice: "$7.99/mo",
-      description: "Most popular choice",
-      annualUpfrontScans: 360,
+      monthlyPrice: "$9.99/mo",
+      description: "For serious enthusiasts",
       features: [
-        "25 label scans / month",
-        "Owned-bottle library: 300",
-        "Multi-image scans (up to 3)",
-        "Advanced bottle details",
+        "**Unlimited bottles**",
+        "**Best AI recognition**",
+        "Up to 3 images per bottle",
+        "Market pricing data",
+        "Priority processing",
       ],
       cta: "Start Free Trial",
       popular: true,
-    },
-    {
-      name: "Reserve",
-      price: "119",
-      period: "year",
-      monthlyPrice: "$11.99/mo",
-      description: "For serious enthusiasts",
-      annualUpfrontScans: 600,
-      features: [
-        "100 label scans / month",
-        "Owned-bottle library: Unlimited",
-        "Up to 3 images per bottle",
-        "Premium features",
-      ],
-      cta: "Start Free Trial",
-      popular: false,
     },
   ];
 
   const faqs = [
     {
       q: "Is BarrelBook free?",
-      a: "Yes. The Free plan includes 5 label scans per month and an owned-bottle library of up to 50 bottles. Upgrade anytime for higher limits and extra features.",
+      a: "Yes. The Free plan includes a 10-bottle library with full AI-powered recognition. Upgrade anytime to Plus or Pro for larger libraries and extra features.",
     },
     {
-      q: "How do label scans work?",
+      q: "How does AI recognition work?",
       a: "Open the app, take up to three photos of the label, and our AI extracts micro‑details to auto‑fill bottle info. Multi‑angle photos improve recognition accuracy.",
     },
     {
@@ -179,7 +161,7 @@ export default function LandingPage() {
             </h1>
 
             <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-              Catalog, track, and manage your bourbon collection with precision AI scanning. 
+              Catalog, track, and manage your bourbon collection with AI-powered recognition.
               From rare allocations to daily drams, BarrelBook is your digital bourbon vault.
             </p>
 
@@ -293,7 +275,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {plans.map((plan, index) => (
               <div
                 key={index}
@@ -319,21 +301,16 @@ export default function LandingPage() {
                 </div>
 
                 <ul className="space-y-3 mb-6">
-                  {(() => {
-                    const displayedFeatures: string[] =
-                      billingCycle === "yearly" && typeof plan.annualUpfrontScans === "number"
-                        ? [
-                            `Includes ${plan.annualUpfrontScans.toLocaleString()} upfront scans`,
-                            ...plan.features.filter((f: string) => !/label\s*scans/i.test(f)),
-                          ]
-                        : plan.features;
-                    return displayedFeatures.map((feature: string, featureIndex: number) => (
+                  {plan.features.map((feature: string, featureIndex: number) => {
+                    const isBold = feature.startsWith("**") && feature.endsWith("**");
+                    const label = isBold ? feature.slice(2, -2) : feature;
+                    return (
                       <li key={featureIndex} className="flex items-start gap-2">
                         <Check className="w-4 h-4 text-[#D2691E] mt-0.5 flex-shrink-0" />
-                        <span className="text-sm text-gray-300">{feature}</span>
+                        <span className={`text-sm ${isBold ? 'text-white font-semibold' : 'text-gray-300'}`}>{label}</span>
                       </li>
-                    ));
-                  })()}
+                    );
+                  })}
                 </ul>
 
                 {/* CTA removed per request */}
@@ -349,55 +326,83 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* App Store Reviews */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-[#1A1A1A]">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl mb-4">Loved by bourbon enthusiasts</h2>
+            <p className="text-gray-400">Real reviews from the App Store</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-[#0A0A0A] border border-[#333333] rounded-xl p-6">
-              <div className="flex mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 text-[#D2691E] fill-current" />
-                ))}
-              </div>
-              <p className="text-gray-300 mb-4">
-                &ldquo;BarrelBook has completely transformed how I track my collection. The multi-angle scanning 
-                captures every detail, and the valuation data helps me make smart trading decisions.&rdquo;
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-[#D2691E] rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm">MH</span>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                title: "Best Bourbon tracking App",
+                text: "BarrelBook has rapidly become one of my favorite apps. The ability to scan labels and instantly catalog bottles is a game changer. Tracking prices, locations, and personal notes makes managing a collection effortless. Highly recommend for any bourbon enthusiast!",
+                author: "MrWCBrown",
+                date: "Feb 4, 2026",
+                version: "1.3",
+              },
+              {
+                title: "An interesting concept that works great!",
+                text: "I love the idea of this app as it lets you keep track of what you have. What I thought was cool is that you could see how much bottles are worth on the secondary market compared to what I paid at MSRP. Highly recommend!",
+                author: "Drbourbondvm",
+                date: "Feb 1, 2026",
+                version: "1.3",
+              },
+              {
+                title: "Best app for Bourbon Inventory",
+                text: "Simple and easy to use. Snap a photo and your bourbon is added to your collection! Gives MSRP, secondary market prices, proof and so much more. If you want to keep track of your collection, this is the one.",
+                author: "RD24/7$",
+                date: "Jan 25, 2026",
+                version: "1.2",
+              },
+              {
+                title: "Awesome app!",
+                text: "Perfect for keeping track of a bourbon collection! It pulls all the details just from scanning the bottle. Very user-friendly and great for anyone who loves bourbon.",
+                author: "amylynns4",
+                date: "Dec 20, 2025",
+                version: "1.1",
+              },
+              {
+                title: "Great App for Bottle Inventory, Pricing, and Accuracy!",
+                text: "Incredibly easy to use. The AI captures detailed bottle info from photos accurately. Market pricing data is a fantastic bonus. Clean interface makes managing a growing collection effortless.",
+                author: "WallyWorld34",
+                date: "Feb 4, 2026",
+                version: "1.3",
+              },
+              {
+                title: "Excel not Needed",
+                text: "Finally, no more spreadsheets! BarrelBook scans your bottles and tracks everything—prices, proof, barrel numbers—all in one clean app. A must-have for bourbon collectors.",
+                author: "AtlantaUnited17",
+                date: "Feb 1, 2026",
+                version: "1.3",
+              },
+              {
+                title: "The first app that actually handles store picks",
+                text: "I've tried other whiskey apps and none of them handle store picks or barrel selections well. BarrelBook nails it—scans the label, picks up the barrel number, batch info, and even the store name. Finally an app built for how bourbon actually works.",
+                author: "Aurelius3000",
+                date: "Dec 20, 2025",
+                version: "1.1",
+              },
+            ].map((review, index) => (
+              <div
+                key={index}
+                className="bg-[#0A0A0A] border border-[#333333] rounded-xl p-6 flex flex-col"
+              >
+                <div className="flex mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 text-[#D2691E] fill-current" />
+                  ))}
                 </div>
-                <div>
-                  <div className="text-white text-sm">Mike H.</div>
-                  <div className="text-gray-400 text-xs">Collector since 2018</div>
+                <h4 className="text-white font-semibold text-sm mb-2">{review.title}</h4>
+                <p className="text-gray-300 text-sm mb-4 flex-1">{review.text}</p>
+                <div className="flex items-center justify-between text-xs text-gray-500">
+                  <span>{review.author}</span>
+                  <span>{review.date} · v{review.version}</span>
                 </div>
               </div>
-            </div>
-
-            <div className="bg-[#0A0A0A] border border-[#333333] rounded-xl p-6">
-              <div className="flex mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 text-[#D2691E] fill-current" />
-                ))}
-              </div>
-              <p className="text-gray-300 mb-4">
-                &ldquo;As a bourbon blogger, BarrelBook is essential. The detailed bottle information and 
-                private rating system help me write better reviews and track my tasting journey.&rdquo;
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-[#D2691E] rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm">SJ</span>
-                </div>
-                <div>
-                  <div className="text-white text-sm">Sarah J.</div>
-                  <div className="text-gray-400 text-xs">Bourbon Blogger</div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -519,7 +524,7 @@ export default function LandingPage() {
           </div>
 
           <div className="border-t border-[#333333] mt-8 pt-8 text-center text-gray-400 text-sm">
-            <p>© 2025 BarrelBook. All rights reserved.</p>
+            <p>© 2025–2026 BarrelBook. All rights reserved.</p>
           </div>
         </div>
       </footer>
@@ -529,14 +534,13 @@ export default function LandingPage() {
 
 type Plan = {
   name: string;
-  price: string; // yearly price number as string (except Free)
-  period: string; // 'year' | 'forever'
+  price: string;
+  period: string;
   description: string;
   features: string[];
   cta: string;
   popular: boolean;
-  monthlyPrice?: string; // formatted monthly string, e.g. "$4.08/mo"
-  annualUpfrontScans?: number;
+  monthlyPrice?: string;
 };
 
 function PriceBlock({ plan, billingCycle }: { plan: Plan; billingCycle: "yearly" | "monthly" }) {
