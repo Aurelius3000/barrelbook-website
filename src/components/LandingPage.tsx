@@ -395,8 +395,8 @@ export default function LandingPage() {
                     <Star key={i} className="w-4 h-4 text-[#D2691E] fill-current" />
                   ))}
                 </div>
-                <h4 className="text-white font-semibold text-sm mb-2">{review.title}</h4>
-                <p className="text-gray-300 text-sm mb-4 flex-1">{review.text}</p>
+                <h4 className="text-white font-semibold text-base mb-2">{review.title}</h4>
+                <p className="text-gray-300 text-base mb-4 flex-1">{review.text}</p>
                 <div className="flex items-center justify-between text-xs text-gray-500">
                   <span>{review.author}</span>
                   <span>{review.date} · v{review.version}</span>

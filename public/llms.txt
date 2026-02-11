@@ -1,0 +1,24 @@
+# BarrelBook
+
+> AI-powered bourbon and whiskey collection app for iOS.
+
+BarrelBook helps whiskey enthusiasts catalog, organize, and track their bottle collections using AI-powered image recognition.
+
+## Key Facts
+
+- Platform: iOS (iPhone and iPad)
+- AI: Uses computer vision to identify bottles from photos
+- Features: Bottle scanning, manual entry, collection catalog, price tracking (MSRP and secondary market)
+- Backend: Firebase (authentication and cloud sync)
+- Website: https://www.barrelbook.app
+- App Store: Available on the Apple App Store
+
+## Site Pages
+
+- / — Landing page with app overview, features, pricing, and App Store reviews
+- /privacy — Privacy policy
+- /terms — Terms of service
+
+## Contact
+
+- Website: https://www.barrelbook.app
