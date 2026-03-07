@@ -1,0 +1,29 @@
+{
+  "redirects": [
+    {
+      "source": "/garys",
+      "destination": "https://apps.apple.com/redeem?ctx=offercodes&id=6751737898&code=GARYSFREEYEAR",
+      "permanent": true
+    },
+    {
+      "source": "/garyspro",
+      "destination": "https://apps.apple.com/redeem?ctx=offercodes&id=6751737898&code=GARYSFREEYEARPRO",
+      "permanent": true
+    },
+    {
+      "source": "/fnf",
+      "destination": "https://apps.apple.com/redeem?ctx=offercodes&id=6751737898&code=FNFFREEPLUSYEAR",
+      "permanent": true
+    },
+    {
+      "source": "/garysplus",
+      "destination": "https://apps.apple.com/redeem?ctx=offercodes&id=6751737898&code=GARYSFREEYEARPLUS",
+      "permanent": true
+    },
+    {
+      "source": "/fobu0307",
+      "destination": "https://apps.apple.com/redeem?ctx=offercodes&id=6751737898&code=FOBU0307",
+      "permanent": true
+    }
+  ]
+}
