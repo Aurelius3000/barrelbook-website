@@ -12,12 +12,12 @@
     },
     {
       "source": "/fnf",
-      "destination": "https://apps.apple.com/redeem?ctx=offercodes&id=6751737898&code=FNFFREEPLUSYEAR",
+      "destination": "/p/fnf",
       "permanent": true
     },
     {
       "source": "/garysplus",
-      "destination": "https://apps.apple.com/redeem?ctx=offercodes&id=6751737898&code=GARYSFREEYEARPLUS",
+      "destination": "/p/garysplus",
       "permanent": true
     },
     {
