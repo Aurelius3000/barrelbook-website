@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:promo": "node scripts/test-promo-foundation.mjs"
+    "test:promo": "node scripts/test-promo-foundation.mjs",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@next/third-parties": "16.1.0",
@@ -19,12 +20,14 @@
     "react-dom": "19.1.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.0",
+    "playwright": "^1.59.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
