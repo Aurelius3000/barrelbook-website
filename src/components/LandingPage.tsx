@@ -1,39 +1,68 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
-import { Star, Check, Images, BookOpen, TrendingUp, ChevronDown, Instagram, Twitter, Facebook } from "lucide-react";
+import { Star, Check, Images, BookOpen, ChevronDown, Instagram, Twitter, Facebook, Camera, MapPin, Share2 } from "lucide-react";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 
 export default function LandingPage() {
   const [billingCycle, setBillingCycle] = useState<"yearly" | "monthly">("yearly");
 
-  const features = [
+  const storySections = [
     {
-      title: "Multi‑photo AI scanning",
+      id: "scan",
+      title: "Snap a photo. BarrelBook handles the details.",
       description:
-        "Capture front, back, and neck. We extract label micro‑text (barrel #, warehouse/floor, batch, yield) and auto‑fill bottle details.",
+        "Take up to three photos of a bottle and BarrelBook builds a detailed record for you — including the information collectors actually care about, from proof and size to pricing and bottle-specific details.",
+      bullets: [
+        "Capture bottle details from photos in seconds",
+        "Build clean, editable entries automatically",
+        "Skip manual entry and messy workarounds",
+      ],
       icon: <Images className="w-6 h-6" />,
-      image:
-        "https://images.unsplash.com/photo-1627314896599-34ea948a3355?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxib3VyYm9uJTIwYm90dGxlJTIwbGFiZWwlMjBjbG9zZSUyMHVwJTIwdGV4dHxlbnwxfHx8fDE3NTY3NDk1ODd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      screenshots: [
+        "/App%20Scan%20WLW.png",
+        "/App%20Scan%20WLW3.png",
+        "/App%20Scan%20WLW4.png",
+      ],
+      columns: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
     },
     {
-      title: "Rich collection management",
+      id: "collection",
+      title: "Know exactly what you have.",
       description:
-        "Track have/try/want, purchase price, fill‑level, location, duplicates, and custom tags. Filter and sort instantly.",
+        "Track your bottles, notes, ratings, fill level, status, tags, pricing, and more — all in one place. Whether you’re managing a growing bunker, organizing your shelf, or keeping records for insurance, BarrelBook makes your collection easier to understand and maintain.",
+      bullets: [
+        "Track unopened, opened, finished, and archived bottles",
+        "Keep notes, ratings, and tags organized",
+        "Monitor MSRP and secondary pricing",
+        "Filter and sort your collection fast",
+      ],
       icon: <BookOpen className="w-6 h-6" />,
-      image:
-        "https://images.unsplash.com/photo-1707941393234-7f2f8cb024ec?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxib3VyYm9uJTIwY29sbGVjdGlvbiUyMGludmVudG9yeSUyMHRyYWNraW5nfGVufDF8fHx8MTc1Njc0OTU5MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      screenshots: [
+        "/App%20Scan%20Blantons2.png",
+        "/App%20Scan%20Blantons3.png",
+        "/App%20Scan%20Blantons4.png",
+        "/App%20Scan%20Blantons5.png",
+      ],
+      columns: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4",
     },
     {
-      title: "MSRP, Valuation, and other details",
+      id: "share",
+      title: "Share a shelf worth showing.",
       description:
-        "Automatic AI web search for distillery, MSRP, secondary Price and mashbill.",
-      icon: <TrendingUp className="w-6 h-6" />,
-      image:
-        "https://images.unsplash.com/photo-1716719215097-a6a640fc3225?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHx3aGlza2V5JTIwcHJpY2UlMjBjaGFydCUyMG1hcmtldHxlbnwxfHx8fDE3NTY3NDk1OTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+        "Build a collection that’s not just organized, but presentable. Share a curated shelf with friends, show off favorites and rare finds, and let other collectors discover what you’re pouring.",
+      bullets: [
+        "A digital shelf that’s useful first — and naturally shareable",
+        "Show off favorites, rare finds, and pours worth talking about",
+        "Make your collection part of the conversation",
+      ],
+      icon: <Share2 className="w-6 h-6" />,
+      screenshots: ["/Catalog1.png", "/Blantons%20Details.png", "/Blantons%20Tasting.png"],
+      columns: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
+      centered: true,
     },
   ];
-  
 
   const plans = [
     {
@@ -116,15 +145,18 @@ export default function LandingPage() {
           <div className="flex items-center justify-between py-3 md:py-4">
             <div className="relative flex items-center overflow-visible">
               <div className="h-8 md:h-10 lg:h-12">
-                <img
+                <Image
                   src="/BarrelBook%20Logo%20Large.png"
                   alt="BarrelBook logo"
+                  width={280}
+                  height={96}
                   className="h-full w-auto origin-left scale-[1.125]"
+                  priority
                 />
               </div>
             </div>
             <nav className="hidden md:flex items-center gap-8">
-              <a href="#features" className="text-gray-300 hover:text-white transition-colors">Features</a>
+              <a href="#how-it-works" className="text-gray-300 hover:text-white transition-colors">How it works</a>
               <a href="#pricing" className="text-gray-300 hover:text-white transition-colors">Pricing</a>
               <a href="#download" className="text-gray-300 hover:text-white transition-colors">Download</a>
             </nav>
@@ -135,7 +167,7 @@ export default function LandingPage() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img
+              <Image
                 src="/badges/app-store.svg"
                 alt="Download on the App Store"
                 width={140}
@@ -148,24 +180,23 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="pt-24 pb-10 px-4 sm:px-6 lg:px-8">
+      <section className="pt-28 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-4xl mx-auto">
             <div className="inline-flex items-center gap-2 bg-[#1A1A1A] border border-[#333333] rounded-full px-4 py-2 mb-6">
               <Star className="w-4 h-4 text-[#D2691E]" />
-              <span className="text-sm text-gray-300">The ultimate bourbon collection app</span>
+              <span className="text-sm text-gray-300">Whiskey collection app</span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl mb-6">
-              Your <span className="text-[#D2691E]">bourbon journey</span> starts here
+            <h1 className="text-5xl md:text-7xl leading-tight mb-6">
+              Your whiskey shelf, <span className="text-[#D2691E]">in your pocket.</span>
             </h1>
 
-            <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-              Catalog, track, and manage your bourbon collection with AI-powered recognition.
-              From rare allocations to daily drams, BarrelBook is your digital bourbon vault.
+            <p className="text-xl text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed">
+              BarrelBook helps whiskey collectors turn bottle photos into a clean, portable digital shelf — without barcodes, typing, or spreadsheets.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
               <a
                 href="https://apps.apple.com/us/app/barrelbook-whiskey-catalog/id6751737898"
                 aria-label="Download on the App Store"
@@ -173,8 +204,15 @@ export default function LandingPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src="/badges/app-store.svg" alt="Download on the App Store" width={180} height={60} />
+                <Image src="/badges/app-store.svg" alt="Download on the App Store" width={180} height={60} priority />
               </a>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-gray-400">
+              <span className="rounded-full border border-[#333333] bg-[#111111] px-3 py-1">Snap a photo, not a barcode</span>
+              <span className="rounded-full border border-[#333333] bg-[#111111] px-3 py-1">Built for bourbon bottle details</span>
+              <span className="rounded-full border border-[#333333] bg-[#111111] px-3 py-1">Your collection always with you</span>
+              <span className="rounded-full border border-[#333333] bg-[#111111] px-3 py-1">Share a shelf worth showing</span>
             </div>
 
             <p className="text-sm text-gray-500 mt-4">
@@ -184,144 +222,94 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="pt-12 pb-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+      {/* Problem Section */}
+      <section className="pt-10 pb-10 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl mb-4">No barcodes. No typing. No spreadsheets.</h2>
+          <p className="text-lg text-gray-400 max-w-3xl mx-auto">
+            Most whiskey tools either miss the details collectors care about or make bottle tracking feel like homework. BarrelBook turns bottle photos into clean, editable records in seconds, so you can spend less time organizing and more time enjoying your collection.
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3 text-sm text-gray-400">
+            <span className="rounded-full border border-[#333333] bg-[#111111] px-3 py-1">Works from bottle photos</span>
+            <span className="rounded-full border border-[#333333] bg-[#111111] px-3 py-1">Handles collector-grade detail</span>
+            <span className="rounded-full border border-[#333333] bg-[#111111] px-3 py-1">Faster than manual entry</span>
+          </div>
+        </div>
+      </section>
 
-          <div className="space-y-16">
-            {features.map((feature, index) => (
-              <div key={index}>
+      {/* How It Works / Story Sections */}
+      <section id="how-it-works" className="pt-12 pb-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="space-y-20">
+            {storySections.map((section, index) => (
+              <div key={section.id}>
                 <div className="text-center mb-8">
                   <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#1A1A1A] text-gray-300 mb-3">
-                    {feature.icon}
+                    {section.icon}
                   </div>
-                  <h3 className="text-2xl md:text-3xl mb-3">{feature.title}</h3>
-                  <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">{feature.description}</p>
+                  <h3 className="text-2xl md:text-3xl mb-3">{section.title}</h3>
+                  <p className="text-gray-400 text-base md:text-lg max-w-3xl mx-auto">{section.description}</p>
+                  <div className="mt-5 flex flex-wrap justify-center gap-3">
+                    {section.bullets.map((bullet, bulletIndex) => (
+                      <span key={bulletIndex} className="rounded-full border border-[#333333] bg-[#111111] px-3 py-1 text-sm text-gray-300">
+                        {bullet}
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
-                <div className={`grid gap-8 ${index === 1 ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4' : index === 2 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'} ${index === 2 ? 'justify-items-center' : ''}`}>
-                  {(
-                    index === 0
-                      ? [
-                          "/App%20Scan%20WLW.png",
-                          "/App%20Scan%20WLW3.png",
-                          "/App%20Scan%20WLW4.png",
-                        ]
-                      : index === 1
-                        ? [
-                            "/App%20Scan%20Blantons2.png",
-                            "/App%20Scan%20Blantons3.png",
-                            "/App%20Scan%20Blantons4.png",
-                            "/App%20Scan%20Blantons5.png",
-                          ]
-                        : index === 2
-                          ? ["/Catalog1.png", "/Blantons%20Details.png", "/Blantons%20Tasting.png"]
-                        : [feature.image, feature.image, feature.image]
-                  ).map((src, i) => (
-                    <figure key={i} className={`rounded-2xl overflow-hidden bg-[#0A0A0A] ${index === 2 ? 'mx-auto w-full max-w-[360px]' : ''}`}>
-                      <div className={`${(index === 0 || index === 1 || index === 2) ? 'aspect-[9/19]' : 'aspect-[4/5]'} bg-black` }>
+                <div className={`grid gap-8 ${section.columns} ${section.centered ? 'justify-items-center' : ''}`}>
+                  {section.screenshots.map((src, i) => (
+                    <figure key={i} className={`rounded-2xl overflow-hidden bg-[#0A0A0A] ${section.centered ? 'mx-auto w-full max-w-[360px]' : ''}`}>
+                      <div className="aspect-[9/19] bg-black">
                         <ImageWithFallback
                           src={src}
-                          alt={`${feature.title} screenshot ${i + 1}`}
-                          className={`w-full h-full ${(index === 0 || index === 1 || index === 2) ? 'object-contain object-center' : 'object-cover'}`}
+                          alt={`${section.title} screenshot ${i + 1}`}
+                          className="w-full h-full object-contain object-center"
                         />
                       </div>
                     </figure>
                   ))}
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      
-
-      {/* Stats Section removed */}
-
-      {/* Pricing Section */}
-      <section id="pricing" className="pt-12 pb-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl mb-6">
-              Choose your <span className="text-[#D2691E]">proof</span>
-            </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              Start free and upgrade as your collection grows.
-            </p>
-          </div>
-
-          {/* Billing toggle */}
-          <div className="flex justify-center mb-8">
-            <div className="inline-flex items-center bg-[#1A1A1A] border border-[#333333] rounded-full p-1">
-              <button
-                type="button"
-                onClick={() => setBillingCycle("yearly")}
-                className={`px-4 py-1.5 rounded-full text-sm ${
-                  billingCycle === "yearly" ? 'bg-[#D2691E] text-white' : 'text-gray-300'
-                }`}
-              >
-                Yearly
-              </button>
-              <button
-                type="button"
-                onClick={() => setBillingCycle("monthly")}
-                className={`px-4 py-1.5 rounded-full text-sm ${
-                  billingCycle === "monthly" ? 'bg-[#D2691E] text-white' : 'text-gray-300'
-                }`}
-              >
-                Monthly
-              </button>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {plans.map((plan, index) => (
-              <div
-                key={index}
-                className={`relative rounded-2xl p-6 ${
-                  plan.popular
-                    ? 'bg-gradient-to-br from-[#D2691E]/20 to-[#C97C3A]/20 border-2 border-[#D2691E]'
-                    : 'bg-[#1A1A1A] border border-[#333333]'
-                }`}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <div className="bg-[#D2691E] text-white px-3 py-1 rounded-full text-sm flex items-center gap-1">
-                      <Star className="w-3 h-3" />
-                      Most Popular
+                {index === 0 && (
+                  <div className="mt-20 rounded-3xl border border-[#333333] bg-[#121212] p-8 md:p-10">
+                    <div className="max-w-4xl mx-auto text-center">
+                      <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[#1A1A1A] text-[#D2691E] mb-4">
+                        <Camera className="w-6 h-6" />
+                      </div>
+                      <h3 className="text-2xl md:text-3xl mb-4">Built for the details bourbon collectors care about.</h3>
+                      <p className="text-gray-400 text-base md:text-lg max-w-3xl mx-auto mb-6">
+                        Generic whiskey apps can struggle when bottles get more specific. BarrelBook is especially useful for bourbon collectors tracking store picks, barrel numbers, batch-specific details, warehouse and floor information, mash bill, and pricing.
+                      </p>
+                      <div className="flex flex-wrap justify-center gap-3 text-sm text-gray-300">
+                        <span className="rounded-full border border-[#333333] bg-[#0A0A0A] px-3 py-1">Store picks</span>
+                        <span className="rounded-full border border-[#333333] bg-[#0A0A0A] px-3 py-1">Barrel numbers</span>
+                        <span className="rounded-full border border-[#333333] bg-[#0A0A0A] px-3 py-1">Batch details</span>
+                        <span className="rounded-full border border-[#333333] bg-[#0A0A0A] px-3 py-1">Warehouse & floor</span>
+                        <span className="rounded-full border border-[#333333] bg-[#0A0A0A] px-3 py-1">Mash bill & pricing</span>
+                      </div>
+                      <p className="text-sm text-gray-500 mt-5">When bourbon bottles get complicated, BarrelBook stays useful.</p>
                     </div>
                   </div>
                 )}
 
-                <div className="mb-6">
-                  <h3 className="text-xl mb-2">{plan.name}</h3>
-                  <PriceBlock plan={plan} billingCycle={billingCycle} />
-                  <p className="text-gray-400 text-sm mt-2">{plan.description}</p>
-                </div>
-
-                <ul className="space-y-3 mb-6">
-                  {plan.features.map((feature: string, featureIndex: number) => {
-                    const isBold = feature.startsWith("**") && feature.endsWith("**");
-                    const label = isBold ? feature.slice(2, -2) : feature;
-                    return (
-                      <li key={featureIndex} className="flex items-start gap-2">
-                        <Check className="w-4 h-4 text-[#D2691E] mt-0.5 flex-shrink-0" />
-                        <span className={`text-sm ${isBold ? 'text-white font-semibold' : 'text-gray-300'}`}>{label}</span>
-                      </li>
-                    );
-                  })}
-                </ul>
-
-                {/* CTA removed per request */}
+                {index === 1 && (
+                  <div className="mt-20 rounded-3xl border border-[#333333] bg-[#121212] p-8 md:p-10">
+                    <div className="max-w-4xl mx-auto text-center">
+                      <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[#1A1A1A] text-[#D2691E] mb-4">
+                        <MapPin className="w-6 h-6" />
+                      </div>
+                      <h3 className="text-2xl md:text-3xl mb-4">Your collection goes wherever you go.</h3>
+                      <p className="text-gray-400 text-base md:text-lg max-w-3xl mx-auto mb-4">
+                        Keep bottle photos and details with you at the store, at tastings, at bars, or with friends. BarrelBook gives you a portable digital shelf, so you always know what you own and what’s worth opening, buying, or sharing.
+                      </p>
+                      <p className="text-sm text-gray-500">Your bottles don’t have to stay trapped on a shelf at home.</p>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
-          </div>
-
-          <div className="text-center mt-8">
-            <p className="text-gray-400 text-sm">
-              All plans include free updates and market data access. Cancel anytime.
-            </p>
           </div>
         </div>
       </section>
@@ -330,8 +318,8 @@ export default function LandingPage() {
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-[#1A1A1A]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl mb-4">Loved by bourbon enthusiasts</h2>
-            <p className="text-gray-400">Real reviews from the App Store</p>
+            <h2 className="text-3xl mb-4">Built for collectors who want more than a spreadsheet.</h2>
+            <p className="text-gray-400">Real feedback from whiskey collectors using BarrelBook to track bottles, capture the details that matter, and keep their shelves close at hand.</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -407,6 +395,91 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Pricing Section */}
+      <section id="pricing" className="pt-12 pb-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl mb-6 leading-tight">
+              Start free. <span className="text-[#D2691E]">Upgrade when your collection grows.</span>
+            </h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              Get started with BarrelBook for free, then unlock more power as your collection expands. Whether you’re cataloging a few favorites or managing a serious shelf, there’s a plan that fits.
+            </p>
+          </div>
+
+          {/* Billing toggle */}
+          <div className="flex justify-center mb-8">
+            <div className="inline-flex items-center bg-[#1A1A1A] border border-[#333333] rounded-full p-1">
+              <button
+                type="button"
+                onClick={() => setBillingCycle("yearly")}
+                className={`px-4 py-1.5 rounded-full text-sm ${
+                  billingCycle === "yearly" ? 'bg-[#D2691E] text-white' : 'text-gray-300'
+                }`}
+              >
+                Yearly
+              </button>
+              <button
+                type="button"
+                onClick={() => setBillingCycle("monthly")}
+                className={`px-4 py-1.5 rounded-full text-sm ${
+                  billingCycle === "monthly" ? 'bg-[#D2691E] text-white' : 'text-gray-300'
+                }`}
+              >
+                Monthly
+              </button>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {plans.map((plan, index) => (
+              <div
+                key={index}
+                className={`relative rounded-2xl p-6 ${
+                  plan.popular
+                    ? 'bg-gradient-to-br from-[#D2691E]/20 to-[#C97C3A]/20 border-2 border-[#D2691E]'
+                    : 'bg-[#1A1A1A] border border-[#333333]'
+                }`}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <div className="bg-[#D2691E] text-white px-3 py-1 rounded-full text-sm flex items-center gap-1">
+                      <Star className="w-3 h-3" />
+                      Most Popular
+                    </div>
+                  </div>
+                )}
+
+                <div className="mb-6">
+                  <h3 className="text-xl mb-2">{plan.name}</h3>
+                  <PriceBlock plan={plan} billingCycle={billingCycle} />
+                  <p className="text-gray-400 text-sm mt-2">{plan.description}</p>
+                </div>
+
+                <ul className="space-y-3 mb-6">
+                  {plan.features.map((feature: string, featureIndex: number) => {
+                    const isBold = feature.startsWith("**") && feature.endsWith("**");
+                    const label = isBold ? feature.slice(2, -2) : feature;
+                    return (
+                      <li key={featureIndex} className="flex items-start gap-2">
+                        <Check className="w-4 h-4 text-[#D2691E] mt-0.5 flex-shrink-0" />
+                        <span className={`text-sm ${isBold ? 'text-white font-semibold' : 'text-gray-300'}`}>{label}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-8">
+            <p className="text-gray-400 text-sm">
+              All plans include free updates and market data access. Start free and upgrade only when your shelf grows.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Section */}
       <section className="py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
@@ -448,11 +521,11 @@ export default function LandingPage() {
       {/* Download CTA */}
       <section id="download" className="py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl mb-6">
-            Ready to elevate your <span className="text-[#D2691E]">bourbon experience</span>?
+          <h2 className="text-4xl md:text-5xl leading-tight mb-6">
+            Build your digital <span className="text-[#D2691E]">whiskey shelf</span> today.
           </h2>
           <p className="text-xl text-gray-400 mb-8">
-            Join thousands of collectors who trust BarrelBook to manage their bourbon investments.
+            Capture bottles, organize your collection, and keep your shelf with you wherever you go.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 items-center">
@@ -463,7 +536,7 @@ export default function LandingPage() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/badges/app-store.svg" alt="Download on the App Store" width={180} height={60} />
+              <Image src="/badges/app-store.svg" alt="Download on the App Store" width={180} height={60} />
             </a>
           </div>
 
@@ -477,9 +550,11 @@ export default function LandingPage() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="relative flex items-center mb-4 md:mb-0 overflow-visible">
               <div className="h-8 md:h-10 lg:h-12">
-                <img
+                <Image
                   src="/BarrelBook%20Logo%20Large.png"
                   alt="BarrelBook logo"
+                  width={280}
+                  height={96}
                   className="h-full w-auto origin-left scale-[1.125]"
                 />
               </div>
