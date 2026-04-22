@@ -1,5 +1,3 @@
-import Image from "next/image";
-import Link from "next/link";
 import {
   getPromoAppOpenUrl,
   type PromoCampaignConfig,
@@ -27,30 +25,7 @@ export default function PromoLandingPage({
 
   return (
     <main className="min-h-screen bg-[#0A0A0A] text-white">
-      <header className="border-b border-[#333333] bg-[#0A0A0A]/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-3">
-            <Image
-              src="/BarrelBook%20Logo%20Large.png"
-              alt="BarrelBook"
-              width={220}
-              height={48}
-              className="h-8 w-auto"
-              priority
-            />
-          </Link>
-          <a
-            href={campaign.installUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center rounded-full border border-[#D2691E]/40 bg-[#D2691E]/10 px-4 py-2 text-sm font-medium text-white transition hover:border-[#D2691E] hover:bg-[#D2691E]/20"
-          >
-            {campaign.installLabel}
-          </a>
-        </div>
-      </header>
-
-      <section className="px-4 py-12 sm:px-6 lg:px-8 lg:py-20">
+      <section className="px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
         <div className="mx-auto max-w-3xl">
           <div className="text-center">
             <p className="text-sm font-medium uppercase tracking-[0.22em] text-[#C78C61]">
