@@ -1,14 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import type { ReactNode } from "react";
 import { useState } from "react";
-import { Star, Check, Images, BookOpen, ChevronDown, Instagram, Twitter, Facebook, Camera, MapPin, Share2, Wine, Sparkles } from "lucide-react";
+import { Star, Check, Images, BookOpen, ChevronDown, Camera, MapPin, Share2, Wine, Sparkles } from "lucide-react";
+import AppStoreBadgeLink from "@/components/AppStoreBadgeLink";
+import AppStoreRatingLink from "@/components/AppStoreRatingLink";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import HeroVideo from "@/components/HeroVideo";
+import SiteFooter from "@/components/SiteFooter";
+import SiteHeader from "@/components/SiteHeader";
 import StoryVideo from "@/components/StoryVideo";
 import {
-  APP_STORE_RATING_COUNT,
   APP_STORE_URL,
 } from "@/lib/app-store";
 
@@ -184,45 +186,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0A]/95 backdrop-blur-md border-b border-[#333333]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-3 md:py-4">
-            <div className="relative flex items-center overflow-visible">
-              <div className="h-8 md:h-10 lg:h-12">
-                <Image
-                  src="/BarrelBook%20Logo%20Large.png"
-                  alt="BarrelBook logo"
-                  width={280}
-                  height={96}
-                  className="h-full w-auto origin-left scale-[1.125]"
-                  priority
-                />
-              </div>
-            </div>
-            <nav className="hidden md:flex items-center gap-8">
-              <a href="#how-it-works" className="text-gray-300 hover:text-white transition-colors">How it works</a>
-              <a href="#pricing" className="text-gray-300 hover:text-white transition-colors">Pricing</a>
-              <a href="#download" className="text-gray-300 hover:text-white transition-colors">Download</a>
-            </nav>
-            <a
-              href="https://apps.apple.com/us/app/barrelbook-whiskey-catalog/id6751737898"
-              aria-label="Download on the App Store"
-              className="inline-flex items-center"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image
-                src="/badges/app-store.svg"
-                alt="Download on the App Store"
-                width={140}
-                height={46}
-                className="h-9 w-auto"
-              />
-            </a>
-          </div>
-        </div>
-      </header>
+      <SiteHeader />
 
       {/* Hero Section */}
       <section className="pt-28 pb-12 px-4 sm:px-6 lg:px-8">
@@ -244,33 +208,10 @@ export default function LandingPage() {
               </p>
 
               {/* WEB-005: Social proof from the current App Store listing. */}
-              <a
-                href={APP_STORE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Read ${APP_STORE_RATING_COUNT} five-star App Store reviews`}
-                className="inline-flex items-center gap-2 mb-6 text-sm text-gray-300 hover:text-white transition-colors"
-              >
-                <span className="flex" aria-hidden="true">
-                  {[0, 1, 2, 3, 4].map((i) => (
-                    <Star key={i} className="w-4 h-4 text-[#D2691E] fill-current" />
-                  ))}
-                </span>
-                <span>
-                  <span className="font-semibold text-white">{APP_STORE_RATING_COUNT}</span> five-star ratings on the App Store
-                </span>
-              </a>
+              <AppStoreRatingLink className="inline-flex items-center gap-2 mb-6 text-sm text-gray-300 hover:text-white transition-colors" />
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center mb-6">
-                <a
-                  href={APP_STORE_URL}
-                  aria-label="Download on the App Store"
-                  className="inline-block"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Image src="/badges/app-store.svg" alt="Download on the App Store" width={180} height={60} priority />
-                </a>
+                <AppStoreBadgeLink width={180} height={60} priority />
               </div>
 
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 text-sm text-gray-400">
@@ -623,80 +564,14 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 items-center">
-              <a
-                href={APP_STORE_URL}
-                aria-label="Download on the App Store"
-                className="inline-block"
-                target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image src="/badges/app-store.svg" alt="Download on the App Store" width={180} height={60} />
-            </a>
+            <AppStoreBadgeLink width={180} height={60} />
           </div>
 
           <p className="text-sm text-gray-500">Available on iPhone and iPad today. Android is on the roadmap.</p>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 px-4 sm:px-6 lg:px-8 bg-[#1A1A1A] border-t border-[#333333]">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="relative flex items-center mb-4 md:mb-0 overflow-visible">
-              <div className="h-8 md:h-10 lg:h-12">
-                <Image
-                  src="/BarrelBook%20Logo%20Large.png"
-                  alt="BarrelBook logo"
-                  width={280}
-                  height={96}
-                  className="h-full w-auto origin-left scale-[1.125]"
-                />
-              </div>
-            </div>
-
-            <div className="flex gap-6 text-sm text-gray-400">
-              <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
-              <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
-            </div>
-          </div>
-
-          <div className="flex justify-center md:justify-end mt-6">
-            <div className="flex items-center gap-5 text-gray-400">
-              <a
-                href="https://www.instagram.com/barrelbook_app/"
-                aria-label="Instagram"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white"
-              >
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a
-                href="https://x.com/barrelbook_app"
-                aria-label="X (Twitter)"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white"
-              >
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a
-                href="https://www.facebook.com/share/19tKbWea4A/?mibextid=wwXIfr"
-                aria-label="Facebook"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white"
-              >
-                <Facebook className="w-5 h-5" />
-              </a>
-            </div>
-          </div>
-
-          <div className="border-t border-[#333333] mt-8 pt-8 text-center text-gray-400 text-sm">
-            <p>© 2025–{new Date().getFullYear()} BarrelBook. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
