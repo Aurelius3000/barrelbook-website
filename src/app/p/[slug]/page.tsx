@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import PromoLandingPage from "@/components/promo/PromoLandingPage";
+import PromoCampaignPage from "@/components/promo/PromoCampaignPage";
 import { APP_STORE_APP_ID } from "@/lib/app-store";
 import {
   getPromoAppOpenUrl,
@@ -81,5 +81,5 @@ export default async function PromoPage({ params }: PromoPageProps) {
     notFound();
   }
 
-  return <PromoLandingPage campaign={campaign} />;
+  return <PromoCampaignPage campaign={campaign} />;
 }

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import PromoLandingPage from "@/components/promo/PromoLandingPage";
+import PromoCampaignPage from "@/components/promo/PromoCampaignPage";
 import { APP_STORE_APP_ID } from "@/lib/app-store";
 import { getFnfQaCampaign, getPromoAppOpenUrl } from "@/lib/promo-campaigns";
 
@@ -19,5 +19,5 @@ export const metadata: Metadata = {
 };
 
 export default function FnfQaPage() {
-  return <PromoLandingPage campaign={QA_CAMPAIGN} />;
+  return <PromoCampaignPage campaign={QA_CAMPAIGN} />;
 }
