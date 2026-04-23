@@ -4,7 +4,7 @@ export const APP_STORE_URL =
   `https://apps.apple.com/us/app/barrelbook-whiskey-catalog/id${APP_STORE_APP_ID}`;
 
 export const APP_STORE_RATING_VALUE = "5.0";
-export const APP_STORE_RATING_COUNT = "14";
+export const APP_STORE_RATING_COUNT = "24";
 
 export const TESTFLIGHT_URL =
   process.env.BARRELBOOK_TESTFLIGHT_URL?.trim() || "https://testflight.apple.com/";
