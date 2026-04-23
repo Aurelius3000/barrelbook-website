@@ -5,11 +5,24 @@ export interface PromoCampaignMetadata {
   description?: string;
 }
 
+export interface CreatorCollabBranding {
+  eyebrow: string;
+  collaborationLabel?: string;
+  supportingText: string;
+  logoSrc?: string;
+  logoAlt?: string;
+  stepOneTitle?: string;
+  stepTwoTitle?: string;
+  manualFallbackTitle?: string;
+}
+
 export interface PromoCampaignConfig {
   slug: string;
   title: string;
   subtitle: string;
   heroBody: string;
+  template?: "standard" | "creator-collab";
+  creatorCollab?: CreatorCollabBranding;
   code: string;
   codeLabel: string;
   installLabel: string;
@@ -119,6 +132,7 @@ const promoCampaigns: Record<string, PromoCampaignConfig> = {
 };
 
 const FNF_QA_PLACEHOLDER_CODE = "ASK-BARRELBOOK-FOR-SANDBOX-CODE";
+const THE_BOURBON_TRAIL_DRAFT_CODE = "THEBOURBONTRAIL";
 
 export function getFnfQaCampaign(): PromoCampaignConfig {
   const sandboxCode = getSandboxPromoCode("fnf") || FNF_QA_PLACEHOLDER_CODE;
@@ -155,6 +169,55 @@ export function getFnfQaCampaign(): PromoCampaignConfig {
       title: "FNF QA Promo",
       description:
         "QA-only TestFlight flow for the FNF promo. Install via TestFlight, return to the page, and tap Open BarrelBook.",
+    },
+  };
+}
+
+export function getTheBourbonTrailDraftCampaign(): PromoCampaignConfig {
+  return {
+    slug: "thebourbontrail",
+    template: "creator-collab",
+    title: "A free BarrelBook Plus offer for The Bourbon Trail audience",
+    subtitle:
+      "Draft creator page for @thebourbontrail. Install BarrelBook, sign in, then come back to claim the offer.",
+    heroBody:
+      "Track distillery pickups, bottle-shop finds, and trail pours in one clean collection.",
+    creatorCollab: {
+      eyebrow: "thebourbontrail",
+      collaborationLabel: "Bourbon Whiskey Content",
+      supportingText:
+        "Kentucky distilleries. USA whiskey. Barrels. Pours.",
+      logoSrc: "/creator-collabs/thebourbontrail-profile.jpg",
+      logoAlt: "The Bourbon Trail logo",
+      stepOneTitle: "Get BarrelBook and create an account",
+      stepTwoTitle: "Claim The Bourbon Trail offer",
+      manualFallbackTitle: "Prefer to redeem manually?",
+    },
+    code: THE_BOURBON_TRAIL_DRAFT_CODE,
+    codeLabel: "Draft promo code",
+    installLabel: "Get the app",
+    installUrl: APP_STORE_URL,
+    primaryCardDescription:
+      "Download BarrelBook from the App Store, then create or sign in to your account. Return here after sign-in and tap Redeem.",
+    openHintTitle: "Then tap Redeem",
+    openHint:
+      "After install and sign-in, return to this page and tap Redeem. This draft currently points to the existing promo flow while we finalize creator-specific offer plumbing.",
+    fallbackTitle: "Fallback if Redeem doesn't work",
+    fallbackSummary:
+      "If tapping Redeem does not work, open BarrelBook manually and use the draft promo code below.",
+    fallbackSteps: [
+      "Open BarrelBook manually.",
+      "Go to Settings and tap Redeem App Store Code.",
+      `Enter ${THE_BOURBON_TRAIL_DRAFT_CODE}.`,
+    ],
+    aliases: [],
+    published: false,
+    qaOnly: false,
+    appArgumentPath: "/p/fnf",
+    metadata: {
+      title: "The Bourbon Trail x BarrelBook Draft",
+      description:
+        "Draft co-branded offer page for @thebourbontrail.",
     },
   };
 }
