@@ -1,0 +1,47 @@
+{
+  "project": {
+    "name": "Add New App Store Reviews",
+    "repoRoot": "."
+  },
+  "definitionOfDone": {
+    "required": [
+      "All items pass",
+      "Project builds",
+      "Production homepage includes the new reviews"
+    ]
+  },
+  "files_changed": [
+    "src/components/LandingPage.tsx",
+    "plans/sprints/2026-05-30-add-new-app-store-reviews/prd.json",
+    "plans/sprints/2026-05-30-add-new-app-store-reviews/progress.txt",
+    "plans/sprints/2026-05-30-add-new-app-store-reviews/prompt.md"
+  ],
+  "items": [
+    {
+      "id": "REV-001",
+      "priority": 1,
+      "title": "Add two new App Store reviews",
+      "description": "Add the two user-supplied App Store reviews to the homepage review grid using the existing card layout and star visual.",
+      "acceptanceCriteria": [
+        "Homepage review grid includes the Cewj2000 review titled This app makes my hobby more organized.",
+        "Homepage review grid includes the BigJ71141 review titled Great app so far",
+        "Existing review section layout and App Store CTAs remain unchanged"
+      ],
+      "passes": false,
+      "tags": ["homepage", "reviews", "copy"]
+    },
+    {
+      "id": "REV-002",
+      "priority": 1,
+      "title": "Verify and publish reviews",
+      "description": "Build, verify rendered output, publish through PR, and confirm production includes the new reviews.",
+      "acceptanceCriteria": [
+        "npm run build completes successfully",
+        "Rendered homepage output contains both new review titles and authors",
+        "Production deployment is ready after merge"
+      ],
+      "passes": false,
+      "tags": ["verification", "production"]
+    }
+  ]
+}
