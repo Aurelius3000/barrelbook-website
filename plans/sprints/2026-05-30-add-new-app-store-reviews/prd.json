@@ -27,7 +27,7 @@
         "Homepage review grid includes the BigJ71141 review titled Great app so far",
         "Existing review section layout and App Store CTAs remain unchanged"
       ],
-      "passes": false,
+      "passes": true,
       "tags": ["homepage", "reviews", "copy"]
     },
     {

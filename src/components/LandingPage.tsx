@@ -346,6 +346,20 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
+                title: "This app makes my hobby more organized.",
+                text: "This app has made my bottle tracking so much easier. I hated going to a store and not being sure if I already had a bottle or not. Now with BarrelBook I can simply open the app and compare my collection to what is available on the shelves. I do also love that I can share my collection with my friends. It makes bottle shares so much more fun as we can look at what is potentially available to share.",
+                author: "Cewj2000",
+                date: "May 19, 2026",
+                version: "1.5",
+              },
+              {
+                title: "Great app so far",
+                text: "Love it so far, I’d been looking for a way to keep track of my bottles other than making a spreadsheet and came across this. Only suggestion so far is that it would be awesome if the “spin to pick a pour” filters had an option for open bottles vs. unopened bottles. I try to keep my open bottles to a minimum but sometimes want to open one I haven’t tried yet.",
+                author: "BigJ71141",
+                date: "May 18, 2026",
+                version: "1.5",
+              },
+              {
                 title: "Best Bourbon tracking App",
                 text: "BarrelBook has rapidly become one of my favorite apps. The ability to scan labels and instantly catalog bottles is a game changer. Tracking prices, locations, and personal notes makes managing a collection effortless. Highly recommend for any bourbon enthusiast!",
                 author: "MrWCBrown",

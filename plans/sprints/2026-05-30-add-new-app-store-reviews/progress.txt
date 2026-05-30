@@ -2,7 +2,7 @@ Add New App Store Reviews
 =====================================================
 
 Started: 2026-05-30
-Status: In Progress (0/2 items)
+Status: In Progress (1/2 items)
 
 ## Goals
 - Add two newer App Store reviews to the homepage review grid.
@@ -12,8 +12,12 @@ Status: In Progress (0/2 items)
 ## Items
 
 ### Priority 1
-- [ ] REV-001: Add two new App Store reviews
+- [x] REV-001: Add two new App Store reviews
 - [ ] REV-002: Verify and publish reviews
+
+## Verification Notes
+- `npm run build` passed.
+- Local build output includes `This app makes my hobby more organized.`, `Great app so far`, `Cewj2000`, and `BigJ71141`.
 
 ## Files to Modify
 - src/components/LandingPage.tsx
