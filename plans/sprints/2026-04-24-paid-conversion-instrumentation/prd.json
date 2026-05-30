@@ -1,0 +1,101 @@
+{
+  "project": {
+    "name": "Paid Conversion Instrumentation Upgrade",
+    "repoRoot": ".",
+    "notes": "Make BarrelBook's existing analytics decision-grade for free-to-paid conversion work without adding a third-party analytics SDK or changing pricing/paywall UX."
+  },
+  "definitionOfDone": {
+    "required": [
+      "Canonical analytics docs define the paid conversion funnel and privacy-safe props",
+      "iOS paywall emits lifecycle, interaction, and outcome events with consistent conversion context",
+      "Backend StoreKit sync emits subscription_activated for applied subscription transactions",
+      "Scan-to-save activation funnel emits coarse milestone events",
+      "Website App Store CTAs emit plan/page/location intent events through existing analytics",
+      "Focused verification passes or any baseline blockers are documented"
+    ]
+  },
+  "files_changed": [
+    "docs/ANALYTICS_EVENTS_SPEC.md",
+    "BarrelBook/Services/AnalyticsService.swift",
+    "BarrelBook/Views/PlansPaywallView.swift",
+    "BarrelBook/ViewModels/ScanViewModel.swift",
+    "BarrelBook/Views/ExtractionReview/ExtractionReviewState.swift",
+    "functions/index.js",
+    "../barrelbook-website/src/components/AppStoreBadgeLink.tsx",
+    "../barrelbook-website/src/components/LandingPage.tsx",
+    "../barrelbook-website/src/components/PricingTeaser.tsx",
+    "../barrelbook-website/src/components/DeepLinkLandingPage.tsx",
+    "../barrelbook-website/src/components/SiteHeader.tsx"
+  ],
+  "items": [
+    {
+      "id": "PCI-001",
+      "priority": 1,
+      "title": "Canonical analytics spec update",
+      "description": "Update the analytics catalog with paid conversion funnel events, reporting sequence, and privacy-safe props. Mark paywall_accept as legacy/backward-compatible.",
+      "acceptanceCriteria": [
+        "Docs define the new paid conversion funnel events and owners",
+        "Docs define canonical reporting sequence from activation through subscription activation",
+        "Docs explicitly preserve privacy rules for conversion props",
+        "paywall_accept is documented as legacy/backward-compatible rather than the primary conversion metric"
+      ],
+      "passes": false,
+      "tags": ["docs", "analytics"]
+    },
+    {
+      "id": "PCI-002",
+      "priority": 2,
+      "title": "Paywall lifecycle instrumentation",
+      "description": "Instrument PlansPaywallView so views, selection, cycle changes, dismiss, restore, redeem, purchase starts, cancellations, failures, and successes are logged with consistent conversion context.",
+      "acceptanceCriteria": [
+        "Plans paywall logs enriched paywall_view_shown and plans_impression context",
+        "Plan selection and billing cycle changes emit dedicated events",
+        "Restore, redeem, and dismiss actions emit dedicated events",
+        "Purchase start/cancel/fail/success events include selected plan, cycle, product ID, intro offer eligibility, current tier, bottle count, and library cap where available",
+        "Existing purchase behavior and entitlement unlock behavior are unchanged"
+      ],
+      "passes": false,
+      "tags": ["ios", "analytics", "paywall"]
+    },
+    {
+      "id": "PCI-003",
+      "priority": 3,
+      "title": "Backend subscription activation event",
+      "description": "Emit subscription_activated from StoreKit transaction sync when a subscription transaction is applied to a user plan.",
+      "acceptanceCriteria": [
+        "Applied subscription transactions log subscription_activated with plan, cycle, product ID, environment, and source",
+        "Analytics write is best effort and does not change endpoint status codes or entitlement behavior",
+        "Existing paywall_accept backend compatibility event remains available"
+      ],
+      "passes": false,
+      "tags": ["backend", "functions", "analytics"]
+    },
+    {
+      "id": "PCI-004",
+      "priority": 4,
+      "title": "Activation funnel instrumentation",
+      "description": "Instrument scan-to-save milestones with coarse plan/cap/count context for conversion analysis.",
+      "acceptanceCriteria": [
+        "scan_started, scan_completed, scan_failed, and extraction_review_shown are logged from scan flows",
+        "bottle_saved includes source plus plan tier, bottle count, and library cap where available",
+        "slot_warning_shown and slot_limit_hit are logged from cap-related scan eligibility paths",
+        "No bottle names, IDs, usernames, or raw label text are logged"
+      ],
+      "passes": false,
+      "tags": ["ios", "analytics", "activation"]
+    },
+    {
+      "id": "PCI-005",
+      "priority": 5,
+      "title": "Website attribution companion task",
+      "description": "Track App Store CTA intent on the website through existing GA/Vercel analytics hooks so page, plan, and CTA location can be reconciled with app-side conversion reporting.",
+      "acceptanceCriteria": [
+        "Website App Store badge and plan CTAs emit app_store_cta_clicked events",
+        "Events include page, CTA location, and plan intent where available",
+        "Tracking uses existing GA/Vercel setup and does not add a third-party analytics SDK"
+      ],
+      "passes": false,
+      "tags": ["website", "analytics", "attribution"]
+    }
+  ]
+}

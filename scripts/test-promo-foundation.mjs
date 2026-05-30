@@ -8,6 +8,10 @@ const HOST = "http://127.0.0.1:" + PORT;
 const AASA_APP_ID = "TESTTEAM.com.barrelbook.app";
 const TESTFLIGHT_URL = "https://testflight.apple.com/join/TESTFNF";
 const FNF_SANDBOX_CODE = "FNF-SANDBOX-CODE";
+const BLACKSHIRT_PLUS_CODE = "BLACKSHIRTPLUS20";
+const BLACKSHIRT_PRO_CODE = "BLACKSHIRTPRO20";
+const THE_BOURBON_TRAIL_PLUS_CODE = "THEBOURBONTRAILPLUS20";
+const THE_BOURBON_TRAIL_PRO_CODE = "THEBOURBONTRAILPRO20";
 const BASE_FORBIDDEN_HTML_SNIPPETS = [
   "Have a promo code?",
   "fallback code",
@@ -78,6 +82,8 @@ async function assertRedirectConfig() {
   const expected = new Map([
     ["/fnf", "/p/fnf"],
     ["/garysplus", "/p/garysplus"],
+    ["/blackshirt", "/p/blackshirt"],
+    ["/thebourbontrail", "/p/thebourbontrail"],
   ]);
 
   for (const [source, destination] of expected.entries()) {
@@ -86,6 +92,31 @@ async function assertRedirectConfig() {
     assert.equal(match.destination, destination, "Unexpected destination for " + source);
     assert.equal(match.permanent, true, "Expected " + source + " redirect to stay permanent");
   }
+
+  const blackshirtRedirect = redirects.find((redirect) => redirect.source === "/blackshirt");
+  assert.ok(
+    blackshirtRedirect && !String(blackshirtRedirect.destination).includes("apps.apple.com"),
+    "Expected /blackshirt to avoid a direct Apple redeem redirect"
+  );
+
+  const bourbonTrailRedirect = redirects.find(
+    (redirect) => redirect.source === "/thebourbontrail"
+  );
+  assert.ok(
+    bourbonTrailRedirect && !String(bourbonTrailRedirect.destination).includes("apps.apple.com"),
+    "Expected /thebourbontrail to avoid a direct Apple redeem redirect"
+  );
+}
+
+async function assertRuntimeRedirect(source, destination) {
+  const response = await fetch(HOST + source, { redirect: "manual" });
+  const location = response.headers.get("location") || "";
+
+  assert.equal(response.status, 308, "Expected " + source + " to redirect permanently");
+  assert.ok(
+    location.endsWith(destination),
+    "Expected " + source + " to redirect to " + destination
+  );
 }
 
 function startDevServer() {
@@ -193,12 +224,169 @@ async function assertPromoPage(pathname) {
   );
 }
 
+async function assertBlackshirtPromoPage() {
+  const pathname = "/p/blackshirt";
+  const response = await fetch(HOST + pathname);
+  const html = await response.text();
+
+  assert.equal(response.status, 200, "Expected " + pathname + " to render");
+
+  const required = [
+    "Black Shirt Bourbon Society x BarrelBook",
+    "20% off the first year of BarrelBook",
+    "Plus Annual",
+    "$39.20 first year",
+    "Pro Annual",
+    "$79.20 first year",
+    "Claim Plus Annual",
+    "Claim Pro Annual",
+    "Manual fallback",
+    "Plus Annual App Store Code",
+    "Pro Annual App Store Code",
+  ];
+
+  for (const snippet of required) {
+    assert.ok(html.includes(snippet), "Expected " + pathname + " to include \"" + snippet + "\"");
+  }
+
+  assert.ok(
+    html.includes('href="barrelbook://promo/blackshirt-plus"'),
+    "Expected Plus CTA to deep-link to blackshirt-plus"
+  );
+  assert.ok(
+    html.includes('href="barrelbook://promo/blackshirt-pro"'),
+    "Expected Pro CTA to deep-link to blackshirt-pro"
+  );
+  assert.ok(
+    !html.includes("apps.apple.com/redeem"),
+    "Expected Black Shirt page to avoid direct Apple redeem URLs"
+  );
+  assert.ok(
+    !html.includes("app-argument=barrelbook://promo/blackshirt"),
+    "Expected Black Shirt parent page to avoid a single parent Smart App Banner handoff"
+  );
+  assert.ok(
+    html.toLowerCase().includes("noindex") && html.toLowerCase().includes("nofollow"),
+    "Expected Black Shirt page to emit noindex,nofollow metadata"
+  );
+
+  const fallbackIndex = html.indexOf('data-testid="creator-multi-offer-manual-fallback"');
+  assert.ok(fallbackIndex > -1, "Expected Black Shirt page to include fallback disclosure");
+  assert.ok(
+    !html.slice(fallbackIndex, fallbackIndex + 300).includes(" open"),
+    "Expected Black Shirt fallback disclosure to be closed by default"
+  );
+  assert.ok(
+    !html.slice(0, fallbackIndex).includes(BLACKSHIRT_PLUS_CODE)
+      && !html.slice(0, fallbackIndex).includes(BLACKSHIRT_PRO_CODE),
+    "Expected Black Shirt codes to stay out of the primary page content"
+  );
+  assert.ok(
+    html.indexOf(BLACKSHIRT_PLUS_CODE) > fallbackIndex
+      && html.indexOf(BLACKSHIRT_PRO_CODE) > fallbackIndex,
+    "Expected Black Shirt codes to be exposed inside the fallback disclosure"
+  );
+}
+
+async function assertTheBourbonTrailPromoPage() {
+  const pathname = "/p/thebourbontrail";
+  const response = await fetch(HOST + pathname);
+  const html = await response.text();
+
+  assert.equal(response.status, 200, "Expected " + pathname + " to render");
+
+  const required = [
+    "thebourbontrail x BarrelBook",
+    "20% off the first year of BarrelBook",
+    "The Bourbon Trail audience gets 20% off",
+    "Plus Annual",
+    "$39.20 first year",
+    "Pro Annual",
+    "$79 first year",
+    "Claim Plus Annual",
+    "Claim Pro Annual",
+    "Manual fallback",
+    "Plus Annual App Store Code",
+    "Pro Annual App Store Code",
+  ];
+
+  for (const snippet of required) {
+    assert.ok(html.includes(snippet), "Expected " + pathname + " to include \"" + snippet + "\"");
+  }
+
+  assert.ok(
+    html.includes('href="barrelbook://promo/thebourbontrail-plus"'),
+    "Expected Plus CTA to deep-link to thebourbontrail-plus"
+  );
+  assert.ok(
+    html.includes('href="barrelbook://promo/thebourbontrail-pro"'),
+    "Expected Pro CTA to deep-link to thebourbontrail-pro"
+  );
+  assert.ok(
+    !html.includes("apps.apple.com/redeem"),
+    "Expected The Bourbon Trail page to avoid direct Apple redeem URLs"
+  );
+  assert.ok(
+    !html.includes("app-argument=barrelbook://promo/thebourbontrail"),
+    "Expected The Bourbon Trail parent page to avoid a single parent Smart App Banner handoff"
+  );
+  assert.ok(
+    html.toLowerCase().includes("noindex") && html.toLowerCase().includes("nofollow"),
+    "Expected The Bourbon Trail page to emit noindex,nofollow metadata"
+  );
+
+  const fallbackIndex = html.indexOf('data-testid="creator-multi-offer-manual-fallback"');
+  assert.ok(fallbackIndex > -1, "Expected The Bourbon Trail page to include fallback disclosure");
+  assert.ok(
+    !html.slice(fallbackIndex, fallbackIndex + 300).includes(" open"),
+    "Expected The Bourbon Trail fallback disclosure to be closed by default"
+  );
+  assert.ok(
+    !html.slice(0, fallbackIndex).includes(THE_BOURBON_TRAIL_PLUS_CODE)
+      && !html.slice(0, fallbackIndex).includes(THE_BOURBON_TRAIL_PRO_CODE),
+    "Expected The Bourbon Trail codes to stay out of the primary page content"
+  );
+  assert.ok(
+    html.indexOf(THE_BOURBON_TRAIL_PLUS_CODE) > fallbackIndex
+      && html.indexOf(THE_BOURBON_TRAIL_PRO_CODE) > fallbackIndex,
+    "Expected The Bourbon Trail codes to be exposed inside the fallback disclosure"
+  );
+}
+
 async function assertNotFound(pathname) {
   const response = await fetch(HOST + pathname);
   const html = await response.text();
 
   assert.equal(response.status, 404, "Expected " + pathname + " to return 404");
   assert.match(html, /not found/i, "Expected " + pathname + " to render a 404 page");
+}
+
+async function assertRobotsDisallowsPromoPaths() {
+  const response = await fetch(HOST + "/robots.txt");
+  const text = await response.text();
+
+  assert.equal(response.status, 200, "Expected robots.txt to render");
+
+  for (const directive of [
+    "Disallow: /p/",
+    "Disallow: /qa/",
+    "Disallow: /blackshirt",
+    "Disallow: /thebourbontrail",
+    "Disallow: /fnf",
+    "Disallow: /garysplus",
+  ]) {
+    assert.ok(text.includes(directive), "Expected robots.txt to include " + directive);
+  }
+}
+
+async function assertSitemapExcludesPromoPages() {
+  const response = await fetch(HOST + "/sitemap.xml");
+  const text = await response.text();
+
+  assert.equal(response.status, 200, "Expected sitemap.xml to render");
+  assert.ok(!text.includes("/p/"), "Expected sitemap.xml to exclude promo pages");
+  assert.ok(!text.includes("blackshirt"), "Expected sitemap.xml to exclude Black Shirt alias");
+  assert.ok(!text.includes("thebourbontrail"), "Expected sitemap.xml to exclude The Bourbon Trail alias");
 }
 
 async function assertAasaEndpoints() {
@@ -251,8 +439,14 @@ async function main() {
     await waitForServer(server);
     await assertPromoPage("/p/fnf");
     await assertPromoPage("/p/garysplus");
+    await assertBlackshirtPromoPage();
+    await assertTheBourbonTrailPromoPage();
+    await assertRuntimeRedirect("/blackshirt", "/p/blackshirt");
+    await assertRuntimeRedirect("/thebourbontrail", "/p/thebourbontrail");
     await assertPromoPage("/qa/fnf");
     await assertNotFound("/p/unknown-slug");
+    await assertRobotsDisallowsPromoPaths();
+    await assertSitemapExcludesPromoPages();
     await assertAasaEndpoints();
     console.log("Promo website foundation checks passed.");
   } finally {

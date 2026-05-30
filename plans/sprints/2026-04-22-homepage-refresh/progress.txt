@@ -1,0 +1,51 @@
+BarrelBook Homepage Refresh
+=====================================================
+
+Started: 2026-04-22
+Status: Complete (14/14 items)
+
+## Goals
+- Fix the pricing CTA bug that silently drops conversions from the pricing section.
+- Refresh the hero so the bourbon specialization, a product visual, and social proof (24 five-star ratings) are all above the fold.
+- Tighten the middle of the page: fewer pills, fewer screenshots, two new video-driven story sections for Tonight's Pour and Spotlight & Flights.
+- Polish: pricing deltas, iOS-only expectation-setting, SEO structured data, and a dynamic copyright year.
+
+## Items
+
+### Priority 1 — bugs
+- [x] WEB-002: Render pricing CTA buttons
+- [x] WEB-012: Fix monthly-toggle copy on Free plan (already guarded; added clarifying comment)
+
+### Priority 2 — hero refresh
+- [x] WEB-003: Rewrite hero copy to lead with bourbon specialization
+- [x] WEB-006: Remove redundant Problem section
+- [x] WEB-004: Add Bottle Scanning video to hero
+- [x] WEB-005: Add social proof (24 five-star ratings) to hero
+
+### Priority 3 — story sections
+- [x] WEB-008: Remove bullet pills from story sections
+- [x] WEB-007: Reduce screenshots per story section to two
+- [x] WEB-009: Add Tonight's Pour story section (Pick-a-Pour.mov)
+- [x] WEB-010: Add Spotlight & Flights story section (Spotlight and Flights.mov)
+
+### Priority 4 — polish
+- [x] WEB-011: Show deltas on pricing cards
+- [x] WEB-013: iOS-only expectation line on Download CTA
+- [x] WEB-014: SoftwareApplication JSON-LD structured data
+- [x] WEB-015: Dynamic footer copyright year
+
+## Files to Modify
+- src/components/LandingPage.tsx (primary)
+- src/app/page.tsx or src/app/layout.tsx (JSON-LD)
+- src/components/HeroVideo.tsx (new)
+- src/components/StoryVideo.tsx (new)
+
+## Media Assets Already in /public
+- /Bottle Scanning 2-14-26.mov  — 886x1920, 31.3s — hero video (WEB-004)
+- /Pick-a-Pour.mov               — 886x1920, 20.7s — Tonight's Pour section (WEB-009)
+- /Spotlight and Flights.mov     — 1080x2336, 30.6s — Spotlight & Flights section (WEB-010)
+
+## Deployment
+- No env changes.
+- No new runtime deps expected; if one is added, document in commit message.
+- Verify `npm run build` and `npm run lint` pass before the sprint is marked complete.

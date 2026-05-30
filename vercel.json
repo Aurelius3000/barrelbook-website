@@ -21,6 +21,16 @@
       "permanent": true
     },
     {
+      "source": "/blackshirt",
+      "destination": "/p/blackshirt",
+      "permanent": true
+    },
+    {
+      "source": "/thebourbontrail",
+      "destination": "/p/thebourbontrail",
+      "permanent": true
+    },
+    {
       "source": "/fobu0307",
       "destination": "https://apps.apple.com/redeem?ctx=offercodes&id=6751737898&code=FOBU0307",
       "permanent": true

@@ -1,0 +1,267 @@
+{
+  "project": {
+    "name": "BarrelBook Homepage Refresh",
+    "repoRoot": "."
+  },
+  "definitionOfDone": {
+    "required": [
+      "All PRD items pass",
+      "`npm run build` succeeds",
+      "`npm run lint` is clean",
+      "No layout regressions at 375px, 768px, and 1280px widths",
+      "Videos lazy-load, loop, autoplay muted with playsInline, and are not blocking initial render"
+    ]
+  },
+  "files_changed": [
+    "src/components/LandingPage.tsx",
+    "src/app/page.tsx",
+    "src/app/layout.tsx",
+    "src/components/HeroVideo.tsx (likely new)",
+    "src/components/StoryVideo.tsx (likely new)"
+  ],
+  "items": [
+    {
+      "id": "WEB-002",
+      "priority": 1,
+      "title": "Render pricing CTA buttons",
+      "description": "The `cta` field on each plan object in LandingPage.tsx is defined but never rendered. Add a button per plan card, labeled from `plan.cta`, that links to the App Store URL. Style the popular plan's button with the bourbon accent (#D2691E) and the non-popular plans with a secondary dark style. Button should be below the feature list, full width of the card.",
+      "acceptanceCriteria": [
+        "Each of the three plan cards (Free, Plus, Pro) renders a visible button using the `cta` string from the plan object",
+        "All three buttons link to https://apps.apple.com/us/app/barrelbook-whiskey-catalog/id6751737898 with target=\"_blank\" and rel=\"noopener noreferrer\"",
+        "The Pro (popular) button uses the bourbon accent background; the others use a dark/outline style consistent with the rest of the page",
+        "Buttons render correctly on both yearly and monthly toggle states",
+        "Tab order is keyboard-accessible and focus-visible ring is present"
+      ],
+      "passes": true,
+      "tags": [
+        "bug",
+        "pricing",
+        "conversion"
+      ]
+    },
+    {
+      "id": "WEB-012",
+      "priority": 1,
+      "title": "Fix monthly-toggle copy on Free plan",
+      "description": "In PriceBlock (bottom of LandingPage.tsx), when billingCycle is 'monthly', the Free plan should not display the 'Billed monthly' subtext because it is a $0/forever plan. Suppress the subtext when plan.period === 'forever'.",
+      "acceptanceCriteria": [
+        "Free plan on monthly toggle shows '$0/mo' without any 'Billed monthly' sub-line",
+        "Plus and Pro still show 'Billed monthly' on monthly toggle",
+        "Yearly toggle behavior on Free plan is unchanged"
+      ],
+      "passes": true,
+      "tags": [
+        "pricing",
+        "polish"
+      ],
+      "notes": "Existing PriceBlock already had the !isForever guard on both yearly and monthly branches, so no functional change was needed. Added an explanatory comment to lock in the invariant."
+    },
+    {
+      "id": "WEB-003",
+      "priority": 2,
+      "title": "Rewrite hero copy to lead with bourbon specialization",
+      "description": "Replace the current hero headline/subhead so the bourbon-specialization differentiator is surfaced above the fold. Fold the 'No barcodes. No typing. No spreadsheets.' messaging into the hero subhead (it becomes redundant after WEB-006 removes the Problem section). Keep the existing bourbon-orange accent treatment on the headline's emphasis phrase.",
+      "acceptanceCriteria": [
+        "Hero headline references the whiskey-shelf-in-your-pocket idea and retains the #D2691E accent on an emphasis fragment",
+        "Hero subhead mentions bourbon-specific details (store picks / barrel numbers / batches) and the 'no barcodes, no typing, no spreadsheets' stance in \u22642 sentences",
+        "Hero subhead is \u2264200 characters",
+        "No duplication with the now-removed Problem section"
+      ],
+      "passes": true,
+      "tags": [
+        "hero",
+        "copy"
+      ]
+    },
+    {
+      "id": "WEB-006",
+      "priority": 2,
+      "title": "Remove redundant Problem section",
+      "description": "Delete the 'No barcodes. No typing. No spreadsheets.' section whose content is now in the hero after WEB-003. Ensure no orphaned imports, IDs, or spacing artifacts remain.",
+      "acceptanceCriteria": [
+        "The Problem section JSX block is removed from LandingPage.tsx",
+        "No unused imports remain as a result",
+        "Vertical rhythm between hero and the How-It-Works section is correct (no double-padding or gap)",
+        "No references to the removed section in page anchors"
+      ],
+      "passes": true,
+      "tags": [
+        "hero",
+        "cleanup"
+      ]
+    },
+    {
+      "id": "WEB-004",
+      "priority": 2,
+      "title": "Add Bottle Scanning video to hero",
+      "description": "Add the /public/Bottle Scanning 2-14-26.mov video to the hero section. Wrap it in a phone-frame treatment if a frame asset is easy to add; otherwise ship a rounded-corner bare video with a subtle border. Video must autoplay, be muted, loop, playsInline, and not render as a fullscreen native player on iOS. Use a new `HeroVideo` component under src/components/ for reuse. Layout: text on left, video on right at md+; video stacks below at sm.",
+      "acceptanceCriteria": [
+        "New component at src/components/HeroVideo.tsx (or similar) with props for src, poster, and aria-label",
+        "<video> element has autoPlay, muted, loop, playsInline, and preload=\"metadata\"",
+        "Video lazy-loads and does not block LCP (use loading patterns appropriate for Next.js)",
+        "At md+ breakpoints, hero shows two-column layout (text | video); at sm it stacks",
+        "Video container is constrained (max-height or max-width) so it doesn't dwarf the headline on large screens",
+        "A poster frame is set so the first render is not blank"
+      ],
+      "passes": true,
+      "tags": [
+        "hero",
+        "video",
+        "media"
+      ]
+    },
+    {
+      "id": "WEB-005",
+      "priority": 2,
+      "title": "Add social proof to hero",
+      "description": "Under the hero headline/subhead, add a social-proof row: a 5-star rating visual and the copy '24 five-star ratings on the App Store' (or similar). Keep it concise and visually lighter than the headline.",
+      "acceptanceCriteria": [
+        "A 5-star row (using lucide-react Star) renders under the hero subhead",
+        "Copy explicitly includes '24' and 'five-star ratings' (or '5-star ratings')",
+        "Row links to the App Store listing or is adjacent to the primary CTA, never replacing it",
+        "Styling is visually secondary to the headline and primary CTA"
+      ],
+      "passes": true,
+      "tags": [
+        "hero",
+        "social-proof"
+      ]
+    },
+    {
+      "id": "WEB-008",
+      "priority": 3,
+      "title": "Remove bullet pills from story sections",
+      "description": "Each story section currently renders its `bullets` array as a row of rounded pills. Remove this row from all three story sections. Pills remain only in the hero. The `bullets` data can stay in the array (unused) or be removed \u2014 optimize for minimal diff.",
+      "acceptanceCriteria": [
+        "No pill row renders inside any story section",
+        "Hero pills still render",
+        "No layout regression in the space between headline/description and screenshots"
+      ],
+      "passes": true,
+      "tags": [
+        "story",
+        "cleanup"
+      ]
+    },
+    {
+      "id": "WEB-007",
+      "priority": 3,
+      "title": "Reduce screenshots per story section to two",
+      "description": "Each story section shows too many screenshots (Collection has 4). Curate each to exactly two screenshots. Update the `columns` field to match. Choose the two that best illustrate each story's claim.",
+      "acceptanceCriteria": [
+        "Scan story shows 2 screenshots (pick the two strongest scan captures)",
+        "Collection story shows 2 screenshots",
+        "Share story shows 2 screenshots",
+        "Grid classnames render 1 column on mobile and 2 on tablet+ without empty cells",
+        "No broken image paths"
+      ],
+      "passes": true,
+      "tags": [
+        "story",
+        "polish"
+      ]
+    },
+    {
+      "id": "WEB-009",
+      "priority": 3,
+      "title": "Add Tonight's Pour story section using Pick-a-Pour video",
+      "description": "Introduce a new story section highlighting the Tonight's Pour / picker feature, using /public/Pick-a-Pour.mov. Place it after the Collection story (index 1) and before the Share story. Use a reusable StoryVideo component with the same video behavior as WEB-004 (autoplay/muted/loop/playsInline).",
+      "acceptanceCriteria": [
+        "A new story section titled around 'Tonight's Pour' (or similar) appears between Collection and Share",
+        "Uses Pick-a-Pour.mov with autoplay, muted, loop, playsInline",
+        "Copy is \u226460 words and describes the picker feature clearly",
+        "Visual treatment is consistent with the other story sections (header + icon + description + media)",
+        "Reusable StoryVideo component is used (new component at src/components/StoryVideo.tsx or equivalent)"
+      ],
+      "passes": true,
+      "tags": [
+        "story",
+        "video"
+      ]
+    },
+    {
+      "id": "WEB-010",
+      "priority": 3,
+      "title": "Add Spotlight & Flights story section using video",
+      "description": "Introduce a story section for Spotlight bottles and Tasting Flights using /public/Spotlight and Flights.mov. Place it after Share (as the closing feature beat) or between Tonight's Pour and Share \u2014 choose whichever flows better. Use the same StoryVideo component as WEB-009.",
+      "acceptanceCriteria": [
+        "A new story section for Spotlight & Flights is rendered with the video",
+        "Video has autoplay, muted, loop, playsInline; dimensions match the 1080x2336 aspect without distortion",
+        "Copy is \u226460 words",
+        "Visual treatment is consistent with the other story sections",
+        "Uses the shared StoryVideo component"
+      ],
+      "passes": true,
+      "tags": [
+        "story",
+        "video"
+      ]
+    },
+    {
+      "id": "WEB-011",
+      "priority": 4,
+      "title": "Show deltas on pricing cards",
+      "description": "Rewrite the feature lists on Plus and Pro so it's obvious what each tier adds, not what it duplicates. Example: Plus becomes 'Everything in Free, plus \u2026'; Pro becomes 'Everything in Plus, plus \u2026'. Keep the bolded emphasis on the Pro-only headline features.",
+      "acceptanceCriteria": [
+        "Free plan features unchanged",
+        "Plus plan's first list entry reads something like 'Everything in Free, plus:' and its remaining items are Plus-specific deltas",
+        "Pro plan's first list entry reads 'Everything in Plus, plus:' and remaining items are Pro-specific deltas",
+        "Existing bold-on-Pro convention (**\u2026**) still highlights the Pro-only headline features"
+      ],
+      "passes": true,
+      "tags": [
+        "pricing",
+        "copy"
+      ]
+    },
+    {
+      "id": "WEB-013",
+      "priority": 4,
+      "title": "Add iOS-only expectation line to Download CTA",
+      "description": "In the Download CTA section, clarify platform expectations for Android visitors. Replace the existing 'Available on iPhone and iPad' with a line that makes iOS-only explicit without sounding final. Leave specific phrasing for the implementing agent to match the rest of the page's voice; if unclear, default to 'iPhone and iPad \u2014 Android not yet supported.'",
+      "acceptanceCriteria": [
+        "Download CTA section explicitly sets the expectation that BarrelBook is iOS-only today",
+        "Copy tone matches the rest of the landing page (concise, collector-oriented)",
+        "No broken layout or orphaned styling"
+      ],
+      "passes": true,
+      "tags": [
+        "cta",
+        "copy"
+      ]
+    },
+    {
+      "id": "WEB-014",
+      "priority": 4,
+      "title": "Add SoftwareApplication JSON-LD structured data",
+      "description": "Add JSON-LD structured data for a SoftwareApplication to the homepage for SEO. Include name, applicationCategory, operatingSystem, aggregateRating (24 reviews, 5 stars), offers (free), and the App Store URL. Place via next/script with strategy 'afterInteractive' in either src/app/page.tsx or a new tiny component.",
+      "acceptanceCriteria": [
+        "Valid JSON-LD block is injected on the homepage",
+        "@type is SoftwareApplication",
+        "aggregateRating.ratingValue=5 and reviewCount=24",
+        "offers reflects the free tier",
+        "The JSON-LD validates in Google's Rich Results Test mental model (valid JSON, correct keys)"
+      ],
+      "passes": true,
+      "tags": [
+        "seo"
+      ]
+    },
+    {
+      "id": "WEB-015",
+      "priority": 4,
+      "title": "Make footer copyright year dynamic",
+      "description": "Footer copyright is hardcoded '\u00a9 2025\u20132026 BarrelBook.' Replace with a dynamic year that always shows `2025\u2013{currentYear}`.",
+      "acceptanceCriteria": [
+        "Footer uses `new Date().getFullYear()` (or Next equivalent) to compute the end year",
+        "If current year is 2026, renders '\u00a9 2025\u20132026 BarrelBook. All rights reserved.'",
+        "If current year is later, the end-year updates automatically"
+      ],
+      "passes": true,
+      "tags": [
+        "footer",
+        "polish"
+      ]
+    }
+  ]
+}

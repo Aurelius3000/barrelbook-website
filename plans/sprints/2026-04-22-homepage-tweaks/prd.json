@@ -1,0 +1,103 @@
+{
+  "project": {
+    "name": "BarrelBook Homepage — Tweaks (Unwrap + Screenshots + Shared Shelves)",
+    "repoRoot": "."
+  },
+  "definitionOfDone": {
+    "required": [
+      "All PRD items pass",
+      "`npx tsc --noEmit` is clean",
+      "`npm run lint` is clean (pre-existing warnings in opengraph-image.tsx, privacy/page.tsx, terms/page.tsx, ImageWithFallback.tsx are acceptable)",
+      "Non-video screenshots render in a plain rounded container (no PhoneFrame)",
+      "Videos (hero + 3 story videos including new SharedShelves) retain the PhoneFrame silhouette",
+      "No layout regressions at 375 / 768 / 1280 px"
+    ]
+  },
+  "files_changed": [
+    "src/components/LandingPage.tsx",
+    "public/video-posters/shared-shelves.jpg (new)",
+    "plans/sprints/2026-04-22-homepage-tweaks/SUMMARY.md (new)"
+  ],
+  "items": [
+    {
+      "id": "TWEAK-001",
+      "priority": 1,
+      "title": "Unwrap screenshots from PhoneFrame",
+      "description": "Revert FRAME-005. In LandingPage.tsx, the screenshot-grid branch currently renders each screenshot inside <PhoneFrame>. Replace that with a plain rounded container (rounded-2xl, bg-black, subtle border) holding the ImageWithFallback. PhoneFrame stays on HeroVideo and StoryVideo.",
+      "acceptanceCriteria": [
+        "Screenshots render inside a plain rounded container (no bezel, no Dynamic Island pill)",
+        "Videos still render inside PhoneFrame (HeroVideo + all StoryVideo instances)",
+        "Image aspect ratio preserved via `aspect-[9/19]` or equivalent inner wrapper",
+        "alt text preserved"
+      ],
+      "passes": true,
+      "tags": ["layout", "revert"]
+    },
+    {
+      "id": "TWEAK-002",
+      "priority": 2,
+      "title": "Add 3rd screenshot to Scan section (WLW4 on the right)",
+      "description": "In the 'Snap a photo. BarrelBook handles the details.' section, add `App Scan WLW4.png` as the third screenshot on the right, restoring the pre-WEB-007 count of 3 photos for this section. Switch the grid to 3 columns on desktop (and 1 on mobile).",
+      "acceptanceCriteria": [
+        "Scan section renders 3 screenshots in order: WLW, WLW3, WLW4",
+        "Grid is `grid-cols-1 sm:grid-cols-3` (or responsive equivalent) so on mobile they stack and on tablet+ they render in a row",
+        "All 3 screenshots are the same visual size"
+      ],
+      "passes": true,
+      "tags": ["layout", "screenshots", "scan"]
+    },
+    {
+      "id": "TWEAK-003",
+      "priority": 2,
+      "title": "Add 3rd screenshot to Collection section (Blantons3 in the middle)",
+      "description": "In the 'Know exactly what you have.' section, insert `App Scan Blantons3.png` as the middle screenshot (between Blantons2 and Blantons4). Switch the grid to 3 columns on desktop (and 1 on mobile).",
+      "acceptanceCriteria": [
+        "Collection section renders 3 screenshots in order: Blantons2, Blantons3, Blantons4",
+        "Grid is `grid-cols-1 sm:grid-cols-3` so they stack on mobile and align in a row on tablet+",
+        "All 3 screenshots are the same visual size"
+      ],
+      "passes": true,
+      "tags": ["layout", "screenshots", "collection"]
+    },
+    {
+      "id": "TWEAK-004",
+      "priority": 2,
+      "title": "Extract poster frame for SharedShelves.mov",
+      "description": "Use ffmpeg to extract a representative frame from /public/SharedShelves.mov at around 1-2s and write it to /public/video-posters/shared-shelves.jpg. Pattern matches the existing posters (bottle-scanning.jpg, pick-a-pour.jpg, spotlight-flights.jpg).",
+      "acceptanceCriteria": [
+        "/public/video-posters/shared-shelves.jpg exists",
+        "File is a valid JPEG, roughly matching source aspect (1080x2336)",
+        "File size under 500 KB to keep LCP fast"
+      ],
+      "passes": true,
+      "tags": ["assets", "video", "poster"]
+    },
+    {
+      "id": "TWEAK-005",
+      "priority": 3,
+      "title": "Replace Share section screenshots with Shared Shelves video",
+      "description": "In the existing 'Share a shelf worth showing' story section, replace the two screenshots (Catalog1.png + Blantons Details.png) with a StoryVideo driven by /public/SharedShelves.mov. Update the title and description to use the condensed copy supplied by the user:\n- Title: 'Share the shelf worth showing off.'\n- Description: 'Build your shelf in private, publish when you're ready, and let friends browse the bottles that define your collection.'\nKeep the section id='share' and the existing icon (Share2).",
+      "acceptanceCriteria": [
+        "The Share section renders as a StoryVideo (phone-framed SharedShelves video), not as a screenshot grid",
+        "Video attributes preserved: autoPlay muted loop playsInline preload='metadata' with poster=/video-posters/shared-shelves.jpg",
+        "Title and description updated to the condensed copy",
+        "Section id remains 'share' (no dependents to update, but stable for future analytics)"
+      ],
+      "passes": true,
+      "tags": ["video", "story", "share"]
+    },
+    {
+      "id": "TWEAK-006",
+      "priority": 4,
+      "title": "Verification: types, lint, SUMMARY.md",
+      "description": "Run `npx tsc --noEmit` and `npm run lint`. Both must be clean. Write SUMMARY.md to the sprint folder.",
+      "acceptanceCriteria": [
+        "`npx tsc --noEmit` exits 0",
+        "`npm run lint` has no new warnings or errors beyond the 4 pre-existing ones",
+        "SUMMARY.md written to the sprint folder"
+      ],
+      "passes": true,
+      "tags": ["verification"]
+    }
+  ]
+}

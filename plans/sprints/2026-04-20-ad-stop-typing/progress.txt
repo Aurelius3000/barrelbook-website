@@ -1,0 +1,53 @@
+Ad 1 — Stop Typing (BarrelBook Instagram, 15s)
+=====================================================
+
+Started: 2026-04-20
+Completed: 2026-04-26
+Status: Complete — 3 deliverables shipped to output/ads/
+
+## Goals
+- Ship four MP4 deliverables: 9:16 main, 9:16 silent, 9:16 alt-hook, 4:5 feed
+- Use only repo assets (Blantons hero, hero imagery, logo, copper/dark brand palette)
+- Enforce brief no-go list (no multi-bottle, social, ratings, trading, export, pricing claims)
+
+## Items
+
+### Priority 1 (setup + shot renders)
+- [ ] AD1-001: Environment check
+- [ ] AD1-002: Captions module
+- [ ] AD1-003: Render Shot 1 (Hook)
+- [ ] AD1-004: Render Shot 2 (Pain)
+- [ ] AD1-005: Render Shot 3 (Open app)
+- [ ] AD1-006: Render Shot 4 (Capture)
+- [ ] AD1-007: Render Shot 5 (Review/Edit)
+- [ ] AD1-008: Render Shot 6 (Save)
+- [ ] AD1-009: Render Shot 7 (Result)
+- [ ] AD1-010: Render Shot 8 (End card)
+
+### Priority 2 (audio + first master)
+- [ ] AD1-011: Voiceover
+- [ ] AD1-012: Music bed
+- [ ] AD1-013: Mix audio
+- [ ] AD1-014: Master 9:16 main
+
+### Priority 3 (variants)
+- [ ] AD1-015: Variant silent
+- [ ] AD1-016: Variant alt hook
+- [ ] AD1-017: Variant 4:5 feed
+
+### Priority 4 (verify + docs)
+- [ ] AD1-018: Verification pass
+- [ ] AD1-019: SUMMARY.md
+
+## Files to Modify / Add
+- scripts/ad_stop_typing/build.sh (top-level runner)
+- scripts/ad_stop_typing/captions.py
+- scripts/ad_stop_typing/shots/*.sh (8 shot scripts)
+- scripts/ad_stop_typing/audio/{voiceover.py, music.sh, mix.sh}
+- scripts/ad_stop_typing/variants/{main.sh, silent.sh, hook_swap.sh, feed_4x5.sh}
+- scripts/ad_stop_typing/fonts/Inter-Bold.ttf
+- scripts/ad_stop_typing/out/ (intermediates, gitignored)
+- output/ads/ (final deliverables)
+
+## Deployment
+- No deployment. Files live in output/ads/ and are consumed by you / your ad buyer directly.

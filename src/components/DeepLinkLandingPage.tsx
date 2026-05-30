@@ -89,7 +89,12 @@ export default function DeepLinkLandingPage({
                 <AppStoreRatingLink className="inline-flex items-center gap-2 mb-6 text-sm text-gray-300 hover:text-white transition-colors" />
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center mb-4">
-                  <AppStoreBadgeLink width={180} height={60} priority />
+                  <AppStoreBadgeLink
+                    width={180}
+                    height={60}
+                    priority
+                    analytics={{ page: config.path, location: "hero" }}
+                  />
                 </div>
 
                 <p className="text-sm text-gray-500">
@@ -253,7 +258,11 @@ export default function DeepLinkLandingPage({
             </p>
 
             <div className="flex justify-center mb-4">
-              <AppStoreBadgeLink width={180} height={60} />
+              <AppStoreBadgeLink
+                width={180}
+                height={60}
+                analytics={{ page: config.path, location: "download" }}
+              />
             </div>
 
             {config.cta.note ? (

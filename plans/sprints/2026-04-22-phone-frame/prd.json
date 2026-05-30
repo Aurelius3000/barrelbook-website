@@ -1,0 +1,114 @@
+{
+  "project": {
+    "name": "BarrelBook Homepage — Phone Frame",
+    "repoRoot": "."
+  },
+  "definitionOfDone": {
+    "required": [
+      "All PRD items pass",
+      "`npx tsc --noEmit` is clean",
+      "`npm run lint` is clean",
+      "Videos and screenshots render inside a recognizable iPhone silhouette",
+      "All phone-framed media on the page share the same outer width and aspect pattern at each breakpoint",
+      "No layout regressions at 375px, 768px, and 1280px widths"
+    ]
+  },
+  "files_changed": [
+    "src/components/PhoneFrame.tsx (new)",
+    "src/components/HeroVideo.tsx",
+    "src/components/StoryVideo.tsx",
+    "src/components/LandingPage.tsx"
+  ],
+  "items": [
+    {
+      "id": "FRAME-001",
+      "priority": 1,
+      "title": "Build reusable PhoneFrame component",
+      "description": "Create src/components/PhoneFrame.tsx — a pure-CSS iPhone 16/17 Pro silhouette that wraps arbitrary children (video, image, or other node). Outer dark bezel (`bg-[#0A0A0A]` or `bg-black` with a subtle ring), outer rounded corners ≈ `rounded-[2.75rem]`, inner screen ≈ `rounded-[2.25rem]` `overflow-hidden bg-black`, and a small Dynamic Island pill absolutely positioned at the top center of the screen. Accept props: `children`, `ariaLabel?`, `className?` (for width control), `width?`/`height?` (intrinsic, default 886x1920 matching the hero video). Use CSS `aspectRatio` on the inner screen so it stays phone-shaped regardless of width. Keep markup semantic — the outer element is a `<figure>`.",
+      "acceptanceCriteria": [
+        "PhoneFrame.tsx exports a default React functional component",
+        "Outer figure has dark bezel, rounded ~2.75rem, subtle border matching existing `border-[#1f1f1f]` palette, and a soft shadow",
+        "Inner screen uses aspectRatio derived from width/height props and clips children with overflow-hidden",
+        "A Dynamic Island pill (≈ 90x26 px at intrinsic 886-wide phone) is absolutely positioned at top center with rounded-full and a `#111111` or darker background",
+        "Component accepts `className` for outer sizing (e.g., `max-w-[300px]`) and forwards `ariaLabel` to the figure",
+        "No layout issues when children is a `<video>` or an `<Image>` / `<img>` with `object-cover` / `object-contain`",
+        "TypeScript clean (`npx tsc --noEmit`)"
+      ],
+      "passes": true,
+      "tags": ["component", "design", "phone-frame"]
+    },
+    {
+      "id": "FRAME-002",
+      "priority": 2,
+      "title": "Rewire HeroVideo to use PhoneFrame",
+      "description": "Replace the current `<figure>` wrapper in HeroVideo.tsx with `<PhoneFrame>`. The video becomes the child, rendered at `className='h-full w-full object-cover'`. Preserve all existing video attributes (autoPlay, muted, loop, playsInline, preload='metadata', poster, aria-label). Keep the component's public API (src, poster, ariaLabel, width, height, className).",
+      "acceptanceCriteria": [
+        "HeroVideo.tsx imports PhoneFrame and uses it as the outer element",
+        "The video still autoplays muted with loop + playsInline + preload='metadata'",
+        "Poster frame displays before autoplay kicks in",
+        "Aria label is applied to the PhoneFrame figure",
+        "Public props (src, poster, ariaLabel, width, height, className) are unchanged",
+        "The component renders identically in the hero at 375 / 768 / 1280 px (tested via viewport resize in dev server or visual inspection)"
+      ],
+      "passes": true,
+      "tags": ["component", "hero", "video"]
+    },
+    {
+      "id": "FRAME-003",
+      "priority": 2,
+      "title": "Rewire StoryVideo to use PhoneFrame",
+      "description": "Same treatment as FRAME-002 for StoryVideo.tsx. Replace the `<figure>` wrapper with `<PhoneFrame>`, keep all video attributes and the public API (src, poster, ariaLabel, width, height, maxWidthClass).",
+      "acceptanceCriteria": [
+        "StoryVideo.tsx imports PhoneFrame and uses it as the outer element",
+        "maxWidthClass prop continues to control outer width (default `max-w-[300px] sm:max-w-[340px]`) and is forwarded as className to PhoneFrame",
+        "Autoplay/muted/loop/playsInline/poster/preload all preserved",
+        "Component renders identically in Tonight's Pour and Spotlight & Flights sections",
+        "Public props unchanged"
+      ],
+      "passes": true,
+      "tags": ["component", "story", "video"]
+    },
+    {
+      "id": "FRAME-004",
+      "priority": 3,
+      "title": "Normalize screenshot widths across story sections",
+      "description": "Currently the Share section uses `centered: true` + `max-w-[360px]` while Scan and Collection let screenshots fill the grid cell (~480-500px at desktop). Apply a shared cap so all screenshot pairs render at the same outer width and align with the StoryVideo widths. Remove the ad-hoc `centered` field on Share — instead, give every image-based story section the same grid + max-width treatment so all phones on the page match in size. Target: each screenshot renders at `max-w-[280px] sm:max-w-[320px]` (roughly matching StoryVideo caps) within a centered 2-column grid.",
+      "acceptanceCriteria": [
+        "No story section visually renders at a different phone width than the others",
+        "`centered` field is either removed from the StorySection type or repurposed so all sections behave consistently",
+        "Screenshots are centered within their grid cells and the overall pair is centered in the page",
+        "Holds at 375 / 768 / 1280 px — on mobile, screenshots stack (1 col) and stay capped at the same max width; on desktop, 2-col grid with the pair centered"
+      ],
+      "passes": true,
+      "tags": ["layout", "consistency", "story"]
+    },
+    {
+      "id": "FRAME-005",
+      "priority": 3,
+      "title": "Wrap story-section screenshots in PhoneFrame",
+      "description": "Replace the current `<figure>` + `aspect-[9/19]` + `object-contain` pattern for screenshots with `<PhoneFrame>`. The Image/ImageWithFallback becomes the child with `object-cover` so it fills the screen area. This is the big visual win — all six screenshots and both videos become iPhone silhouettes, giving the page a unified device-mockup aesthetic.",
+      "acceptanceCriteria": [
+        "All six image-based screenshots render inside a PhoneFrame silhouette with visible bezel + Dynamic Island",
+        "The ImageWithFallback/Image inside the frame uses object-cover and fills the inner screen with no letterboxing",
+        "Alt text is preserved on the inner img",
+        "The outer PhoneFrame respects the same max-width cap used in FRAME-004 so videos and images match",
+        "No console errors or missing-key warnings in the story map"
+      ],
+      "passes": true,
+      "tags": ["layout", "story", "phone-frame"]
+    },
+    {
+      "id": "FRAME-006",
+      "priority": 4,
+      "title": "Verification: types, lint, visual check",
+      "description": "Run `npx tsc --noEmit` and `npm run lint`. Both must be clean (pre-existing warnings in opengraph-image.tsx, privacy/page.tsx, terms/page.tsx, ImageWithFallback.tsx are acceptable). Document any net-new warnings and fix them. Write a SUMMARY.md noting files added/modified, high-level change narrative, and recommended next steps (run build locally; visual QA at 375/768/1280).",
+      "acceptanceCriteria": [
+        "`npx tsc --noEmit` exits 0",
+        "`npm run lint` has no new warnings or errors beyond the 4 pre-existing ones",
+        "SUMMARY.md written to the sprint folder"
+      ],
+      "passes": true,
+      "tags": ["verification"]
+    }
+  ]
+}

@@ -13,6 +13,7 @@ import StoryVideo from "@/components/StoryVideo";
 import {
   APP_STORE_URL,
 } from "@/lib/app-store";
+import { trackAppStoreCtaClick } from "@/lib/cta-analytics";
 
 export default function LandingPage() {
   const [billingCycle, setBillingCycle] = useState<"yearly" | "monthly">("yearly");
@@ -211,7 +212,12 @@ export default function LandingPage() {
               <AppStoreRatingLink className="inline-flex items-center gap-2 mb-6 text-sm text-gray-300 hover:text-white transition-colors" />
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center mb-6">
-                <AppStoreBadgeLink width={180} height={60} priority />
+                <AppStoreBadgeLink
+                  width={180}
+                  height={60}
+                  priority
+                  analytics={{ page: "/", location: "hero" }}
+                />
               </div>
 
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 text-sm text-gray-400">
@@ -495,6 +501,13 @@ export default function LandingPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`${plan.cta} — ${plan.name} plan`}
+                  onClick={() =>
+                    trackAppStoreCtaClick({
+                      page: "/",
+                      location: "pricing_plan",
+                      plan: plan.name.toLowerCase(),
+                    })
+                  }
                   className={`block w-full text-center rounded-xl px-4 py-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D2691E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A] ${
                     plan.popular
                       ? 'bg-[#D2691E] text-white hover:bg-[#C05E17]'
@@ -564,7 +577,11 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 items-center">
-            <AppStoreBadgeLink width={180} height={60} />
+            <AppStoreBadgeLink
+              width={180}
+              height={60}
+              analytics={{ page: "/", location: "download" }}
+            />
           </div>
 
           <p className="text-sm text-gray-500">Available on iPhone and iPad today. Android is on the roadmap.</p>

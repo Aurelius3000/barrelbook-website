@@ -1,5 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import { APP_STORE_URL } from "@/lib/app-store";
+import {
+  trackAppStoreCtaClick,
+  type AppStoreCtaAnalytics,
+} from "@/lib/cta-analytics";
 
 type AppStoreBadgeLinkProps = {
   className?: string;
@@ -8,6 +14,7 @@ type AppStoreBadgeLinkProps = {
   height?: number;
   priority?: boolean;
   ariaLabel?: string;
+  analytics?: AppStoreCtaAnalytics;
 };
 
 export default function AppStoreBadgeLink({
@@ -17,6 +24,7 @@ export default function AppStoreBadgeLink({
   height = 60,
   priority = false,
   ariaLabel = "Download on the App Store",
+  analytics,
 }: AppStoreBadgeLinkProps) {
   return (
     <a
@@ -25,6 +33,7 @@ export default function AppStoreBadgeLink({
       className={className}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={() => trackAppStoreCtaClick(analytics)}
     >
       <Image
         src="/badges/app-store.svg"
