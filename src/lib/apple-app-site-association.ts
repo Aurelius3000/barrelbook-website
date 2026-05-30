@@ -23,6 +23,11 @@ const STORE_PICKS_PATH_COMPONENT = {
   comment: "Universal link handoff to the BarrelBook store-picks experience",
 } as const;
 
+const BOTTLE_PATH_COMPONENT = {
+  "/": "/bottles/*",
+  comment: "Universal link handoff to private BarrelBook bottle links",
+} as const;
+
 export const AASA_RESPONSE_HEADERS = {
   "Cache-Control": "public, max-age=300, s-maxage=300",
   "Content-Type": "application/json; charset=utf-8",
@@ -48,6 +53,7 @@ export function getAppleAppSiteAssociation() {
             SCAN_PATH_COMPONENT,
             COLLECTION_PATH_COMPONENT,
             STORE_PICKS_PATH_COMPONENT,
+            BOTTLE_PATH_COMPONENT,
             PROMO_PATH_COMPONENT,
             GOLDEN_TICKET_PATH_COMPONENT,
           ],

@@ -6,6 +6,7 @@ import { setTimeout as delay } from "node:timers/promises";
 const PORT = process.env.PROMO_TEST_PORT ?? "3107";
 const HOST = "http://127.0.0.1:" + PORT;
 const AASA_APP_ID = "TESTTEAM.com.barrelbook.app";
+const APP_STORE_URL = "https://apps.apple.com/us/app/barrelbook-whiskey-catalog/id6751737898";
 const TESTFLIGHT_URL = "https://testflight.apple.com/join/TESTFNF";
 const FNF_SANDBOX_CODE = "FNF-SANDBOX-CODE";
 const BLACKSHIRT_PLUS_CODE = "BLACKSHIRTPLUS20";
@@ -361,6 +362,59 @@ async function assertNotFound(pathname) {
   assert.match(html, /not found/i, "Expected " + pathname + " to render a 404 page");
 }
 
+async function assertBottleFallbackPage() {
+  const sampleResponse = await fetch(HOST + "/bottles/testBottle123");
+  const sampleHtml = await sampleResponse.text();
+
+  assert.equal(sampleResponse.status, 200, "Expected /bottles/testBottle123 to render");
+
+  for (const snippet of [
+    "Open this bottle in BarrelBook",
+    "This web page is an app handoff, not a public bottle page.",
+    "signed-in BarrelBook account owns it",
+    "Bottle details stay private and are not shown on the web.",
+  ]) {
+    assert.ok(
+      sampleHtml.includes(snippet),
+      "Expected /bottles/testBottle123 to include \"" + snippet + "\""
+    );
+  }
+
+  assert.ok(
+    sampleHtml.includes('href="barrelbook://bottles/testBottle123"'),
+    "Expected /bottles/testBottle123 to expose the encoded bottle deep link"
+  );
+  assert.ok(
+    sampleHtml.includes('href="' + APP_STORE_URL + '"'),
+    "Expected /bottles/testBottle123 to expose the App Store CTA"
+  );
+  assert.ok(
+    sampleHtml.includes('name="apple-itunes-app"')
+      && sampleHtml.includes("app-argument=barrelbook://bottles/testBottle123"),
+    "Expected /bottles/testBottle123 to expose a Smart App Banner for the bottle link"
+  );
+
+  for (const snippet of ["MSRP", "Secondary", "imageUrl", "userId", "accountId"]) {
+    assert.ok(
+      !sampleHtml.includes(snippet),
+      "Expected /bottles/testBottle123 to avoid private bottle snippet \"" + snippet + "\""
+    );
+  }
+
+  const encodedResponse = await fetch(HOST + "/bottles/test%20Bottle%20123");
+  const encodedHtml = await encodedResponse.text();
+
+  assert.equal(
+    encodedResponse.status,
+    200,
+    "Expected /bottles/test%20Bottle%20123 to render"
+  );
+  assert.ok(
+    encodedHtml.includes('href="barrelbook://bottles/test%20Bottle%20123"'),
+    "Expected bottle IDs with spaces to stay URL-encoded in the deep link"
+  );
+}
+
 async function assertRobotsDisallowsPromoPaths() {
   const response = await fetch(HOST + "/robots.txt");
   const text = await response.text();
@@ -387,6 +441,14 @@ async function assertSitemapExcludesPromoPages() {
   assert.ok(!text.includes("/p/"), "Expected sitemap.xml to exclude promo pages");
   assert.ok(!text.includes("blackshirt"), "Expected sitemap.xml to exclude Black Shirt alias");
   assert.ok(!text.includes("thebourbontrail"), "Expected sitemap.xml to exclude The Bourbon Trail alias");
+  assert.ok(!text.includes("/bottles/"), "Expected sitemap.xml to exclude bottle pages");
+}
+
+function assertAasaComponent(components, path, comment) {
+  assert.ok(
+    components.some((component) => component?.["/"] === path && component?.comment === comment),
+    "Expected " + path + " AASA component to be present"
+  );
 }
 
 async function assertAasaEndpoints() {
@@ -420,13 +482,35 @@ async function assertAasaEndpoints() {
     Array.isArray(details[0].components),
     "Expected applinks components to be an array"
   );
-  assert.ok(
-    details[0].components.some(
-      (component) =>
-        component?.["/"] === "/p/*" &&
-        component?.comment === "Canonical BarrelBook promo links"
-    ),
-    "Expected promo AASA component to be present"
+  assertAasaComponent(
+    details[0].components,
+    "/scan",
+    "Universal link handoff to the BarrelBook scan experience"
+  );
+  assertAasaComponent(
+    details[0].components,
+    "/collection",
+    "Universal link handoff to the BarrelBook collection experience"
+  );
+  assertAasaComponent(
+    details[0].components,
+    "/store-picks",
+    "Universal link handoff to the BarrelBook store-picks experience"
+  );
+  assertAasaComponent(
+    details[0].components,
+    "/bottles/*",
+    "Universal link handoff to private BarrelBook bottle links"
+  );
+  assertAasaComponent(
+    details[0].components,
+    "/p/*",
+    "Canonical BarrelBook promo links"
+  );
+  assertAasaComponent(
+    details[0].components,
+    "/gift/*",
+    "Canonical BarrelBook Golden Ticket links"
   );
 }
 
@@ -444,6 +528,7 @@ async function main() {
     await assertRuntimeRedirect("/blackshirt", "/p/blackshirt");
     await assertRuntimeRedirect("/thebourbontrail", "/p/thebourbontrail");
     await assertPromoPage("/qa/fnf");
+    await assertBottleFallbackPage();
     await assertNotFound("/p/unknown-slug");
     await assertRobotsDisallowsPromoPaths();
     await assertSitemapExcludesPromoPages();
