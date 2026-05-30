@@ -28,7 +28,7 @@
         "Hero rating link says 4.8 stars from 100+ App Store ratings",
         "App Store link behavior is unchanged"
       ],
-      "passes": false,
+      "passes": true,
       "tags": ["copy", "seo", "homepage"]
     },
     {

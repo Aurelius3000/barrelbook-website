@@ -2,7 +2,7 @@ App Store Rating Refresh
 =====================================================
 
 Started: 2026-05-30
-Status: In Progress (0/2 items)
+Status: In Progress (1/2 items)
 
 ## Goals
 - Remove stale `24 five-star ratings` homepage copy.
@@ -12,8 +12,13 @@ Status: In Progress (0/2 items)
 ## Items
 
 ### Priority 1
-- [ ] RATE-001: Refresh App Store rating copy
+- [x] RATE-001: Refresh App Store rating copy
 - [ ] RATE-002: Verify and publish
+
+## Verification Notes
+- `npm run build` passed.
+- Local build output includes `4.8 stars from 100+ App Store ratings`.
+- JSON-LD includes exact `ratingValue=4.8` and `reviewCount=116`.
 
 ## Files to Modify
 - src/lib/app-store.ts

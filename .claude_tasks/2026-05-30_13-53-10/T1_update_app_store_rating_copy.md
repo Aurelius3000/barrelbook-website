@@ -16,3 +16,10 @@ Store-backed rating copy.
 - `npm run build`
 - Confirm rendered homepage text includes `4.8 stars from 100+ App Store ratings`.
 - Confirm JSON-LD includes exact `4.8` and `116` values.
+
+## Result
+- Updated centralized constants in `src/lib/app-store.ts`.
+- Updated `AppStoreRatingLink` text and accessibility label.
+- `npm run build` passed.
+- Generated homepage contains `4.8 stars from 100+ App Store ratings`.
+- Generated JSON-LD contains `ratingValue: 4.8` and `reviewCount: 116`.
