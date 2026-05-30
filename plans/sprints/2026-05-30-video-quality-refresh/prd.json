@@ -1,0 +1,53 @@
+{
+  "project": {
+    "name": "Video Quality Refresh",
+    "repoRoot": "."
+  },
+  "definitionOfDone": {
+    "required": [
+      "All items pass",
+      "Project builds",
+      "Video assets are sharper without changing public URLs"
+    ]
+  },
+  "files_changed": [
+    "public/videos/bottle-scanning.mp4",
+    "public/videos/pick-a-pour.mp4",
+    "public/videos/shared-shelves.mp4",
+    "public/videos/spotlight-and-flights.mp4",
+    "plans/adapters/Codex.sh",
+    "plans/sprints/2026-05-30-video-quality-refresh/prd.json",
+    "plans/sprints/2026-05-30-video-quality-refresh/progress.txt",
+    "plans/sprints/2026-05-30-video-quality-refresh/prompt.md"
+  ],
+  "items": [
+    {
+      "id": "VQR-001",
+      "priority": 1,
+      "title": "Re-encode website MP4s",
+      "description": "Replace the four low-resolution public/videos MP4s with browser-compatible H.264 MP4s generated from the matching high-resolution MOV originals. Preserve public URLs and aspect ratios, target about 720px source width, and strip audio because the site uses muted looping playback.",
+      "acceptanceCriteria": [
+        "All four public/videos/*.mp4 files are regenerated from the matching MOV originals",
+        "Each replacement MP4 is about 720px wide while preserving source aspect ratio",
+        "Each replacement MP4 has no audio track",
+        "No React component or route changes are needed for the new assets"
+      ],
+      "passes": false,
+      "tags": ["media", "performance", "homepage"]
+    },
+    {
+      "id": "VQR-002",
+      "priority": 1,
+      "title": "Verify build and homepage playback",
+      "description": "Verify metadata, build the Next.js app, and smoke-test the homepage so the higher-resolution videos render correctly at the existing URLs.",
+      "acceptanceCriteria": [
+        "Metadata checks confirm dimensions, durations, and no audio tracks for all four MP4s",
+        "npm run build completes successfully",
+        "Homepage smoke test confirms the existing /videos/*.mp4 URLs are present",
+        "git diff is limited to expected task, sprint, adapter, and video asset changes"
+      ],
+      "passes": false,
+      "tags": ["verification", "build", "smoke"]
+    }
+  ]
+}

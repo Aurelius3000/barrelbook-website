@@ -1,0 +1,40 @@
+Video Quality Refresh
+=====================================================
+
+Started: 2026-05-30
+Status: In Progress (0/2 items)
+
+## Goals
+- Replace visibly soft website MP4s with retina-friendly web encodes.
+- Keep existing public video URLs and homepage components unchanged.
+- Keep this work isolated from the bottle-link fallback branch.
+
+## Items
+
+### Priority 1
+- [ ] VQR-001: Re-encode website MP4s
+- [ ] VQR-002: Verify build and homepage playback
+
+## Files to Modify
+- public/videos/bottle-scanning.mp4
+- public/videos/pick-a-pour.mp4
+- public/videos/shared-shelves.mp4
+- public/videos/spotlight-and-flights.mp4
+- plans/adapters/Codex.sh
+- plans/sprints/2026-05-30-video-quality-refresh/prd.json
+- plans/sprints/2026-05-30-video-quality-refresh/progress.txt
+- plans/sprints/2026-05-30-video-quality-refresh/prompt.md
+
+## Deployment
+- No production push, deploy, or Vercel alias change in this sprint.
+- Ship through a normal review branch/PR.
+
+## Ralph Launch Commands
+
+```bash
+# Iterative (runs up to 25 iterations until all items pass):
+RALPH_AGENT_CMD=./plans/adapters/Codex.sh ./plans/ralph.sh plans/sprints/2026-05-30-video-quality-refresh 25
+
+# Single iteration:
+RALPH_AGENT_CMD=./plans/adapters/Codex.sh ./plans/ralph_once.sh plans/sprints/2026-05-30-video-quality-refresh
+```
