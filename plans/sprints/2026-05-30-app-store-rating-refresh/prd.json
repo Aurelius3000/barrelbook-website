@@ -1,0 +1,48 @@
+{
+  "project": {
+    "name": "App Store Rating Refresh",
+    "repoRoot": "."
+  },
+  "definitionOfDone": {
+    "required": [
+      "All items pass",
+      "Project builds",
+      "Production homepage no longer shows stale rating copy"
+    ]
+  },
+  "files_changed": [
+    "src/lib/app-store.ts",
+    "src/components/AppStoreRatingLink.tsx",
+    "plans/sprints/2026-05-30-app-store-rating-refresh/prd.json",
+    "plans/sprints/2026-05-30-app-store-rating-refresh/progress.txt",
+    "plans/sprints/2026-05-30-app-store-rating-refresh/prompt.md"
+  ],
+  "items": [
+    {
+      "id": "RATE-001",
+      "priority": 1,
+      "title": "Refresh App Store rating copy",
+      "description": "Update centralized App Store rating constants and the homepage rating link so the hero uses durable current copy while JSON-LD keeps exact App Store values.",
+      "acceptanceCriteria": [
+        "Structured data uses ratingValue 4.8 and reviewCount 116",
+        "Hero rating link says 4.8 stars from 100+ App Store ratings",
+        "App Store link behavior is unchanged"
+      ],
+      "passes": false,
+      "tags": ["copy", "seo", "homepage"]
+    },
+    {
+      "id": "RATE-002",
+      "priority": 1,
+      "title": "Verify and publish",
+      "description": "Build, verify rendered output, push through PR, and confirm production updates.",
+      "acceptanceCriteria": [
+        "npm run build completes successfully",
+        "Rendered homepage text contains the updated rating claim",
+        "Production deployment is ready after merge"
+      ],
+      "passes": false,
+      "tags": ["verification", "production"]
+    }
+  ]
+}
