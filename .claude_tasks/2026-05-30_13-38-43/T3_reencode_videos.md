@@ -21,3 +21,18 @@ generated from the existing MOV originals.
 - Confirm the new MP4s are about `720px` wide.
 - Confirm durations still match the MOV sources.
 - Confirm file sizes remain web-appropriate.
+
+## Result
+- `public/videos/bottle-scanning.mp4`: `720x1558`, `30.633333s`, no audio, `4.8M`
+- `public/videos/pick-a-pour.mp4`: `720x1560`, `20.700000s`, no audio, `1.3M`
+- `public/videos/shared-shelves.mp4`: `720x1558`, `20.666667s`, no audio, `3.1M`
+- `public/videos/spotlight-and-flights.mp4`: `720x1560`, `31.333333s`, no audio, `2.6M`
+
+## Command Shape
+Used temporary `ffmpeg-static`/`ffprobe-static` tooling outside the repo:
+
+```bash
+ffmpeg -i <source.mov> -map 0:v:0 -vf scale=720:-2 -an \
+  -c:v libx264 -preset slow -crf 23 -pix_fmt yuv420p \
+  -movflags +faststart -map_metadata -1 <dest.mp4>
+```

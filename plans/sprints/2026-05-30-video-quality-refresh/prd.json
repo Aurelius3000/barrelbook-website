@@ -32,7 +32,7 @@
         "Each replacement MP4 has no audio track",
         "No React component or route changes are needed for the new assets"
       ],
-      "passes": false,
+      "passes": true,
       "tags": ["media", "performance", "homepage"]
     },
     {
@@ -46,7 +46,7 @@
         "Homepage smoke test confirms the existing /videos/*.mp4 URLs are present",
         "git diff is limited to expected task, sprint, adapter, and video asset changes"
       ],
-      "passes": false,
+      "passes": true,
       "tags": ["verification", "build", "smoke"]
     }
   ]

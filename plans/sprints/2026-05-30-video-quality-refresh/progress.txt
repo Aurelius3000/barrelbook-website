@@ -2,7 +2,7 @@ Video Quality Refresh
 =====================================================
 
 Started: 2026-05-30
-Status: In Progress (0/2 items)
+Status: Complete (2/2 items)
 
 ## Goals
 - Replace visibly soft website MP4s with retina-friendly web encodes.
@@ -12,8 +12,8 @@ Status: In Progress (0/2 items)
 ## Items
 
 ### Priority 1
-- [ ] VQR-001: Re-encode website MP4s
-- [ ] VQR-002: Verify build and homepage playback
+- [x] VQR-001: Re-encode website MP4s
+- [x] VQR-002: Verify build and homepage playback
 
 ## Files to Modify
 - public/videos/bottle-scanning.mp4
@@ -28,6 +28,11 @@ Status: In Progress (0/2 items)
 ## Deployment
 - No production push, deploy, or Vercel alias change in this sprint.
 - Ship through a normal review branch/PR.
+
+## Verification Notes
+- Re-encoded all four MP4s to `720px` source width with H.264 and no audio.
+- `npm run build` passed.
+- Homepage smoke on `http://127.0.0.1:3109/` confirmed all four existing video URLs load as `video/mp4`.
 
 ## Ralph Launch Commands
 
