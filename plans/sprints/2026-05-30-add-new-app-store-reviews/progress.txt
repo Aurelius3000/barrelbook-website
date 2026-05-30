@@ -1,0 +1,40 @@
+Add New App Store Reviews
+=====================================================
+
+Started: 2026-05-30
+Status: In Progress (1/2 items)
+
+## Goals
+- Add two newer App Store reviews to the homepage review grid.
+- Keep the review UI and App Store CTAs unchanged.
+- Publish through the normal GitHub/Vercel production flow.
+
+## Items
+
+### Priority 1
+- [x] REV-001: Add two new App Store reviews
+- [ ] REV-002: Verify and publish reviews
+
+## Verification Notes
+- `npm run build` passed.
+- Local build output includes `This app makes my hobby more organized.`, `Great app so far`, `Cewj2000`, and `BigJ71141`.
+
+## Files to Modify
+- src/components/LandingPage.tsx
+- plans/sprints/2026-05-30-add-new-app-store-reviews/prd.json
+- plans/sprints/2026-05-30-add-new-app-store-reviews/progress.txt
+- plans/sprints/2026-05-30-add-new-app-store-reviews/prompt.md
+
+## Deployment
+- Publish through GitHub PR merge to main.
+- Let Vercel deploy production from the merge commit.
+
+## Ralph Launch Commands
+
+```bash
+# Iterative (runs up to 25 iterations until all items pass):
+RALPH_AGENT_CMD=./plans/adapters/Codex.sh ./plans/ralph.sh plans/sprints/2026-05-30-add-new-app-store-reviews 25
+
+# Single iteration:
+RALPH_AGENT_CMD=./plans/adapters/Codex.sh ./plans/ralph_once.sh plans/sprints/2026-05-30-add-new-app-store-reviews
+```
