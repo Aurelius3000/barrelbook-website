@@ -60,7 +60,7 @@
         "The test verifies sitemap.xml does not include /bottles/",
         "npm run lint, npm run build, and npm run test:promo pass"
       ],
-      "passes": false,
+      "passes": true,
       "tags": ["tests"]
     }
   ]

@@ -2,7 +2,7 @@ Bottle Link Fallback
 =====================================================
 
 Started: 2026-05-30
-Status: In Progress (2/3 items)
+Status: Complete (3/3 items)
 
 ## Goals
 - Add a privacy-safe web fallback at /bottles/{id}.
@@ -16,7 +16,12 @@ Status: In Progress (2/3 items)
 - [x] BLF-002: Add bottle universal-link component
 
 ### Priority 2
-- [ ] BLF-003: Cover bottle fallback with lightweight tests
+- [x] BLF-003: Cover bottle fallback with lightweight tests
+
+## Verification
+- `npm run lint` passed with existing warnings in unrelated files.
+- `npm run build` passed.
+- `npm run test:promo` passed.
 
 ## Files to Modify
 - src/app/bottles/[id]/page.tsx

@@ -10,8 +10,16 @@ interface BottlePageProps {
   }>;
 }
 
+function decodeBottleId(id: string): string {
+  try {
+    return decodeURIComponent(id);
+  } catch {
+    return id;
+  }
+}
+
 function normalizeBottleId(id: string): string {
-  return id.trim();
+  return decodeBottleId(id).trim();
 }
 
 // T1: only the normalized, encoded route ID is used for app handoff URLs.
