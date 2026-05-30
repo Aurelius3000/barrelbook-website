@@ -45,7 +45,7 @@
         "Existing /scan, /collection, /store-picks, /p/*, and /gift/* components remain present",
         "Both existing AASA route handlers continue to serve the same shared payload"
       ],
-      "passes": false,
+      "passes": true,
       "tags": ["aasa", "universal-links"]
     },
     {
