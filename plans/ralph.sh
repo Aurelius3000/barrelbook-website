@@ -5,7 +5,7 @@
 # is marked passes=true, or until max_iters is reached.
 #
 # Usage:
-#   RALPH_AGENT_CMD=./plans/adapters/claude_code.sh \
+#   RALPH_AGENT_CMD=./plans/adapters/Codex.sh \
 #     ./plans/ralph.sh plans/sprints/YYYY-MM-DD-slug [max_iters]
 #
 set -euo pipefail
@@ -19,7 +19,7 @@ if [[ -z "$SPRINT_DIR" || ! -d "$SPRINT_DIR" ]]; then
 fi
 
 if [[ -z "${RALPH_AGENT_CMD:-}" ]]; then
-  echo "RALPH_AGENT_CMD must be set (e.g. ./plans/adapters/claude_code.sh)" >&2
+  echo "RALPH_AGENT_CMD must be set (e.g. ./plans/adapters/Codex.sh)" >&2
   exit 1
 fi
 

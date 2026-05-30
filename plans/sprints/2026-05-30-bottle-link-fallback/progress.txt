@@ -1,0 +1,29 @@
+Bottle Link Fallback
+=====================================================
+
+Started: 2026-05-30
+Status: In Progress (0/3 items)
+
+## Goals
+- Add a privacy-safe web fallback at /bottles/{id}.
+- Enable iOS universal-link handoff for /bottles/*.
+- Cover the route and AASA behavior with existing lightweight checks.
+
+## Items
+
+### Priority 1
+- [ ] BLF-001: Add private bottle handoff route
+- [ ] BLF-002: Add bottle universal-link component
+
+### Priority 2
+- [ ] BLF-003: Cover bottle fallback with lightweight tests
+
+## Files to Modify
+- src/app/bottles/[id]/page.tsx
+- src/lib/apple-app-site-association.ts
+- scripts/test-promo-foundation.mjs
+- plans/sprints/2026-05-30-bottle-link-fallback/prd.json
+- plans/sprints/2026-05-30-bottle-link-fallback/progress.txt
+
+## Deployment
+- No push, deploy, or Vercel alias changes in this sprint unless explicitly requested later.

@@ -1,0 +1,67 @@
+{
+  "project": {
+    "name": "Bottle Link Fallback",
+    "repoRoot": "."
+  },
+  "definitionOfDone": {
+    "required": [
+      "All items pass",
+      "Project builds",
+      "No bottle data is fetched or displayed",
+      "No production push or deploy"
+    ]
+  },
+  "files_changed": [
+    "src/app/bottles/[id]/page.tsx",
+    "src/lib/apple-app-site-association.ts",
+    "scripts/test-promo-foundation.mjs",
+    "plans/sprints/2026-05-30-bottle-link-fallback/prd.json",
+    "plans/sprints/2026-05-30-bottle-link-fallback/progress.txt"
+  ],
+  "items": [
+    {
+      "id": "BLF-001",
+      "priority": 1,
+      "title": "Add private bottle handoff route",
+      "description": "Create the Next.js app-router route for /bottles/{id}. The page must trim and encode the route id for outbound app links, render app/install handoff copy only, and emit noindex/nofollow plus Smart App Banner metadata. It must not fetch or display bottle details.",
+      "acceptanceCriteria": [
+        "src/app/bottles/[id]/page.tsx exists and follows the existing async params pattern used by the app router routes",
+        "Open CTA href is barrelbook://bottles/{encodeURIComponent(trimmedId)}",
+        "Get BarrelBook CTA uses the shared APP_STORE_URL constant",
+        "generateMetadata emits robots index=false follow=false and apple-itunes-app with APP_STORE_APP_ID plus the encoded app argument",
+        "The rendered page states the bottle opens only for the signed-in account that owns it",
+        "No bottle details, notes, images, prices, values, user IDs, account IDs, or network fetches are added"
+      ],
+      "passes": false,
+      "tags": ["route", "privacy"]
+    },
+    {
+      "id": "BLF-002",
+      "priority": 1,
+      "title": "Add bottle universal-link component",
+      "description": "Update the Apple App Site Association helper so iOS can claim /bottles/* while preserving all existing handoff components.",
+      "acceptanceCriteria": [
+        "src/lib/apple-app-site-association.ts includes a /bottles/* component with a bottle-specific comment",
+        "Existing /scan, /collection, /store-picks, /p/*, and /gift/* components remain present",
+        "Both existing AASA route handlers continue to serve the same shared payload"
+      ],
+      "passes": false,
+      "tags": ["aasa", "universal-links"]
+    },
+    {
+      "id": "BLF-003",
+      "priority": 2,
+      "title": "Cover bottle fallback with lightweight tests",
+      "description": "Extend the existing lightweight website checks to cover the bottle fallback route, encoded deep-link href, AASA /bottles/* component, and sitemap exclusion.",
+      "acceptanceCriteria": [
+        "scripts/test-promo-foundation.mjs checks /bottles/testBottle123 renders",
+        "The test verifies href=\"barrelbook://bottles/testBottle123\" for a sample id",
+        "The test verifies /bottles/* appears in the AASA components",
+        "The test verifies sitemap.xml does not include /bottles/",
+        "npm run lint, npm run build, and npm run test:promo pass"
+      ],
+      "passes": false,
+      "tags": ["tests"]
+    }
+  ]
+}
