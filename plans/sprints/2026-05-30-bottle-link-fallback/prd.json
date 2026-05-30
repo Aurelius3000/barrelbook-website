@@ -32,7 +32,7 @@
         "The rendered page states the bottle opens only for the signed-in account that owns it",
         "No bottle details, notes, images, prices, values, user IDs, account IDs, or network fetches are added"
       ],
-      "passes": false,
+      "passes": true,
       "tags": ["route", "privacy"]
     },
     {

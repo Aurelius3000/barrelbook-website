@@ -2,7 +2,7 @@ Bottle Link Fallback
 =====================================================
 
 Started: 2026-05-30
-Status: In Progress (0/3 items)
+Status: In Progress (1/3 items)
 
 ## Goals
 - Add a privacy-safe web fallback at /bottles/{id}.
@@ -12,7 +12,7 @@ Status: In Progress (0/3 items)
 ## Items
 
 ### Priority 1
-- [ ] BLF-001: Add private bottle handoff route
+- [x] BLF-001: Add private bottle handoff route
 - [ ] BLF-002: Add bottle universal-link component
 
 ### Priority 2
