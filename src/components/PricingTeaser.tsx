@@ -60,7 +60,11 @@ export default function PricingTeaser() {
         </div>
 
         <div className="mt-8 flex flex-col items-center gap-3 text-center">
-          <AppStoreBadgeLink width={180} height={60} />
+          <AppStoreBadgeLink
+            width={180}
+            height={60}
+            analytics={{ location: "pricing_teaser" }}
+          />
           <p className="text-sm text-gray-500">
             Available on iPhone and iPad. Android is on the roadmap.
           </p>

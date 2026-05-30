@@ -49,6 +49,7 @@ export default function SiteHeader({
             width={140}
             height={46}
             imageClassName="h-9 w-auto"
+            analytics={{ location: "header" }}
             priority
           />
         </div>

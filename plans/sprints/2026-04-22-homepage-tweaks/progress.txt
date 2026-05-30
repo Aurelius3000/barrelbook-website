@@ -1,0 +1,36 @@
+BarrelBook Homepage — Tweaks
+=====================================================
+
+Started: 2026-04-22
+Status: Complete (6/6 items)
+
+## Goals
+- Un-wrap non-video screenshots from the PhoneFrame (iPhone-in-iPhone looked odd).
+- Restore the third screenshot in the Scan and Collection sections for richer visual storytelling.
+- Add the new SharedShelves video to the Share story section with condensed copy.
+
+## Items
+
+### Priority 1 — revert screenshot wrapper
+- [x] TWEAK-001: Unwrap screenshots from PhoneFrame
+
+### Priority 2 — screenshots + assets
+- [x] TWEAK-002: Add 3rd screenshot to Scan section (WLW4)
+- [x] TWEAK-003: Add 3rd screenshot to Collection section (Blantons3 in middle)
+- [x] TWEAK-004: Extract poster frame for SharedShelves.mov
+
+### Priority 3 — shared shelves video
+- [x] TWEAK-005: Replace Share section screenshots with Shared Shelves video
+
+### Priority 4 — verify
+- [x] TWEAK-006: Verification + SUMMARY.md
+
+## Files to Modify
+- src/components/LandingPage.tsx (primary)
+- public/video-posters/shared-shelves.jpg (new, via ffmpeg)
+
+## Deployment
+- No env changes.
+- No new runtime deps.
+- `npx tsc --noEmit` clean, `npm run lint` clean (4 pre-existing warnings).
+- `npm run build` cannot run in-session (dev server on :3000 locks `.next/`). Run locally.

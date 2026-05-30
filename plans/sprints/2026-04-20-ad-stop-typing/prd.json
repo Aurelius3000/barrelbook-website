@@ -1,0 +1,44 @@
+{
+  "project": {
+    "name": "Ad 1 — Stop Typing (BarrelBook Instagram)",
+    "repoRoot": ".",
+    "description": "Produce four MP4 deliverables for a 15s Instagram ad about BarrelBook's snap-review-save flow. Uses repo assets only. No live-action shoot required."
+  },
+  "definitionOfDone": {
+    "required": [
+      "All four MP4 deliverables render without errors",
+      "Each master is between 12 and 15 seconds",
+      "9:16 masters are 1080x1920; 4:5 master is 1080x1350",
+      "Captions are readable and inside safe zones (top 22% / bottom 28% kept clear)",
+      "Brief no-go list is clean: no multi-bottle, no social, no ratings, no trading, no export, no unsupported pricing claims",
+      "ffprobe reports a valid audio track on every master except the silent variant (which may have music-only)",
+      "Deliverables saved to /Users/petereilly2021/Projects/barrelbook-website/output/ads/"
+    ]
+  },
+  "files_changed": [
+    "scripts/ad_stop_typing/**",
+    "output/ads/**",
+    "plans/sprints/2026-04-20-ad-stop-typing/**"
+  ],
+  "items": [
+    { "id": "AD1-001", "priority": 1, "title": "Environment check", "description": "Verify ffmpeg present; install edge-tts via pip; download Inter font (SF-Pro-alike); ensure output paths writable.", "acceptanceCriteria": ["ffmpeg -version succeeds", "python3 -c 'import edge_tts' succeeds", "Inter-Bold.ttf exists in scripts/ad_stop_typing/fonts/", "output/ads/ directory exists"], "passes": false, "tags": ["setup"] },
+    { "id": "AD1-002", "priority": 1, "title": "Captions module", "description": "Single source of truth for all 8 caption cues with text, timing, position, style.", "acceptanceCriteria": ["captions.py exports CAPTIONS list of 8 entries", "Each entry has text, t_in, t_out, shot_id, pos", "Safe zone constants defined"], "passes": false, "tags": ["captions"] },
+    { "id": "AD1-003", "priority": 1, "title": "Render Shot 1 (Hook)", "description": "BB-Image2 Small.png Ken Burns + caption 'Stop typing bourbon bottle details.' 2s.", "acceptanceCriteria": ["out/shots/shot01.mp4 exists", "Duration ~= 2.0s ± 0.1", "1080x1920 @ 30fps"], "passes": false, "tags": ["shot"] },
+    { "id": "AD1-004", "priority": 1, "title": "Render Shot 2 (Pain)", "description": "Generate fake Notes screenshot via PIL, slight handheld shake, caption 'Notes. Spreadsheets. Manual entry.' 2s.", "acceptanceCriteria": ["out/shots/shot02.mp4 exists", "Shake motion visible but subtle", "Duration ~= 2.0s"], "passes": false, "tags": ["shot"] },
+    { "id": "AD1-005", "priority": 1, "title": "Render Shot 3 (Open app)", "description": "iphone17pro1.png push-in + caption 'Use BarrelBook instead.' 1s.", "acceptanceCriteria": ["out/shots/shot03.mp4 exists", "Duration ~= 1.0s"], "passes": false, "tags": ["shot"] },
+    { "id": "AD1-006", "priority": 1, "title": "Render Shot 4 (Capture)", "description": "Blantons1 → Blantons2 crossfade + caption 'Snap the bottle.' 2s.", "acceptanceCriteria": ["out/shots/shot04.mp4 exists", "Duration ~= 2.0s", "Crossfade visible"], "passes": false, "tags": ["shot"] },
+    { "id": "AD1-007", "priority": 1, "title": "Render Shot 5 (Review/Edit)", "description": "Blantons3 → Blantons5 with punch-in + caption 'Review. Edit if needed.' 3s.", "acceptanceCriteria": ["out/shots/shot05.mp4 exists", "Duration ~= 3.0s", "Punch-in on review fields visible"], "passes": false, "tags": ["shot"] },
+    { "id": "AD1-008", "priority": 1, "title": "Render Shot 6 (Save)", "description": "Save-button pulse overlay + caption 'Save it.' 1s.", "acceptanceCriteria": ["out/shots/shot06.mp4 exists", "Duration ~= 1.0s", "Pulse glow visible on save-button region"], "passes": false, "tags": ["shot"] },
+    { "id": "AD1-009", "priority": 1, "title": "Render Shot 7 (Result)", "description": "Catalog1 → Catalog2 parallax + caption 'Now it's in your catalog.' 3s.", "acceptanceCriteria": ["out/shots/shot07.mp4 exists", "Duration ~= 3.0s", "Parallax between catalog states"], "passes": false, "tags": ["shot"] },
+    { "id": "AD1-010", "priority": 1, "title": "Render Shot 8 (End card)", "description": "Logo Mark on #0A0A0A, copper CTA 'Download BarrelBook', BarrelBook for iPhone + 'Snap. Review. Save.' 1s.", "acceptanceCriteria": ["out/shots/shot08.mp4 exists", "Duration ~= 1.0s", "Brand colors present: #D2691E and #0A0A0A"], "passes": false, "tags": ["shot"] },
+    { "id": "AD1-011", "priority": 2, "title": "Voiceover", "description": "edge-tts en-US-GuyNeural male VO; script v1 ('Still typing bourbon bottle details?...'). Time-align to total 15s.", "acceptanceCriteria": ["out/audio/voiceover.wav exists", "Duration <= 14s (leaves room at end)"], "passes": false, "tags": ["audio"] },
+    { "id": "AD1-012", "priority": 2, "title": "Music bed", "description": "Fetch royalty-free track OR synthesize ambient pad. Normalize.", "acceptanceCriteria": ["out/audio/music.wav exists", "Duration >= 15s"], "passes": false, "tags": ["audio"] },
+    { "id": "AD1-013", "priority": 2, "title": "Mix audio", "description": "Duck music under VO (sidechain compressor), optional save-tap SFX at 10.5s, export main and silent mixes.", "acceptanceCriteria": ["out/audio/audio_main.wav exists", "out/audio/audio_silent.wav exists"], "passes": false, "tags": ["audio"] },
+    { "id": "AD1-014", "priority": 2, "title": "Master 9:16 main", "description": "Concat shots 1-8 + audio_main → stop_typing_9x16_main.mp4.", "acceptanceCriteria": ["output/ads/stop_typing_9x16_main.mp4 exists", "Duration 12-15s", "1080x1920", "Audio track present"], "passes": false, "tags": ["master"] },
+    { "id": "AD1-015", "priority": 3, "title": "Variant silent", "description": "Same video, music-only mix → stop_typing_9x16_silent.mp4.", "acceptanceCriteria": ["output/ads/stop_typing_9x16_silent.mp4 exists", "Duration 12-15s"], "passes": false, "tags": ["variant"] },
+    { "id": "AD1-016", "priority": 3, "title": "Variant alt hook", "description": "Re-render Shot 1 with caption 'Built for bottles that are annoying to type in.' → stop_typing_9x16_hook_collector.mp4.", "acceptanceCriteria": ["output/ads/stop_typing_9x16_hook_collector.mp4 exists", "Caption text changed"], "passes": false, "tags": ["variant"] },
+    { "id": "AD1-017", "priority": 3, "title": "Variant 4:5 feed", "description": "Re-render at 1080x1350 with tightened safe zones → stop_typing_4x5_main.mp4.", "acceptanceCriteria": ["output/ads/stop_typing_4x5_main.mp4 exists", "1080x1350"], "passes": false, "tags": ["variant"] },
+    { "id": "AD1-018", "priority": 4, "title": "Verification pass", "description": "ffprobe all masters, extract middle-frame thumbs, brief no-go checklist signoff.", "acceptanceCriteria": ["out/thumbs/*.png exist for each master", "ffprobe log clean", "No-go checklist reviewed"], "passes": false, "tags": ["verify"] },
+    { "id": "AD1-019", "priority": 4, "title": "SUMMARY.md", "description": "Sprint summary: files delivered, decisions, recommended next steps.", "acceptanceCriteria": ["plans/sprints/2026-04-20-ad-stop-typing/SUMMARY.md exists"], "passes": false, "tags": ["docs"] }
+  ]
+}

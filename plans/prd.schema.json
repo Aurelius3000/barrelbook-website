@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Ralph Sprint PRD",
+  "type": "object",
+  "required": ["project", "definitionOfDone", "items"],
+  "properties": {
+    "project": {
+      "type": "object",
+      "required": ["name", "repoRoot"],
+      "properties": {
+        "name": { "type": "string" },
+        "repoRoot": { "type": "string" }
+      }
+    },
+    "definitionOfDone": {
+      "type": "object",
+      "required": ["required"],
+      "properties": {
+        "required": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "files_changed": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "priority", "title", "description", "acceptanceCriteria", "passes"],
+        "properties": {
+          "id": { "type": "string" },
+          "priority": { "type": "integer", "minimum": 1 },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "acceptanceCriteria": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "passes": { "type": "boolean" },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  }
+}

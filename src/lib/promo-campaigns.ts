@@ -9,6 +9,7 @@ export interface CreatorCollabBranding {
   eyebrow: string;
   collaborationLabel?: string;
   supportingText: string;
+  theme?: "black-gold" | "bourbon-trail";
   logoSrc?: string;
   logoAlt?: string;
   stepOneTitle?: string;
@@ -16,13 +17,26 @@ export interface CreatorCollabBranding {
   manualFallbackTitle?: string;
 }
 
+export interface PromoCampaignOfferConfig {
+  planName: string;
+  normalPrice: string;
+  offerPrice: string;
+  firstYearCopy: string;
+  appSlug: string;
+  code: string;
+  codeLabel: string;
+  fallbackLabel: string;
+  ctaLabel: string;
+}
+
 export interface PromoCampaignConfig {
   slug: string;
   title: string;
   subtitle: string;
   heroBody: string;
-  template?: "standard" | "creator-collab";
+  template?: "standard" | "creator-collab" | "creator-multi-offer";
   creatorCollab?: CreatorCollabBranding;
+  offers?: PromoCampaignOfferConfig[];
   code: string;
   codeLabel: string;
   installLabel: string;
@@ -62,6 +76,12 @@ export function getPromoAppOpenUrl(
 ): string {
   const targetSlug = getPromoAppTargetSlug(campaign);
   return `barrelbook://promo/${encodeURIComponent(targetSlug)}`;
+}
+
+export function getPromoOfferAppOpenUrl(
+  offer: Pick<PromoCampaignOfferConfig, "appSlug">
+): string {
+  return `barrelbook://promo/${encodeURIComponent(offer.appSlug.toLowerCase())}`;
 }
 
 const promoCampaigns: Record<string, PromoCampaignConfig> = {
@@ -127,6 +147,143 @@ const promoCampaigns: Record<string, PromoCampaignConfig> = {
       title: "Gary's Plus Promo",
       description:
         "Install BarrelBook, sign in, then return to the page and tap Open BarrelBook to continue your offer.",
+    },
+  },
+  blackshirt: {
+    slug: "blackshirt",
+    template: "creator-multi-offer",
+    title: "20% off the first year of BarrelBook",
+    subtitle:
+      "Black Shirt Bourbon Society members get 20% off the first year of BarrelBook Plus Annual or Pro Annual.",
+    heroBody:
+      "Choose the annual plan that fits your collection, then open BarrelBook to claim the creator offer.",
+    creatorCollab: {
+      eyebrow: "Black Shirt Bourbon Society",
+      collaborationLabel: "Creator offer",
+      supportingText:
+        "Join the Black Shirt Bourbon Society for spirited adventures.",
+      logoSrc: "/creator-collabs/blackshirt-bourbon-society-logo.jpeg",
+      logoAlt: "Black Shirt Bourbon Society logo",
+      stepOneTitle: "Get BarrelBook and create an account",
+      stepTwoTitle: "Choose your annual plan",
+      manualFallbackTitle: "Manual fallback",
+    },
+    offers: [
+      {
+        planName: "Plus Annual",
+        normalPrice: "$49/year",
+        offerPrice: "$39.20 first year",
+        firstYearCopy: "20% off the first year of Plus Annual",
+        appSlug: "blackshirt-plus",
+        code: "BLACKSHIRTPLUS20",
+        codeLabel: "Plus Annual App Store Code",
+        fallbackLabel: "Use this if the Plus CTA does not open the offer.",
+        ctaLabel: "Claim Plus Annual",
+      },
+      {
+        planName: "Pro Annual",
+        normalPrice: "$99/year",
+        offerPrice: "$79.20 first year",
+        firstYearCopy: "20% off the first year of Pro Annual",
+        appSlug: "blackshirt-pro",
+        code: "BLACKSHIRTPRO20",
+        codeLabel: "Pro Annual App Store Code",
+        fallbackLabel: "Use this if the Pro CTA does not open the offer.",
+        ctaLabel: "Claim Pro Annual",
+      },
+    ],
+    code: "BLACKSHIRTPLUS20",
+    codeLabel: "App Store Codes",
+    installLabel: "Get the app",
+    installUrl: APP_STORE_URL,
+    primaryCardDescription:
+      "Download BarrelBook from the App Store, then create or sign in to your account. Return here after sign-in and choose Plus Annual or Pro Annual.",
+    openHintTitle: "Then choose an annual plan",
+    openHint:
+      "After install and sign-in, return to this page and choose the annual plan you want to claim in BarrelBook.",
+    fallbackTitle: "Manual fallback",
+    fallbackSummary:
+      "If a claim button does not open the correct offer, open BarrelBook manually and redeem the matching App Store Code.",
+    fallbackSteps: [
+      "Open BarrelBook manually.",
+      "Go to Settings and tap Redeem App Store Code.",
+      "Enter the matching Black Shirt code for Plus Annual or Pro Annual.",
+    ],
+    aliases: ["/blackshirt"],
+    published: true,
+    metadata: {
+      title: "Black Shirt Bourbon Society x BarrelBook",
+      description:
+        "Black Shirt Bourbon Society members get 20% off the first year of BarrelBook Plus Annual or Pro Annual.",
+    },
+  },
+  thebourbontrail: {
+    slug: "thebourbontrail",
+    template: "creator-multi-offer",
+    title: "20% off the first year of BarrelBook",
+    subtitle:
+      "The Bourbon Trail audience gets 20% off the first year of BarrelBook Plus Annual or Pro Annual.",
+    heroBody:
+      "Choose the annual plan that fits your distillery trips, bottle-shop finds, and trail pours.",
+    creatorCollab: {
+      eyebrow: "thebourbontrail",
+      collaborationLabel: "Bourbon Whiskey Content",
+      supportingText:
+        "Kentucky distilleries. USA whiskey. Barrels. Pours.",
+      theme: "bourbon-trail",
+      logoSrc: "/creator-collabs/thebourbontrail-profile.jpg",
+      logoAlt: "The Bourbon Trail logo",
+      stepOneTitle: "Get BarrelBook and create an account",
+      stepTwoTitle: "Choose your annual plan",
+      manualFallbackTitle: "Manual fallback",
+    },
+    offers: [
+      {
+        planName: "Plus Annual",
+        normalPrice: "$49/year",
+        offerPrice: "$39.20 first year",
+        firstYearCopy: "20% off the first year of Plus Annual",
+        appSlug: "thebourbontrail-plus",
+        code: "THEBOURBONTRAILPLUS20",
+        codeLabel: "Plus Annual App Store Code",
+        fallbackLabel: "Use this if the Plus CTA does not open the offer.",
+        ctaLabel: "Claim Plus Annual",
+      },
+      {
+        planName: "Pro Annual",
+        normalPrice: "$99/year",
+        offerPrice: "$79 first year",
+        firstYearCopy: "20% off the first year of Pro Annual",
+        appSlug: "thebourbontrail-pro",
+        code: "THEBOURBONTRAILPRO20",
+        codeLabel: "Pro Annual App Store Code",
+        fallbackLabel: "Use this if the Pro CTA does not open the offer.",
+        ctaLabel: "Claim Pro Annual",
+      },
+    ],
+    code: "THEBOURBONTRAILPLUS20",
+    codeLabel: "App Store Codes",
+    installLabel: "Get the app",
+    installUrl: APP_STORE_URL,
+    primaryCardDescription:
+      "Download BarrelBook from the App Store, then create or sign in to your account. Return here after sign-in and choose Plus Annual or Pro Annual.",
+    openHintTitle: "Then choose an annual plan",
+    openHint:
+      "After install and sign-in, return to this page and choose the annual plan you want to claim in BarrelBook.",
+    fallbackTitle: "Manual fallback",
+    fallbackSummary:
+      "If a claim button does not open the correct offer, open BarrelBook manually and redeem the matching App Store Code.",
+    fallbackSteps: [
+      "Open BarrelBook manually.",
+      "Go to Settings and tap Redeem App Store Code.",
+      "Enter the matching The Bourbon Trail code for Plus Annual or Pro Annual.",
+    ],
+    aliases: ["/thebourbontrail"],
+    published: true,
+    metadata: {
+      title: "The Bourbon Trail x BarrelBook",
+      description:
+        "The Bourbon Trail audience gets 20% off the first year of BarrelBook Plus Annual or Pro Annual.",
     },
   },
 };

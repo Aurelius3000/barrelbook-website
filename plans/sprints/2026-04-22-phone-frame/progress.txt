@@ -1,0 +1,38 @@
+BarrelBook Homepage — Phone Frame
+=====================================================
+
+Started: 2026-04-22
+Status: Complete (6/6 items)
+
+## Goals
+- Frame all product media (videos AND screenshots) inside a recognizable iPhone silhouette so the homepage reads as a polished device-mockup landing page rather than a row of bare rounded rectangles.
+- Unify screenshot widths across story sections so no section visually renders smaller/wider than the others.
+- Ship a reusable PhoneFrame component that any future video or screenshot section can drop into.
+
+## Items
+
+### Priority 1 — foundation
+- [x] FRAME-001: Build reusable PhoneFrame component
+
+### Priority 2 — wire videos
+- [x] FRAME-002: Rewire HeroVideo to use PhoneFrame
+- [x] FRAME-003: Rewire StoryVideo to use PhoneFrame
+
+### Priority 3 — wire screenshots
+- [x] FRAME-004: Normalize screenshot widths across story sections
+- [x] FRAME-005: Wrap story-section screenshots in PhoneFrame
+
+### Priority 4 — verify
+- [x] FRAME-006: Verification — types, lint, SUMMARY.md
+
+## Files to Modify
+- src/components/PhoneFrame.tsx (new)
+- src/components/HeroVideo.tsx
+- src/components/StoryVideo.tsx
+- src/components/LandingPage.tsx
+
+## Deployment
+- No env changes.
+- No new runtime deps.
+- `npx tsc --noEmit` clean, `npm run lint` clean (4 pre-existing warnings in unrelated files).
+- `npm run build` cannot run in-session (dev server on :3000 locks `.next/`). Run locally.

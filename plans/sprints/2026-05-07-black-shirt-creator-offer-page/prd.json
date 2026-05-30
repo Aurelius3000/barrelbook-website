@@ -1,0 +1,94 @@
+{
+  "project": {
+    "name": "Black Shirt Creator Offer Page",
+    "repoRoot": "/Users/petereilly2021/Projects/barrelbook-website",
+    "notes": "Create a future website sprint for a Black Shirt Bourbon Society creator-offer page. This is planning only; App Store Connect setup, Firestore campaign docs, and BarrelBook app changes are out of scope for this saved record."
+  },
+  "definitionOfDone": {
+    "required": [
+      "/p/blackshirt renders a mobile-friendly creator landing page with Black Shirt Bourbon Society styling.",
+      "/blackshirt redirects to /p/blackshirt.",
+      "The page supports Plus Annual and Pro Annual offer CTAs and clearly explains the 20% first-year discount.",
+      "Raw App Store custom codes are available only in a manual fallback or disclosure section.",
+      "Promo pages remain noindex,nofollow, are excluded from sitemap, and robots disallow promo paths and aliases.",
+      "Tests cover the new promo page, redirect, metadata, and code visibility behavior.",
+      "Setup notes document required App Store Connect codes and Firestore campaign documents."
+    ]
+  },
+  "items": [
+    {
+      "id": "BSB-001",
+      "priority": 1,
+      "title": "Add Black Shirt creator campaign configuration",
+      "description": "Add the Black Shirt Bourbon Society campaign to the existing promo campaign architecture with two annual-plan offer options.",
+      "acceptanceCriteria": [
+        "Campaign route is /p/blackshirt",
+        "Campaign alias is /blackshirt",
+        "Plus Annual offer uses BLACKSHIRTPLUS20 and 500 redemptions in setup notes",
+        "Pro Annual offer uses BLACKSHIRTPRO20 and 500 redemptions in setup notes",
+        "Offer copy explains 20% off the first year for either annual plan"
+      ],
+      "passes": false,
+      "tags": ["website", "promo", "creator"]
+    },
+    {
+      "id": "BSB-002",
+      "priority": 1,
+      "title": "Build bespoke Black Shirt offer page",
+      "description": "Create a Black Shirt Bourbon Society themed landing page using dark black, antique gold, warm barrel tones, ornamental borders, and co-branded BarrelBook treatment.",
+      "acceptanceCriteria": [
+        "Design reflects Black Shirt Bourbon Society public styling",
+        "Page is responsive on mobile and desktop",
+        "Page presents Plus Annual and Pro Annual offer cards",
+        "Primary CTAs use existing barrelbook://promo/{slug} handoff",
+        "No direct Apple redeem URLs are exposed as public redirects"
+      ],
+      "passes": false,
+      "tags": ["design", "website", "promo"]
+    },
+    {
+      "id": "BSB-003",
+      "priority": 1,
+      "title": "Hide raw codes behind manual fallback",
+      "description": "Keep the offer simple while reducing casual code discovery by exposing raw Apple custom codes only in a manual fallback or disclosure area.",
+      "acceptanceCriteria": [
+        "Raw codes are not the primary visual CTA",
+        "Manual fallback copy explains when to use the codes",
+        "Copy code behavior works for both Plus and Pro codes",
+        "The page remains usable if app deep-link handoff fails"
+      ],
+      "passes": false,
+      "tags": ["ux", "promo", "code-visibility"]
+    },
+    {
+      "id": "BSB-004",
+      "priority": 2,
+      "title": "Harden promo discoverability controls",
+      "description": "Keep promo pages out of normal search discovery and avoid code leakage through redirects.",
+      "acceptanceCriteria": [
+        "Promo pages continue to emit noindex,nofollow metadata",
+        "/p/blackshirt is not added to sitemap",
+        "robots disallows /p/ and promo aliases including /blackshirt",
+        "/blackshirt redirects only to /p/blackshirt",
+        "No direct Apple redeem redirect is added for this campaign"
+      ],
+      "passes": false,
+      "tags": ["seo", "privacy", "promo"]
+    },
+    {
+      "id": "BSB-005",
+      "priority": 2,
+      "title": "Add tests and setup documentation",
+      "description": "Update promo checks and document the manual App Store Connect and Firestore setup required to launch the campaign.",
+      "acceptanceCriteria": [
+        "Promo tests cover /p/blackshirt",
+        "Tests cover /blackshirt redirect behavior",
+        "Tests verify hidden/manual code visibility expectations",
+        "Setup notes name required App Store custom codes and expected product IDs",
+        "Setup notes specify Firestore campaign docs remain manual operational setup"
+      ],
+      "passes": false,
+      "tags": ["tests", "docs", "setup"]
+    }
+  ]
+}

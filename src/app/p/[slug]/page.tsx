@@ -45,6 +45,14 @@ export async function generateMetadata({
   const title = campaign.metadata?.title ?? campaign.title;
   const description = campaign.metadata?.description ?? campaign.heroBody;
   const canonicalPath = `/p/${campaign.slug}`;
+  const smartAppBanner =
+    campaign.template === "creator-multi-offer"
+      ? {}
+      : {
+          other: {
+            "apple-itunes-app": `app-id=${APP_STORE_APP_ID}, app-argument=${getPromoAppOpenUrl(campaign)}`,
+          },
+        };
 
   return {
     title,
@@ -52,9 +60,7 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalPath,
     },
-    other: {
-      "apple-itunes-app": `app-id=${APP_STORE_APP_ID}, app-argument=${getPromoAppOpenUrl(campaign)}`,
-    },
+    ...smartAppBanner,
     robots: {
       index: false,
       follow: false,
