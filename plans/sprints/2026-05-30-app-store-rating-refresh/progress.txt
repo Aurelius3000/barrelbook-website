@@ -1,0 +1,42 @@
+App Store Rating Refresh
+=====================================================
+
+Started: 2026-05-30
+Status: In Progress (1/2 items)
+
+## Goals
+- Remove stale `24 five-star ratings` homepage copy.
+- Show durable, current App Store social proof.
+- Keep JSON-LD exact for SEO consumers.
+
+## Items
+
+### Priority 1
+- [x] RATE-001: Refresh App Store rating copy
+- [ ] RATE-002: Verify and publish
+
+## Verification Notes
+- `npm run build` passed.
+- Local build output includes `4.8 stars from 100+ App Store ratings`.
+- JSON-LD includes exact `ratingValue=4.8` and `reviewCount=116`.
+
+## Files to Modify
+- src/lib/app-store.ts
+- src/components/AppStoreRatingLink.tsx
+- plans/sprints/2026-05-30-app-store-rating-refresh/prd.json
+- plans/sprints/2026-05-30-app-store-rating-refresh/progress.txt
+- plans/sprints/2026-05-30-app-store-rating-refresh/prompt.md
+
+## Deployment
+- Publish through GitHub PR merge to main.
+- Let Vercel deploy production from the merge commit.
+
+## Ralph Launch Commands
+
+```bash
+# Iterative (runs up to 25 iterations until all items pass):
+RALPH_AGENT_CMD=./plans/adapters/Codex.sh ./plans/ralph.sh plans/sprints/2026-05-30-app-store-rating-refresh 25
+
+# Single iteration:
+RALPH_AGENT_CMD=./plans/adapters/Codex.sh ./plans/ralph_once.sh plans/sprints/2026-05-30-app-store-rating-refresh
+```
