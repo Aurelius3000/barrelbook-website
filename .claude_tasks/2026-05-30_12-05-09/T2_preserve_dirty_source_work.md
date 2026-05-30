@@ -13,5 +13,10 @@ Preserve unpublished paid-conversion and creator-promo source work on a dedicate
 - Preserve source work in Git history before moving generated artifacts out of the repo.
 - Archive bulky generated artifacts outside the repo rather than committing them.
 
+## Result
+- Created branch `codex/preserve-paid-conversion-instrumentation-20260530`.
+- Committed source/product work as `43d920b241bda012ca78a79786254fbe8d98fd63`.
+- Did not push or deploy.
+
 ## Status
-Pending execution.
+Completed.

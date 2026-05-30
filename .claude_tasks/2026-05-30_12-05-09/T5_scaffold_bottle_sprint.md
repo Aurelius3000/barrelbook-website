@@ -13,5 +13,11 @@ Prepare the Ralph sprint scaffold in the clean bottle-link worktree before any b
 - Use Codex adapter naming to match `AGENTS.md`.
 - Sprint scaffold only; no bottle route implementation in this cleanup task.
 
+## Result
+- Added Ralph infrastructure in the bottle-link worktree.
+- Added executable `plans/adapters/Codex.sh`.
+- Created sprint scaffold under `plans/sprints/2026-05-30-bottle-link-fallback/`.
+- Committed scaffold as `3d4e2ce`.
+
 ## Status
-Pending execution.
+Completed.

@@ -12,5 +12,10 @@ Create a clean worktree from verified `origin/main` for the bottle-link fallback
 - Confirm worktree branch is `codex/bottle-link-fallback`.
 - Confirm initial status is clean before sprint scaffold files are added.
 
+## Result
+- Created worktree `/Users/petereilly2021/Projects/barrelbook-website-bottle-link-fallback`.
+- Created branch `codex/bottle-link-fallback` from `origin/main`.
+- Verified initial worktree base was `ba37f7a754ab70d67e1d3460eb18bd85bd188420`.
+
 ## Status
-Pending execution.
+Completed.
