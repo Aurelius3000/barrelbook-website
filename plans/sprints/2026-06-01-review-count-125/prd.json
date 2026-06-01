@@ -1,0 +1,56 @@
+{
+  "project": {
+    "name": "Review Count 125 Refresh",
+    "repoRoot": "."
+  },
+  "definitionOfDone": {
+    "required": [
+      "All items pass",
+      "Project builds",
+      "No stale 100+ App Store rating/review count remains"
+    ]
+  },
+  "files_changed": [
+    "src/lib/app-store.ts",
+    "src/components/AppStoreRatingLink.tsx",
+    ".claude_tasks/2026-06-01_10-09-03/T1_isolate_worktree_and_scaffold_sprint.md",
+    ".claude_tasks/2026-06-01_10-09-03/T2_locate_review_messaging.md",
+    ".claude_tasks/2026-06-01_10-09-03/T3_update_review_count_copy.md",
+    ".claude_tasks/2026-06-01_10-09-03/T4_verify_build_and_copy.md",
+    ".claude_tasks/2026-06-01_10-09-03/T5_commit_and_summarize.md",
+    "plans/sprints/2026-06-01-review-count-125/prd.json",
+    "plans/sprints/2026-06-01-review-count-125/progress.txt",
+    "plans/sprints/2026-06-01-review-count-125/prompt.md"
+  ],
+  "items": [
+    {
+      "id": "REV-001",
+      "priority": 1,
+      "title": "Update App Store review count messaging",
+      "description": "Update centralized App Store rating/review count data so public messaging uses 125+ while exact machine-readable review count reflects the user-provided current count of 126.",
+      "acceptanceCriteria": [
+        "Public rating link copy displays 125+ App Store ratings",
+        "Accessible rating label uses 125+ for the rounded public count",
+        "Exact structured-data review count is 126 if an exact review-count constant is present",
+        "App Store URL, rating value, and layout are unchanged"
+      ],
+      "passes": false,
+      "tags": ["copy", "homepage", "seo"]
+    },
+    {
+      "id": "REV-002",
+      "priority": 1,
+      "title": "Verify build and stale copy removal",
+      "description": "Run the website verification command and confirm the repository/build output contains the refreshed count without stale 100+ App Store count messaging.",
+      "acceptanceCriteria": [
+        "npm run build completes successfully",
+        "Repository search confirms 125+ App Store rating messaging is present",
+        "Repository search confirms stale 100+ App Store rating messaging is absent",
+        "Task summary records files changed and verification results"
+      ],
+      "passes": false,
+      "tags": ["verification", "summary"]
+    }
+  ]
+}
+
