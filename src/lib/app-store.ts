@@ -4,8 +4,9 @@ export const APP_STORE_URL =
   `https://apps.apple.com/us/app/barrelbook-whiskey-catalog/id${APP_STORE_APP_ID}`;
 
 export const APP_STORE_RATING_VALUE = "4.8";
-export const APP_STORE_RATING_COUNT = "116";
-export const APP_STORE_RATING_DISPLAY_COUNT = "100+";
+// REV-001: keep structured data exact while public copy uses a durable rounded count.
+export const APP_STORE_RATING_COUNT = "126";
+export const APP_STORE_RATING_DISPLAY_COUNT = "125+";
 
 export const TESTFLIGHT_URL =
   process.env.BARRELBOOK_TESTFLIGHT_URL?.trim() || "https://testflight.apple.com/";
