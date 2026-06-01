@@ -34,7 +34,7 @@
         "Exact structured-data review count is 126 if an exact review-count constant is present",
         "App Store URL, rating value, and layout are unchanged"
       ],
-      "passes": false,
+      "passes": true,
       "tags": ["copy", "homepage", "seo"]
     },
     {
@@ -53,4 +53,3 @@
     }
   ]
 }
-

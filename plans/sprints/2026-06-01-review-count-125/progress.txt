@@ -2,7 +2,7 @@ Review Count 125 Refresh
 =====================================================
 
 Started: 2026-06-01
-Status: In Progress (0/2 items)
+Status: In Progress (1/2 items)
 
 ## Goals
 - Update the website's rounded App Store social-proof count from `100+` to `125+`.
@@ -12,7 +12,7 @@ Status: In Progress (0/2 items)
 ## Items
 
 ### Priority 1
-- [ ] REV-001: Update App Store review count messaging
+- [x] REV-001: Update App Store review count messaging
 - [ ] REV-002: Verify build and stale copy removal
 
 ## Files to Modify
@@ -34,4 +34,3 @@ RALPH_AGENT_CMD=./plans/adapters/Codex.sh ./plans/ralph.sh plans/sprints/2026-06
 # Single iteration:
 RALPH_AGENT_CMD=./plans/adapters/Codex.sh ./plans/ralph_once.sh plans/sprints/2026-06-01-review-count-125
 ```
-

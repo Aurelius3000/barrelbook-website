@@ -12,5 +12,14 @@ Update the public website messaging from `100+` App Store ratings/reviews to `12
 
 ## Code Snippets
 
-To be added after implementation.
+```ts
+// REV-001: keep structured data exact while public copy uses a durable rounded count.
+export const APP_STORE_RATING_COUNT = "126";
+export const APP_STORE_RATING_DISPLAY_COUNT = "125+";
+```
 
+## Outcome
+
+- Updated the exact structured-data review count to `126`.
+- Updated the rounded public count to `125+`.
+- Left the App Store URL, rating value, component layout, and rating-link markup unchanged.
