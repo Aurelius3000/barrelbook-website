@@ -15,6 +15,12 @@ Status: In Progress (1/2 items)
 - [x] REV-001: Update App Store review count messaging
 - [ ] REV-002: Verify build and stale copy removal
 
+## Verification Notes
+- `npm ci` was required in the fresh worktree before building.
+- `npm run build` passed.
+- Rendered homepage output contains `125+` public rating copy and JSON-LD `reviewCount` of `126`.
+- Rendered homepage output no longer contains stale `100+ App Store ratings` copy.
+
 ## Files to Modify
 - src/lib/app-store.ts
 - src/components/AppStoreRatingLink.tsx
