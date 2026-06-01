@@ -12,12 +12,12 @@
   },
   "files_changed": [
     "src/lib/app-store.ts",
-    "src/components/AppStoreRatingLink.tsx",
     ".claude_tasks/2026-06-01_10-09-03/T1_isolate_worktree_and_scaffold_sprint.md",
     ".claude_tasks/2026-06-01_10-09-03/T2_locate_review_messaging.md",
     ".claude_tasks/2026-06-01_10-09-03/T3_update_review_count_copy.md",
     ".claude_tasks/2026-06-01_10-09-03/T4_verify_build_and_copy.md",
     ".claude_tasks/2026-06-01_10-09-03/T5_commit_and_summarize.md",
+    ".claude_tasks/2026-06-01_10-09-03/SUMMARY.md",
     "plans/sprints/2026-06-01-review-count-125/prd.json",
     "plans/sprints/2026-06-01-review-count-125/progress.txt",
     "plans/sprints/2026-06-01-review-count-125/prompt.md"
@@ -48,7 +48,7 @@
         "Repository search confirms stale 100+ App Store rating messaging is absent",
         "Task summary records files changed and verification results"
       ],
-      "passes": false,
+      "passes": true,
       "tags": ["verification", "summary"]
     }
   ]

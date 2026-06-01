@@ -16,3 +16,14 @@ git status --short
 git diff --stat
 ```
 
+## Final Diff Review
+
+- Source change is limited to `src/lib/app-store.ts`.
+- `AppStoreRatingLink` and homepage JSON-LD consume the updated constants without direct edits.
+- Ralph/task bookkeeping files document the plan, implementation, and verification.
+
+## Outcome
+
+- Created `SUMMARY.md`.
+- Marked `REV-002` passing and sprint status complete.
+- Prepared the final commit for the review-count refresh.

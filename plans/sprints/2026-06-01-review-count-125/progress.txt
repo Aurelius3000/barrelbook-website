@@ -2,7 +2,7 @@ Review Count 125 Refresh
 =====================================================
 
 Started: 2026-06-01
-Status: In Progress (1/2 items)
+Status: Complete (2/2 items)
 
 ## Goals
 - Update the website's rounded App Store social-proof count from `100+` to `125+`.
@@ -13,17 +13,17 @@ Status: In Progress (1/2 items)
 
 ### Priority 1
 - [x] REV-001: Update App Store review count messaging
-- [ ] REV-002: Verify build and stale copy removal
+- [x] REV-002: Verify build and stale copy removal
 
 ## Verification Notes
 - `npm ci` was required in the fresh worktree before building.
 - `npm run build` passed.
 - Rendered homepage output contains `125+` public rating copy and JSON-LD `reviewCount` of `126`.
 - Rendered homepage output no longer contains stale `100+ App Store ratings` copy.
+- Final diff review confirmed the only source change is `src/lib/app-store.ts`.
 
 ## Files to Modify
 - src/lib/app-store.ts
-- src/components/AppStoreRatingLink.tsx
 - .claude_tasks/2026-06-01_10-09-03/
 - plans/sprints/2026-06-01-review-count-125/
 
