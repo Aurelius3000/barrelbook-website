@@ -76,7 +76,7 @@
         "A local HTTP check confirms /openai-approval/barrelbook-chatgpt-mcp-demo.mp4 is served as video/mp4",
         "Sitemap and robots checks confirm the intended discovery behavior"
       ],
-      "passes": false,
+      "passes": true,
       "tags": [
         "verification"
       ]
