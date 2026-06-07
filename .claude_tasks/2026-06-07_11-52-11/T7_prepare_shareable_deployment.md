@@ -11,5 +11,20 @@ Push the branch so Vercel can produce a preview, or use the production URL if th
 
 ## Code Snippets
 
-Pending deployment.
+Branch pushed:
 
+```text
+codex/openai-mcp-video -> origin/codex/openai-mcp-video
+```
+
+Hosted deployment link:
+
+```text
+https://barrelbook-website-openai-mcp-video-4nubsyb5d.vercel.app/openai-approval/barrelbook-chatgpt-mcp-demo.mp4
+```
+
+Production path after merge/deploy:
+
+```text
+https://www.barrelbook.app/openai-approval/barrelbook-chatgpt-mcp-demo.mp4
+```

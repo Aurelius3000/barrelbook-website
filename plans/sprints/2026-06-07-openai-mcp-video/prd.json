@@ -91,7 +91,7 @@
         "Branch codex/openai-mcp-video is pushed to origin",
         "Final response includes the direct path to share after deployment"
       ],
-      "passes": false,
+      "passes": true,
       "tags": [
         "git",
         "deployment"
