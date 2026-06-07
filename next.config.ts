@@ -1,7 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async headers() {
+    return [
+      {
+        source: "/openai-approval/:path*",
+        headers: [
+          {
+            // Plan Task 4: direct-link approval assets should not be indexed.
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow, noarchive",
+          },
+        ],
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

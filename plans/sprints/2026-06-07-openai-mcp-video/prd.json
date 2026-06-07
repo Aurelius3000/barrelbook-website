@@ -59,7 +59,7 @@
         "next.config.ts applies X-Robots-Tag noindex, nofollow, noarchive to /openai-approval/:path*",
         "sitemap.ts remains free of approval video URLs"
       ],
-      "passes": false,
+      "passes": true,
       "tags": [
         "seo",
         "privacy"

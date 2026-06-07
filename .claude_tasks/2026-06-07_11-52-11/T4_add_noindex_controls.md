@@ -12,5 +12,14 @@ Keep the approval video out of normal discovery by adding robots and response he
 
 ## Code Snippets
 
-Pending implementation.
+Added a scoped static-asset header in `next.config.ts`:
 
+```ts
+source: "/openai-approval/:path*"
+```
+
+Added a generated robots exclusion in `src/app/robots.ts`:
+
+```ts
+'/openai-approval/'
+```
