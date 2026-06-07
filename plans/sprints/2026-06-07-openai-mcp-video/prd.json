@@ -43,7 +43,7 @@
         "No navigation, homepage, footer, sitemap, or public page links to the MP4",
         "The expected public path is /openai-approval/barrelbook-chatgpt-mcp-demo.mp4"
       ],
-      "passes": false,
+      "passes": true,
       "tags": [
         "asset",
         "approval"

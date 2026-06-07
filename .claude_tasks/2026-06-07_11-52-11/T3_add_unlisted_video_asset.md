@@ -11,5 +11,14 @@ Copy the local CapCut MP4 into the website's static `public/` directory under an
 
 ## Code Snippets
 
-Pending implementation.
+Copied asset:
 
+```text
+public/openai-approval/barrelbook-chatgpt-mcp-demo.mp4
+```
+
+Source and copied asset SHA-256:
+
+```text
+42f89de99da6271c21cd224a46b675eead36bc433a60c004075033f8edd1f882
+```

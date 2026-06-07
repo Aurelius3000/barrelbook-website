@@ -2,7 +2,7 @@ OpenAI MCP Video Link
 =====================================================
 
 Started: 2026-06-07
-Status: In Progress (1/5 items)
+Status: In Progress (2/5 items)
 
 ## Goals
 - Make the ChatGPT MCP demo video available through a direct BarrelBook website link.
@@ -13,7 +13,7 @@ Status: In Progress (1/5 items)
 
 ### Priority 1
 - [x] OMV-001: Scaffold implementation records
-- [ ] OMV-002: Add unlisted approval video asset
+- [x] OMV-002: Add unlisted approval video asset
 - [ ] OMV-003: Add no-index controls
 
 ### Priority 2
