@@ -1,0 +1,101 @@
+{
+  "project": {
+    "name": "OpenAI MCP Video Link",
+    "repoRoot": "."
+  },
+  "definitionOfDone": {
+    "required": [
+      "All items pass",
+      "Project builds",
+      "Video link is direct and unlisted",
+      "No regressions"
+    ]
+  },
+  "files_changed": [
+    "public/openai-approval/barrelbook-chatgpt-mcp-demo.mp4",
+    "src/app/robots.ts",
+    "next.config.ts"
+  ],
+  "items": [
+    {
+      "id": "OMV-001",
+      "priority": 1,
+      "title": "Scaffold implementation records",
+      "description": "Create task-log and Ralph sprint records for the approved OpenAI MCP video work before implementation begins.",
+      "acceptanceCriteria": [
+        ".claude_tasks/2026-06-07_11-52-11/ exists with task markdown files",
+        "plans/sprints/2026-06-07-openai-mcp-video/ contains prd.json, progress.txt, and prompt.md",
+        "Sprint launch commands are documented in prompt.md"
+      ],
+      "passes": true,
+      "tags": [
+        "process",
+        "ralph"
+      ]
+    },
+    {
+      "id": "OMV-002",
+      "priority": 1,
+      "title": "Add unlisted approval video asset",
+      "description": "Copy the local CapCut MP4 into the website public directory under an approval-only path without creating a public page.",
+      "acceptanceCriteria": [
+        "The MP4 exists at public/openai-approval/barrelbook-chatgpt-mcp-demo.mp4",
+        "No navigation, homepage, footer, sitemap, or public page links to the MP4",
+        "The expected public path is /openai-approval/barrelbook-chatgpt-mcp-demo.mp4"
+      ],
+      "passes": false,
+      "tags": [
+        "asset",
+        "approval"
+      ]
+    },
+    {
+      "id": "OMV-003",
+      "priority": 1,
+      "title": "Add no-index controls",
+      "description": "Add robots and response header controls for the approval-only asset path.",
+      "acceptanceCriteria": [
+        "src/app/robots.ts disallows /openai-approval/",
+        "next.config.ts applies X-Robots-Tag noindex, nofollow, noarchive to /openai-approval/:path*",
+        "sitemap.ts remains free of approval video URLs"
+      ],
+      "passes": false,
+      "tags": [
+        "seo",
+        "privacy"
+      ]
+    },
+    {
+      "id": "OMV-004",
+      "priority": 2,
+      "title": "Verify direct link and build",
+      "description": "Run project checks and verify the direct file path is available locally without surfacing in public discovery routes.",
+      "acceptanceCriteria": [
+        "npm run lint passes",
+        "npm run build passes",
+        "A local HTTP check confirms /openai-approval/barrelbook-chatgpt-mcp-demo.mp4 is served as video/mp4",
+        "Sitemap and robots checks confirm the intended discovery behavior"
+      ],
+      "passes": false,
+      "tags": [
+        "verification"
+      ]
+    },
+    {
+      "id": "OMV-005",
+      "priority": 2,
+      "title": "Prepare shareable deployment",
+      "description": "Commit scoped changes and push the branch so a Vercel preview or production deployment can expose the approval link.",
+      "acceptanceCriteria": [
+        "Only scoped files are staged and committed",
+        "Branch codex/openai-mcp-video is pushed to origin",
+        "Final response includes the direct path to share after deployment"
+      ],
+      "passes": false,
+      "tags": [
+        "git",
+        "deployment"
+      ]
+    }
+  ]
+}

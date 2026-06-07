@@ -1,0 +1,32 @@
+OpenAI MCP Video Link
+=====================================================
+
+Started: 2026-06-07
+Status: In Progress (1/5 items)
+
+## Goals
+- Make the ChatGPT MCP demo video available through a direct BarrelBook website link.
+- Keep the video out of public pages, public navigation, and sitemap discovery.
+- Add no-index controls for the approval-only path.
+
+## Items
+
+### Priority 1
+- [x] OMV-001: Scaffold implementation records
+- [ ] OMV-002: Add unlisted approval video asset
+- [ ] OMV-003: Add no-index controls
+
+### Priority 2
+- [ ] OMV-004: Verify direct link and build
+- [ ] OMV-005: Prepare shareable deployment
+
+## Files to Modify
+- public/openai-approval/barrelbook-chatgpt-mcp-demo.mp4
+- src/app/robots.ts
+- next.config.ts
+- .claude_tasks/2026-06-07_11-52-11/
+- plans/sprints/2026-06-07-openai-mcp-video/
+
+## Deployment
+- Push `codex/openai-mcp-video` for a Vercel preview.
+- Production direct URL after merge/deploy: `https://www.barrelbook.app/openai-approval/barrelbook-chatgpt-mcp-demo.mp4`.
