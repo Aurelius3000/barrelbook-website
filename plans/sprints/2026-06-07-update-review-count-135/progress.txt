@@ -1,0 +1,31 @@
+Update Review Count To 135+
+=====================================================
+
+Started: 2026-06-07
+Status: Complete (5/5 items)
+
+## Goals
+- Update BarrelBook website review-count messaging from 125+ to 135+.
+- Keep structured metadata exact and public copy rounded.
+- Preserve unrelated local work by using a clean origin/main worktree.
+
+## Items
+
+### Priority 1
+- [x] RC135-001: Base update on production main
+- [x] RC135-002: Scaffold task tracking
+- [x] RC135-003: Update App Store review count constants
+
+### Priority 2
+- [x] RC135-004: Verify build and rendered count usage
+
+### Priority 3
+- [x] RC135-005: Commit scoped update
+
+## Files to Modify
+- src/lib/app-store.ts
+- .claude_tasks/2026-06-07_08-07-06/
+- plans/sprints/2026-06-07-update-review-count-135/
+
+## Deployment
+- Website deploy should follow the normal Vercel/GitHub flow after review or merge.
