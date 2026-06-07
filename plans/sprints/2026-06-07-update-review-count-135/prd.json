@@ -1,0 +1,101 @@
+{
+  "project": {
+    "name": "Update Review Count To 135+",
+    "repoRoot": "."
+  },
+  "definitionOfDone": {
+    "required": [
+      "All items pass",
+      "Project builds",
+      "No regressions"
+    ]
+  },
+  "files_changed": [
+    "src/lib/app-store.ts",
+    ".claude_tasks/2026-06-07_08-07-06/",
+    "plans/sprints/2026-06-07-update-review-count-135/"
+  ],
+  "items": [
+    {
+      "id": "RC135-001",
+      "priority": 1,
+      "title": "Base update on production main",
+      "description": "Perform the update in a clean branch/worktree based on origin/main so the current production 125+ implementation is preserved and updated.",
+      "acceptanceCriteria": [
+        "Worktree is on branch codex/update-review-count-135",
+        "Branch is based on origin/main at or after commit 58133e6",
+        "Original dirty checkout is not modified"
+      ],
+      "passes": true,
+      "tags": [
+        "git",
+        "setup"
+      ]
+    },
+    {
+      "id": "RC135-002",
+      "priority": 1,
+      "title": "Scaffold task tracking",
+      "description": "Create the required .claude_tasks task log and Ralph sprint files before implementation begins.",
+      "acceptanceCriteria": [
+        ".claude_tasks/2026-06-07_08-07-06/ exists with one markdown file per task",
+        "plans/sprints/2026-06-07-update-review-count-135/prd.json exists and follows plans/prd.schema.json",
+        "plans/sprints/2026-06-07-update-review-count-135/progress.txt exists",
+        "plans/sprints/2026-06-07-update-review-count-135/prompt.md exists"
+      ],
+      "passes": true,
+      "tags": [
+        "tracking",
+        "ralph"
+      ]
+    },
+    {
+      "id": "RC135-003",
+      "priority": 1,
+      "title": "Update App Store review count constants",
+      "description": "Update the centralized App Store rating constants so public copy displays 135+ while structured data keeps an exact numeric review count.",
+      "acceptanceCriteria": [
+        "APP_STORE_RATING_COUNT is 135",
+        "APP_STORE_RATING_DISPLAY_COUNT is 135+",
+        "APP_STORE_RATING_VALUE remains 4.8 unless separately verified as changed",
+        "No unrelated marketing copy is changed"
+      ],
+      "passes": true,
+      "tags": [
+        "copy",
+        "seo"
+      ]
+    },
+    {
+      "id": "RC135-004",
+      "priority": 2,
+      "title": "Verify build and rendered count usage",
+      "description": "Run the website build and inspect source/generated output to confirm visible copy and JSON-LD use the expected values.",
+      "acceptanceCriteria": [
+        "npm run build passes",
+        "Rendered or generated output contains 135+ for public-facing rating copy",
+        "Structured data reviewCount uses 135",
+        "No stale 125+ App Store rating copy remains in rendered homepage output"
+      ],
+      "passes": true,
+      "tags": [
+        "verification"
+      ]
+    },
+    {
+      "id": "RC135-005",
+      "priority": 3,
+      "title": "Commit scoped update",
+      "description": "Stage and commit only the review-count update plus required task/sprint tracking artifacts.",
+      "acceptanceCriteria": [
+        "git diff is limited to src/lib/app-store.ts and required task/sprint files",
+        "Changes are committed on codex/update-review-count-135",
+        "Commit message describes the 135+ review-count update"
+      ],
+      "passes": true,
+      "tags": [
+        "git"
+      ]
+    }
+  ]
+}
