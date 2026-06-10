@@ -1,0 +1,119 @@
+{
+  "project": {
+    "name": "Add June 2026 App Store Reviews",
+    "repoRoot": "."
+  },
+  "definitionOfDone": {
+    "required": [
+      "All items pass",
+      "Project builds",
+      "No regressions"
+    ]
+  },
+  "files_changed": [
+    "src/components/LandingPage.tsx",
+    "src/lib/app-store.ts",
+    ".claude_tasks/2026-06-09_20-12-21/",
+    "plans/sprints/2026-06-09-add-june-2026-reviews/"
+  ],
+  "items": [
+    {
+      "id": "JREV-001",
+      "priority": 1,
+      "title": "Base update on origin main",
+      "description": "Perform the review update in a clean branch/worktree based on origin/main so unrelated local state is preserved.",
+      "acceptanceCriteria": [
+        "Worktree is on branch codex/add-june-2026-app-store-reviews",
+        "Branch is based on origin/main at or after commit d6a7047",
+        "Original dirty checkout is not modified"
+      ],
+      "passes": true,
+      "tags": [
+        "git",
+        "setup"
+      ]
+    },
+    {
+      "id": "JREV-002",
+      "priority": 1,
+      "title": "Scaffold task tracking",
+      "description": "Create the required .claude_tasks task log and Ralph sprint files before implementation begins.",
+      "acceptanceCriteria": [
+        ".claude_tasks/2026-06-09_20-12-21/ exists with one markdown file per task",
+        "plans/sprints/2026-06-09-add-june-2026-reviews/prd.json exists and follows plans/prd.schema.json",
+        "plans/sprints/2026-06-09-add-june-2026-reviews/progress.txt exists",
+        "plans/sprints/2026-06-09-add-june-2026-reviews/prompt.md exists"
+      ],
+      "passes": true,
+      "tags": [
+        "tracking",
+        "ralph"
+      ]
+    },
+    {
+      "id": "JREV-003",
+      "priority": 1,
+      "title": "Add June App Store reviews to homepage",
+      "description": "Add the supplied June 2026 App Store reviews to the homepage review grid in newest-first order.",
+      "acceptanceCriteria": [
+        "JackD_942 review appears first in the homepage review grid",
+        "Djbindust review appears second in the homepage review grid",
+        "The long JackD_942 review is excerpted for homepage readability",
+        "Review footer handles missing version without rendering an undefined value",
+        "Existing reviews remain present"
+      ],
+      "passes": true,
+      "tags": [
+        "copy",
+        "reviews"
+      ]
+    },
+    {
+      "id": "JREV-004",
+      "priority": 1,
+      "title": "Update exact structured review count",
+      "description": "Increment exact App Store review count metadata for the two new reviews while preserving rounded public display copy.",
+      "acceptanceCriteria": [
+        "APP_STORE_RATING_COUNT is 137",
+        "APP_STORE_RATING_DISPLAY_COUNT remains 135+",
+        "APP_STORE_RATING_VALUE remains 4.8"
+      ],
+      "passes": true,
+      "tags": [
+        "seo",
+        "metadata"
+      ]
+    },
+    {
+      "id": "JREV-005",
+      "priority": 2,
+      "title": "Verify build and rendered output",
+      "description": "Run the website build and inspect generated homepage output for the new reviews and updated structured review count.",
+      "acceptanceCriteria": [
+        "npm run build passes",
+        "Generated homepage output contains JackD_942 and Djbindust",
+        "Generated homepage output contains structured reviewCount 137",
+        "Generated homepage output still contains public display count 135+"
+      ],
+      "passes": true,
+      "tags": [
+        "verification"
+      ]
+    },
+    {
+      "id": "JREV-006",
+      "priority": 3,
+      "title": "Commit scoped update",
+      "description": "Stage and commit only the review update plus required task/sprint tracking artifacts.",
+      "acceptanceCriteria": [
+        "git diff is limited to homepage review data, app-store metadata, and required task/sprint files",
+        "Changes are committed on codex/add-june-2026-app-store-reviews",
+        "Commit message describes the June review additions"
+      ],
+      "passes": true,
+      "tags": [
+        "git"
+      ]
+    }
+  ]
+}
