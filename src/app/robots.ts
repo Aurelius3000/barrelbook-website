@@ -8,6 +8,7 @@ export default function robots(): MetadataRoute.Robots {
       disallow: [
         '/p/',
         '/qa/',
+        '/w/',
         // Plan Task 4: approval assets are direct-link only, not public discovery.
         '/openai-approval/',
         '/blackshirt',
