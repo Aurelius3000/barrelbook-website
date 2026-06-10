@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { APP_STORE_APP_ID, APP_STORE_URL } from "@/lib/app-store";
+import { APP_STORE_URL } from "@/lib/app-store";
 
 type WantListPageProps = {
   params: Promise<{
@@ -69,14 +69,6 @@ function decodeRouteValue(value: string): string {
 
 function normalizeShareToken(token: string): string {
   return decodeRouteValue(token).trim();
-}
-
-function getEncodedShareToken(token: string): string {
-  return encodeURIComponent(normalizeShareToken(token));
-}
-
-function getWantListAppOpenUrl(token: string): string {
-  return `barrelbook://w/${getEncodedShareToken(token)}`;
 }
 
 function getPublicWantListEndpoint(): string {
@@ -293,20 +285,13 @@ function getPlaceholderInitials(item: PublicWantListItem): string {
   return `${words[0][0]}${words[1][0]}`.toUpperCase();
 }
 
-export async function generateMetadata({
-  params,
-}: WantListPageProps): Promise<Metadata> {
-  const { token } = await params;
-  const appOpenUrl = getWantListAppOpenUrl(token);
+export function generateMetadata(): Metadata {
   const description =
-    "View a shared BarrelBook Want list, then open BarrelBook to build or manage your own whiskey list.";
+    "View a shared BarrelBook Want list, then get BarrelBook to build or manage your own whiskey list.";
 
   return {
     title: "Shared Want List",
     description,
-    other: {
-      "apple-itunes-app": `app-id=${APP_STORE_APP_ID}, app-argument=${appOpenUrl}`,
-    },
     robots: {
       index: false,
       follow: false,
@@ -328,7 +313,6 @@ export async function generateMetadata({
 export default async function WantListPage({ params }: WantListPageProps) {
   const { token } = await params;
   const snapshot = await fetchPublicWantListShare(token);
-  const appOpenUrl = getWantListAppOpenUrl(token);
 
   return (
     <main className="min-h-screen bg-[#0A0A0A] text-white">
@@ -356,9 +340,9 @@ export default async function WantListPage({ params }: WantListPageProps) {
       </header>
 
       {snapshot.status === "active" ? (
-        <ActiveWantListView snapshot={snapshot} appOpenUrl={appOpenUrl} />
+        <ActiveWantListView snapshot={snapshot} />
       ) : (
-        <UnavailableWantListView appOpenUrl={appOpenUrl} />
+        <UnavailableWantListView />
       )}
     </main>
   );
@@ -366,10 +350,8 @@ export default async function WantListPage({ params }: WantListPageProps) {
 
 function ActiveWantListView({
   snapshot,
-  appOpenUrl,
 }: {
   snapshot: Extract<PublicWantListSnapshot, { status: "active" }>;
-  appOpenUrl: string;
 }) {
   const updatedDate = formatUpdatedDate(snapshot.updatedAt);
 
@@ -418,16 +400,10 @@ function ActiveWantListView({
           </p>
           <div className="mt-6 flex flex-col gap-3">
             <a
-              href={appOpenUrl}
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#D2691E] px-5 py-3 text-base font-semibold text-white transition hover:bg-[#B85714]"
-            >
-              Open in BarrelBook
-            </a>
-            <a
               href={APP_STORE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#D2691E]/45 bg-transparent px-5 py-3 text-base font-semibold text-white transition hover:border-[#D2691E] hover:bg-[#D2691E]/10"
+              className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#D2691E] px-5 py-3 text-base font-semibold text-white transition hover:bg-[#B85714]"
             >
               Get BarrelBook
             </a>
@@ -524,7 +500,7 @@ function ItemPill({ children }: { children: ReactNode }) {
   );
 }
 
-function UnavailableWantListView({ appOpenUrl }: { appOpenUrl: string }) {
+function UnavailableWantListView() {
   return (
     <section className="px-4 py-12 sm:px-6 lg:px-8 lg:py-20">
       <div className="mx-auto max-w-3xl">
@@ -540,16 +516,10 @@ function UnavailableWantListView({ appOpenUrl }: { appOpenUrl: string }) {
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <a
-              href={appOpenUrl}
-              className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#D2691E] px-5 py-3 text-base font-semibold text-white transition hover:bg-[#B85714]"
-            >
-              Open BarrelBook
-            </a>
-            <a
               href={APP_STORE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D2691E]/45 bg-transparent px-5 py-3 text-base font-semibold text-white transition hover:border-[#D2691E] hover:bg-[#D2691E]/10"
+              className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#D2691E] px-5 py-3 text-base font-semibold text-white transition hover:bg-[#B85714]"
             >
               Get BarrelBook
             </a>
