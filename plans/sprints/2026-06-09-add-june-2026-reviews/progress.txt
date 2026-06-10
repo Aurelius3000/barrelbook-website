@@ -1,0 +1,33 @@
+Add June 2026 App Store Reviews
+=====================================================
+
+Started: 2026-06-09
+Status: Complete (6/6 items)
+
+## Goals
+- Add two new App Store reviews to the BarrelBook homepage.
+- Keep the homepage review grid readable with a curated excerpt for the long review.
+- Keep structured review metadata current without changing rounded public count copy.
+
+## Items
+
+### Priority 1
+- [x] JREV-001: Base update on origin main
+- [x] JREV-002: Scaffold task tracking
+- [x] JREV-003: Add June App Store reviews to homepage
+- [x] JREV-004: Update exact structured review count
+
+### Priority 2
+- [x] JREV-005: Verify build and rendered output
+
+### Priority 3
+- [x] JREV-006: Commit scoped update
+
+## Files to Modify
+- src/components/LandingPage.tsx
+- src/lib/app-store.ts
+- .claude_tasks/2026-06-09_20-12-21/
+- plans/sprints/2026-06-09-add-june-2026-reviews/
+
+## Deployment
+- Website deploy should follow the normal GitHub/Vercel flow after review or merge.

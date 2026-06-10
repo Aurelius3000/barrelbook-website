@@ -345,6 +345,19 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
+              // JREV-003: newest App Store reviews first; the longer June 8 review uses a homepage-friendly excerpt.
+              {
+                title: "BarrelBook Is the Whiskey Collection Tool I Didn’t Know I Needed",
+                text: "BarrelBook has quickly become one of the most useful tools in my whiskey journey. It goes beyond simply tracking bottles — it helps me understand my collection, my palate, and the role each bottle plays on my shelf. Overall, BarrelBook is one of the best bourbon and whiskey collection tools I’ve used.",
+                author: "JackD_942",
+                date: "Jun 8, 2026",
+              },
+              {
+                title: "Well Thought Out",
+                text: "Wow, this is such a well thought out App. The AI image recognition takes it to the next level. The “Tonight’s Pour” or “Wheel of Bourbon” is a fun feature. The “Bourbon Somelier” lets a newbie look like a professional. 👍",
+                author: "Djbindust",
+                date: "Jun 3, 2026",
+              },
               {
                 title: "This app makes my hobby more organized.",
                 text: "This app has made my bottle tracking so much easier. I hated going to a store and not being sure if I already had a bottle or not. Now with BarrelBook I can simply open the app and compare my collection to what is available on the shelves. I do also love that I can share my collection with my friends. It makes bottle shares so much more fun as we can look at what is potentially available to share.",
@@ -422,7 +435,7 @@ export default function LandingPage() {
                 <p className="text-gray-300 text-base mb-4 flex-1">{review.text}</p>
                 <div className="flex items-center justify-between text-xs text-gray-500">
                   <span>{review.author}</span>
-                  <span>{review.date} · v{review.version}</span>
+                  <span>{review.version ? `${review.date} · v${review.version}` : review.date}</span>
                 </div>
               </div>
             ))}
