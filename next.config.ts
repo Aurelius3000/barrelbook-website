@@ -4,6 +4,23 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: "/w/:path*",
+        headers: [
+          {
+            key: "Referrer-Policy",
+            value: "no-referrer",
+          },
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow, noarchive",
+          },
+          {
+            key: "Cache-Control",
+            value: "no-store",
+          },
+        ],
+      },
+      {
         source: "/openai-approval/:path*",
         headers: [
           {
