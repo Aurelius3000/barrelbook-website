@@ -27,6 +27,7 @@ type PublicWantListSnapshot =
   | {
       status: "active";
       listName: string;
+      listDescription: string | null;
       listType: "want";
       updatedAt: PublicTimestamp;
       items: PublicWantListItem[];
@@ -43,6 +44,9 @@ const UNAVAILABLE_SNAPSHOT: PublicWantListSnapshot = {
   status: "unavailable",
   items: [],
 };
+
+const DEFAULT_WANT_LIST_DESCRIPTION =
+  "A ranked BarrelBook Want list shared for gift ideas, store runs, or bottles worth watching.";
 
 const PLACEHOLDER_PALETTES = [
   ["#3A1D0D", "#D2691E", "#F2C19A"],
@@ -176,6 +180,7 @@ function parseSnapshot(payload: unknown): PublicWantListSnapshot {
   return {
     status: "active",
     listName: cleanText(data.listName, 120) || "Shared Want List",
+    listDescription: cleanText(data.listDescription, 240),
     listType: "want",
     updatedAt: isSupportedTimestamp(data.updatedAt) ? data.updatedAt : null,
     items,
@@ -368,7 +373,7 @@ function ActiveWantListView({
                 {snapshot.listName}
               </h1>
               <p className="mt-3 max-w-2xl text-base leading-7 text-[#CFCFCF]">
-                A ranked BarrelBook Want list shared for gift ideas, store runs, or bottles worth watching.
+                {snapshot.listDescription || DEFAULT_WANT_LIST_DESCRIPTION}
               </p>
             </div>
             <div className="flex shrink-0 flex-wrap gap-2 text-sm text-[#D4D4D4]">
