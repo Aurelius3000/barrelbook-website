@@ -1,0 +1,35 @@
+{
+  "project": {
+    "name": "Public Want List Empty State",
+    "repoRoot": "."
+  },
+  "files_changed": [
+    "src/app/w/[token]/page.tsx"
+  ],
+  "definitionOfDone": {
+    "required": [
+      "Active public Want-list shares render even when they have zero public items",
+      "Unavailable/revoked/invalid tokens still render the neutral unavailable page",
+      "The page keeps no-store/noindex behavior",
+      "Website build passes",
+      "The reported production token can be verified against the fixed rendering path before deployment"
+    ]
+  },
+  "items": [
+    {
+      "id": "PLES-001",
+      "priority": 1,
+      "title": "Render active empty public Want lists",
+      "description": "The public page should distinguish a valid active share with no recipient-visible items from an invalid, revoked, expired, or mistyped token.",
+      "acceptanceCriteria": [
+        "Parser returns an active snapshot when backend status is active and items is an empty array",
+        "Active empty snapshots show list title, description, metadata, and an empty-state message",
+        "Invalid/revoked/unavailable responses continue to show the existing unavailable page",
+        "No public endpoint contract or analytics behavior changes are introduced",
+        "npm run build passes"
+      ],
+      "passes": true,
+      "tags": ["website", "public-share", "hotfix"]
+    }
+  ]
+}

@@ -173,10 +173,6 @@ function parseSnapshot(payload: unknown): PublicWantListSnapshot {
         .sort((left, right) => left.rank - right.rank)
     : [];
 
-  if (items.length === 0) {
-    return UNAVAILABLE_SNAPSHOT;
-  }
-
   return {
     status: "active",
     listName: cleanText(data.listName, 120) || "Shared Want List",
@@ -388,11 +384,15 @@ function ActiveWantListView({
             </div>
           </div>
 
-          <ol className="mt-8 space-y-4">
-            {snapshot.items.map((item, index) => (
-              <WantListItemRow key={`${item.rank}-${item.displayName}-${index}`} item={item} />
-            ))}
-          </ol>
+          {snapshot.items.length > 0 ? (
+            <ol className="mt-8 space-y-4">
+              {snapshot.items.map((item, index) => (
+                <WantListItemRow key={`${item.rank}-${item.displayName}-${index}`} item={item} />
+              ))}
+            </ol>
+          ) : (
+            <EmptyWantListState />
+          )}
         </div>
 
         <aside className="rounded-lg border border-[#333333] bg-[#111111] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.28)] sm:p-6 lg:sticky lg:top-6">
@@ -421,6 +421,19 @@ function ActiveWantListView({
         </aside>
       </div>
     </section>
+  );
+}
+
+function EmptyWantListState() {
+  return (
+    <div className="mt-8 rounded-lg border border-[#2C2C2C] bg-[#111111] p-5">
+      <div className="text-sm font-semibold uppercase tracking-[0.16em] text-[#F2C19A]">
+        No public bottles yet
+      </div>
+      <p className="mt-3 text-base leading-7 text-[#CFCFCF]">
+        This shared list is active, but no bottles are currently visible to recipients.
+      </p>
+    </div>
   );
 }
 

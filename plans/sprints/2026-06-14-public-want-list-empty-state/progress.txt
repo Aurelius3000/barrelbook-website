@@ -1,0 +1,44 @@
+Public Want List Empty State
+=====================================================
+
+Started: 2026-06-14
+Status: Complete (1/1 items)
+Branch: codex/public-want-list-page
+Base commit: 5fd4997
+
+## Goals
+- Treat valid active public shares with zero visible items as active, not unavailable.
+- Preserve the neutral unavailable page for invalid, revoked, expired, or mistyped links.
+
+## Items
+
+### Priority 1
+- [x] PLES-001: Render active empty public Want lists
+
+## Files to Modify
+- src/app/w/[token]/page.tsx
+
+## Verification
+- npm run build
+- Read-only production Function canary for token NFBIxzxgQ3Ki53fWg1hJ5M1scE2urfCVjVK3SGo7iE8
+- Local or static verification that active empty snapshots render the empty state
+
+## Deployment
+- Requires a website production deploy after merge/push for https://www.barrelbook.app/w/{token} to show the fixed state.
+
+## Completion Evidence
+- Removed the parser behavior that converted active snapshots with zero public items into unavailable snapshots.
+- Added an active empty-list state for valid public Want-list links with no recipient-visible bottles.
+- Verified the reported token directly against production Functions:
+  - token `NFBIxzxgQ3Ki53fWg1hJ5M1scE2urfCVjVK3SGo7iE8`
+  - Function returned `status: active`, `listName: Want it`, `listDescription: Fathers Day ideas`, and `items: []`.
+- Verification passed:
+  - git diff --check
+  - jq -e . plans/sprints/2026-06-14-public-want-list-empty-state/prd.json
+  - npm run build
+  - Local browser smoke at `http://localhost:3042/w/NFBIxzxgQ3Ki53fWg1hJ5M1scE2urfCVjVK3SGo7iE8`
+- Local browser smoke confirmed:
+  - `Want it` rendered.
+  - `Fathers Day ideas` rendered.
+  - `No public bottles yet` empty state rendered.
+  - `This shared list is unavailable.` did not render.
