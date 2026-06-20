@@ -1,0 +1,41 @@
+Public Want List Mobile Preview
+=====================================================
+
+Started: 2026-06-20
+Status: Preview Ready (2/2 items)
+
+## Goals
+- Preview a more compact mobile layout for `/w/[token]`.
+- Keep the patch limited to website presentation.
+- Do not commit until the visual direction is approved.
+
+## Items
+
+### Priority 1
+- [x] PWLM-001: Tighten mobile public-list item cards
+- [x] PWLM-002: Preview the layout locally
+
+## Files to Modify
+- src/app/w/[token]/page.tsx
+
+## Verification
+- npm run build
+- Local browser preview at mobile and desktop widths
+
+## Results
+- `npm run build` passed.
+- Local preview opened at `http://127.0.0.1:3044/w/preview-token`.
+- Mobile screenshot: `output/playwright/public-want-mobile-preview.png`.
+- Comment-width screenshot: `output/playwright/public-want-comment-width-preview.png`.
+- Desktop screenshot: `output/playwright/public-want-desktop-preview.png`.
+- Second pass removed brand/type from the visible card metadata, kept public notes under the bottle name, and made target price a right-side mobile tile.
+- `curl http://127.0.0.1:3044/w/preview-token` confirmed `1792 • Bourbon` is no longer present while public note and target labels still render.
+- Third pass vertically centered the item text stack against the bottle artwork and target tile.
+- Comment-width screenshot: `output/playwright/public-want-comment-width-centered.png`.
+- Fourth pass moved rank into a larger dedicated left column before the bottle artwork.
+- Left-rank screenshot: `output/playwright/public-want-comment-width-left-rank-large.png`.
+- Fifth pass rendered optional `ownerDisplayName` as the header eyebrow, e.g. `Pete Reilly's Shared Want List`.
+- Owner-name screenshot: `output/playwright/public-want-owner-name-preview.png`.
+
+## Deployment
+- No deploy until the preview is approved.
