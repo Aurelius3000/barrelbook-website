@@ -1,0 +1,48 @@
+{
+  "$schema": "../../prd.schema.json",
+  "project": {
+    "name": "Public Want List Mobile Preview",
+    "repoRoot": "/Users/petereilly2021/Projects/barrelbook-website-public-want-list-page"
+  },
+  "definitionOfDone": {
+    "required": [
+      "Mobile item cards are visibly more compact and scannable.",
+      "Artwork and placeholder sizing is consistent on mobile.",
+      "Target price and public note remain visible without oversized blocks.",
+      "Desktop layout does not regress.",
+      "Local browser preview is available before commit."
+    ]
+  },
+  "files_changed": [
+    "src/app/w/[token]/page.tsx"
+  ],
+  "items": [
+    {
+      "id": "PWLM-001",
+      "priority": 1,
+      "title": "Tighten mobile public-list item cards",
+      "description": "Adjust the public Want-list item card layout so mobile recipients can scan multiple bottles quickly.",
+      "acceptanceCriteria": [
+        "Mobile item cards use a compact row layout.",
+        "Bottle artwork is smaller and aligned with item copy.",
+        "Rank, title, tags, target price, and public note fit without excessive empty space.",
+        "Desktop layout remains card-based and readable."
+      ],
+      "passes": true,
+      "tags": ["website", "mobile", "public-share"]
+    },
+    {
+      "id": "PWLM-002",
+      "priority": 1,
+      "title": "Preview the layout locally",
+      "description": "Run the website locally with public-list data and open it in a browser for visual approval.",
+      "acceptanceCriteria": [
+        "A local preview URL is available.",
+        "Mobile and desktop screenshots or visual checks are completed.",
+        "No production backend change is required for the preview."
+      ],
+      "passes": true,
+      "tags": ["preview", "verification"]
+    }
+  ]
+}

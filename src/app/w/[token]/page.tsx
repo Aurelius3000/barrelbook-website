@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import type { ReactNode } from "react";
 import { APP_STORE_URL } from "@/lib/app-store";
 
 type WantListPageProps = {
@@ -28,6 +27,7 @@ type PublicWantListSnapshot =
       status: "active";
       listName: string;
       listDescription: string | null;
+      ownerDisplayName: string | null;
       listType: "want";
       updatedAt: PublicTimestamp;
       items: PublicWantListItem[];
@@ -177,6 +177,7 @@ function parseSnapshot(payload: unknown): PublicWantListSnapshot {
     status: "active",
     listName: cleanText(data.listName, 120) || "Shared Want List",
     listDescription: cleanText(data.listDescription, 240),
+    ownerDisplayName: cleanText(data.ownerDisplayName, 80),
     listType: "want",
     updatedAt: isSupportedTimestamp(data.updatedAt) ? data.updatedAt : null,
     items,
@@ -259,6 +260,16 @@ function formatTargetPrice(value: PublicWantListItem["targetPrice"]): string | n
     currency: "USD",
     maximumFractionDigits: Number.isInteger(numeric) ? 0 : 2,
   }).format(numeric);
+}
+
+function possessiveName(value: string): string {
+  return /s$/i.test(value) ? `${value}'` : `${value}'s`;
+}
+
+function formatWantListEyebrow(ownerDisplayName: string | null): string {
+  return ownerDisplayName
+    ? `${possessiveName(ownerDisplayName)} Shared Want List`
+    : "Shared Want List";
 }
 
 function hashText(value: string): number {
@@ -355,13 +366,14 @@ function ActiveWantListView({
   snapshot: Extract<PublicWantListSnapshot, { status: "active" }>;
 }) {
   const updatedDate = formatUpdatedDate(snapshot.updatedAt);
+  const eyebrow = formatWantListEyebrow(snapshot.ownerDisplayName);
 
   return (
     <section className="px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
       <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
         <div>
-          <div className="text-sm font-semibold uppercase tracking-[0.2em] text-[#F2C19A]">
-            Shared Want List
+          <div className="text-sm font-semibold tracking-[0.08em] text-[#F2C19A]">
+            {eyebrow}
           </div>
           <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -385,7 +397,7 @@ function ActiveWantListView({
           </div>
 
           {snapshot.items.length > 0 ? (
-            <ol className="mt-8 space-y-4">
+            <ol className="mt-6 space-y-3 sm:mt-8 sm:space-y-4">
               {snapshot.items.map((item, index) => (
                 <WantListItemRow key={`${item.rank}-${item.displayName}-${index}`} item={item} />
               ))}
@@ -441,38 +453,38 @@ function WantListItemRow({ item }: { item: PublicWantListItem }) {
   const targetPrice = formatTargetPrice(item.targetPrice);
 
   return (
-    <li className="rounded-lg border border-[#2C2C2C] bg-[#111111] p-4 sm:p-5">
-      <div className="grid gap-4 sm:grid-cols-[96px_minmax(0,1fr)] sm:items-start">
+    <li className="rounded-lg border border-[#2C2C2C] bg-[#111111] p-3 sm:p-5">
+      <div className="grid grid-cols-[2.25rem_80px_minmax(0,1fr)] items-center gap-2 sm:grid-cols-[3rem_96px_minmax(0,1fr)] sm:gap-4">
+        <div
+          aria-label={`Rank ${item.rank}`}
+          className="text-center text-3xl font-semibold leading-none tabular-nums text-[#F2C19A] sm:text-4xl"
+        >
+          {item.rank}
+        </div>
         <BottleArtwork item={item} />
         <div className="min-w-0">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div className="min-w-0">
-              <div className="text-sm font-semibold uppercase tracking-[0.18em] text-[#F2C19A]">
-                #{item.rank}
-              </div>
-              <h2 className="mt-1 text-2xl font-semibold leading-tight text-white">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:flex sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0 self-center">
+              <h2 className="break-words text-xl font-semibold leading-tight text-white sm:text-2xl">
                 {item.displayName}
               </h2>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {item.brand ? <ItemPill>{item.brand}</ItemPill> : null}
-                {item.bottleType ? <ItemPill>{item.bottleType}</ItemPill> : null}
-              </div>
+              {item.publicNote ? (
+                <p className="mt-1 text-sm leading-5 text-[#D4D4D4] sm:mt-1.5 sm:text-base sm:leading-6">
+                  {item.publicNote}
+                </p>
+              ) : null}
             </div>
             {targetPrice ? (
-              <div className="shrink-0 rounded-lg border border-[#D2691E]/35 bg-[#2A1B11] px-4 py-3 text-left sm:text-right">
-                <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[#F2C19A]">
+              <div className="flex h-20 w-20 shrink-0 flex-col justify-center rounded-md border border-[#D2691E]/35 bg-[#2A1B11] px-3 py-2 text-left sm:h-auto sm:w-auto sm:rounded-lg sm:px-4 sm:py-3 sm:text-right">
+                <div className="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-[#F2C19A] sm:text-xs">
                   Target
                 </div>
-                <div className="mt-1 text-xl font-semibold text-white">{targetPrice}</div>
+                <div className="mt-0.5 text-base font-semibold text-white sm:mt-1 sm:text-xl">
+                  {targetPrice}
+                </div>
               </div>
             ) : null}
           </div>
-
-          {item.publicNote ? (
-            <p className="mt-4 rounded-lg border border-[#2F2F2F] bg-[#0A0A0A] px-4 py-3 text-base leading-7 text-[#D4D4D4]">
-              {item.publicNote}
-            </p>
-          ) : null}
         </div>
       </div>
     </li>
@@ -482,7 +494,7 @@ function WantListItemRow({ item }: { item: PublicWantListItem }) {
 function BottleArtwork({ item }: { item: PublicWantListItem }) {
   if (item.thumbnailUrl) {
     return (
-      <div className="relative h-24 w-24 overflow-hidden rounded-lg border border-[#333333] bg-[#151515]">
+      <div className="relative h-20 w-20 overflow-hidden rounded-md border border-[#333333] bg-[#151515] sm:h-24 sm:w-24 sm:rounded-lg">
         <div
           aria-label={`${item.displayName} thumbnail`}
           className="h-full w-full bg-cover bg-center"
@@ -497,7 +509,7 @@ function BottleArtwork({ item }: { item: PublicWantListItem }) {
 
   return (
     <div
-      className="flex h-24 w-24 items-center justify-center rounded-lg border border-[#333333] text-xl font-semibold"
+      className="flex h-20 w-20 items-center justify-center rounded-md border border-[#333333] text-lg font-semibold sm:h-24 sm:w-24 sm:rounded-lg sm:text-xl"
       style={{
         background: `linear-gradient(145deg, ${from}, ${to})`,
         color: text,
@@ -507,14 +519,6 @@ function BottleArtwork({ item }: { item: PublicWantListItem }) {
     >
       {getPlaceholderInitials(item)}
     </div>
-  );
-}
-
-function ItemPill({ children }: { children: ReactNode }) {
-  return (
-    <span className="rounded-full border border-[#333333] bg-[#171717] px-3 py-1 text-sm text-[#D4D4D4]">
-      {children}
-    </span>
   );
 }
 
