@@ -27,5 +27,4 @@
   - `output/playwright/public-want-desktop-preview.png`
 
 ## Next Steps
-- Review the preview visually.
-- If approved, commit the website presentation patch.
+- Monitor the production public Want-list page during QA.
