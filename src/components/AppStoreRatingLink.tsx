@@ -1,6 +1,5 @@
 import { Star } from "lucide-react";
 import {
-  APP_STORE_RATING_DISPLAY_COUNT,
   APP_STORE_RATING_VALUE,
   APP_STORE_URL,
 } from "@/lib/app-store";
@@ -17,18 +16,20 @@ export default function AppStoreRatingLink({
       href={APP_STORE_URL}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`Read App Store reviews for BarrelBook, rated ${APP_STORE_RATING_VALUE} stars from ${APP_STORE_RATING_DISPLAY_COUNT} ratings`}
+      aria-label={`Open BarrelBook's ${APP_STORE_RATING_VALUE}-star App Store rating`}
       className={className}
     >
-      <span className="flex" aria-hidden="true">
-        {[0, 1, 2, 3, 4].map((i) => (
-          <Star key={i} className="w-4 h-4 text-[#D2691E] fill-current" />
-        ))}
+      <span className="inline-flex items-center gap-2" aria-hidden="true">
+        <span className="text-xl font-semibold leading-none text-white">
+          {APP_STORE_RATING_VALUE}
+        </span>
+        <span className="flex gap-0.5">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <Star key={i} className="h-5 w-5 fill-current text-[#D2691E]" />
+          ))}
+        </span>
       </span>
-      <span>
-        <span className="font-semibold text-white">{APP_STORE_RATING_VALUE}</span> stars from{" "}
-        <span className="font-semibold text-white">{APP_STORE_RATING_DISPLAY_COUNT}</span> App Store ratings
-      </span>
+      <span>App Store rating</span>
     </a>
   );
 }
