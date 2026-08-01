@@ -59,7 +59,7 @@ export default function PrivacyPage() {
             </aside>
 
             <article className="lg:col-span-8">
-              <div className="prose prose-invert prose-lg sm:prose-xl leading-8 prose-headings:text-white prose-strong:text-white prose-a:text-[#D2691E] prose-a:underline prose-p:text-gray-200 prose-li:marker:text-gray-500 prose-li:my-2 prose-h2:scroll-mt-28 prose-h2:mt-20 md:prose-h2:mt-28 prose-h2:pt-10 md:prose-h2:pt-12 prose-h2:mb-6 prose-h2:border-t prose-h2:border-white/10 prose-h3:mt-6 prose-p:mt-4 prose-ul:mt-4 prose-ol:mt-4 tos">
+              <div className="prose prose-invert prose-lg sm:prose-xl leading-8 prose-headings:text-white prose-strong:text-white prose-a:text-[#D2691E] prose-a:underline prose-p:text-gray-200 prose-li:marker:text-[#D2691E] prose-li:my-3 prose-h2:scroll-mt-28 prose-h2:mt-20 md:prose-h2:mt-28 prose-h2:pt-10 md:prose-h2:pt-12 prose-h2:mb-6 prose-h2:border-t prose-h2:border-white/10 prose-h3:mt-6 prose-p:mt-4 prose-ul:mt-4 prose-ol:mt-4 tos">
                 <h2 id="introduction">1. Introduction</h2>
                 <p>This Privacy Policy explains how BarrelBook (“we,” “our,” or “us”) collects, uses, and protects your information when you use our mobile app (“the App”).</p>
                 <p>By using the App, you agree to the practices described here. BarrelBook is a collection and social sharing app only — it does not allow buying, selling, trading, or shipping of alcohol.</p>
@@ -106,17 +106,47 @@ export default function PrivacyPage() {
                 <h3>Friend Sharing</h3>
                 <p>If you share bottles or collections with friends, those users will see the shared photos, data, and notes. We cannot prevent recipients from saving or redistributing your content outside the App.</p>
                 <h3>Public Lists (Opt-In)</h3>
-                <p>If public-list features are available, you may choose to publish certain lists (such as a Want List) to a public link. Anyone with the link can view it — no account needed — and links can be forwarded, copied, cached, or indexed, so treat a published list as public. The page always shows the list’s current contents: every item on the list, with item details, target prices, public notes, your display name, and photo thumbnails. Private notes, your other lists, and your catalog are never included. You can revoke or regenerate the link at any time; revoking stops future access, but copies made while the list was public may persist.</p>
+                <ul>
+                  <li>If public-list features are available, you may choose to publish certain lists (such as a Want List) to a public link.</li>
+                  <li>Anyone with the link can view it — no account needed — and links can be forwarded, copied, cached, or indexed, so treat a published list as public.</li>
+                  <li>The page always shows the list’s current contents: every item on the list, with item details, target prices, public notes, your display name, and photo thumbnails.</li>
+                  <li>Private notes, your other lists, and your catalog are never included.</li>
+                  <li>You can revoke or regenerate the link at any time; revoking stops future access, but copies made while the list was public may persist.</li>
+                </ul>
                 <h3>Aggregate Statistics</h3>
-                <p>Your individual catalog, photos, notes, and entries are never made publicly visible unless you publish them yourself. If we offer community statistics and you enable contribution, we may publish anonymous, aggregated statistics computed across many users (for example, “tracked by 340 collectors, median paid $189”) in the App and on public bottle pages. These statistics never include your name, photos, notes, or any individual entry. Community statistics are computed only from users who have enabled contribution, and the contribution controls are provided before this processing begins.</p>
+                <ul>
+                  <li>Your individual catalog, photos, notes, and entries are never made publicly visible unless you publish them yourself.</li>
+                  <li>If we offer community statistics and you enable contribution, we may publish anonymous, aggregated statistics computed across many users (for example, “tracked by 340 collectors, median paid $189”) in the App and on public bottle pages.</li>
+                  <li>These statistics never include your name, photos, notes, or any individual entry.</li>
+                  <li>Community statistics are computed only from users who have enabled contribution, and the contribution controls are provided before this processing begins.</li>
+                </ul>
                 <h3>Community Contribution (Opt-In)</h3>
-                <p>If community contribution is available and you enable it, selected facts from your catalog and lists — bottle details, ratings, corrections, and prices you paid (which you can exclude at any time in settings) — feed shared bottle information, combined with contributions from other collectors. Contribution records are kept internally attributable to your account so we can honor withdrawal, deletion, and quality controls, but they are never shown to other users, and shared results never identify you or any individual transaction. You can contribute facts without sharing prices paid, and you can turn contribution off at any time; previously published de-identified statistics may persist.</p>
+                <ul>
+                  <li>If community contribution is available and you enable it, selected facts from your catalog and lists — bottle details, ratings, corrections, and prices you paid (which you can exclude at any time in settings) — feed shared bottle information, combined with contributions from other collectors.</li>
+                  <li>Contribution records are kept internally attributable to your account so we can honor withdrawal, deletion, and quality controls, but they are never shown to other users, and shared results never identify you or any individual transaction.</li>
+                  <li>You can contribute facts without sharing prices paid, and you can turn contribution off at any time; previously published de-identified statistics may persist.</li>
+                </ul>
                 <h3>Aggregated &amp; De-identified Data</h3>
-                <p>If we publish community statistics, they are aggregated and de-identified: they are computed across many users, are only shown when enough collectors track a bottle, and cannot reasonably be used to identify you. De-identified data is not personal information. We maintain it in de-identified form, will not attempt to re-identify it, and require the same of our service providers.</p>
+                <ul>
+                  <li>If we publish community statistics, they are aggregated and de-identified: they are computed across many users, are only shown when enough collectors track a bottle, and cannot reasonably be used to identify you.</li>
+                  <li>De-identified data is not personal information.</li>
+                  <li>We maintain it in de-identified form, will not attempt to re-identify it, and require the same of our service providers.</li>
+                </ul>
                 <h3>Featured Photos (Opt-In, Per Photo)</h3>
-                <p>If featured-photo functionality is available, you can choose to feature individual photos of yours on public bottle pages — we may suggest a photo, but it appears only if you approve it. A featured photo is visible to anyone on the internet and is shown with your display name or anonymously — your choice. We remove location and other hidden metadata before display, and we review photos before they appear. You can unfeature a photo at any time, and deleting your account removes your featured photos; copies made while public may persist.</p>
+                <ul>
+                  <li>If featured-photo functionality is available, you can choose to feature individual photos of yours on public bottle pages — we may suggest a photo, but it appears only if you approve it.</li>
+                  <li>A featured photo is visible to anyone on the internet and is shown with your display name or anonymously — your choice.</li>
+                  <li>We remove location and other hidden metadata before display, and we review photos before they appear.</li>
+                  <li>You can unfeature a photo at any time, and deleting your account removes your featured photos; copies made while public may persist.</li>
+                </ul>
                 <h3>Services You Connect (Opt-In)</h3>
-                <p>If connected-service functionality is available and you connect a third-party AI assistant or other service to your BarrelBook account (for example, through our API or MCP), the data you authorize it to access is disclosed to that service at your direction. Its use of your data — including any retention or model-training behavior — is governed by your agreement with that provider, not this policy. Access is read-only: a connected service can request the information you approve from your catalog but cannot modify it. BarrelBook does not receive your conversations with the connected service; we receive only the requests it makes to your catalog. You can review and revoke connected services at any time in settings.</p>
+                <ul>
+                  <li>If connected-service functionality is available and you connect a third-party AI assistant or other service to your BarrelBook account (for example, through our API or MCP), the data you authorize it to access is disclosed to that service at your direction.</li>
+                  <li>Its use of your data — including any retention or model-training behavior — is governed by your agreement with that provider, not this policy.</li>
+                  <li>Access is read-only: a connected service can request the information you approve from your catalog but cannot modify it.</li>
+                  <li>BarrelBook does not receive your conversations with the connected service; we receive only the requests it makes to your catalog.</li>
+                  <li>You can review and revoke connected services at any time in settings.</li>
+                </ul>
                 <h3>Third Parties</h3>
                 <ul>
                   <li>We do not sell or rent your personal information.</li>

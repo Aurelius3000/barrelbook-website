@@ -164,22 +164,51 @@
 
 /* Readability helpers for legal pages */
 .tos {
-  max-width: 72ch;
+  max-width: 68ch;
   margin-left: auto;
   margin-right: auto;
   padding-inline: 16px;
 }
 
 .tos p {
-  line-height: 1.48;
+  line-height: 1.68;
   margin-block-start: 0;
-  margin-block-end: 1.1em;
+  margin-block-end: 1.3em;
 }
 
 .tos ul, .tos ol {
-  margin-block-start: 0.8em;
-  margin-block-end: 1.2em;
-  line-height: 1.5;
+  margin-block-start: 1em;
+  margin-block-end: 1.5em;
+  padding-inline-start: 1.4em;
+  line-height: 1.62;
+  list-style-position: outside;
+}
+
+.tos ul {
+  list-style-type: disc;
+}
+
+.tos ul ul {
+  list-style-type: circle;
+}
+
+.tos ol {
+  list-style-type: decimal;
+}
+
+.tos li + li {
+  margin-block-start: 0.65em;
+}
+
+.tos li::marker {
+  color: #D2691E;
+  font-weight: 700;
+}
+
+.tos li > ul,
+.tos li > ol {
+  margin-block-start: 0.65em;
+  margin-block-end: 0.35em;
 }
 
 .tos h2 + p {
@@ -191,12 +220,16 @@
   font-weight: 700;
 }
 
+.tos h3 {
+  margin-block-end: 0.7em;
+}
+
 .tos .bullet {
-  margin-left: 1rem;
+  margin-left: 0;
 }
 
 .tos .bullet li {
-  margin-block: 6px;
+  margin-block: 0.65em;
 }
 
 /* Accessible warning callout */
