@@ -67,7 +67,7 @@ export default function TermsPage() {
             </aside>
 
             <article className="lg:col-span-8">
-              <div className="prose prose-invert prose-lg sm:prose-xl leading-8 prose-headings:text-white prose-strong:text-white prose-a:text-[#D2691E] prose-a:underline prose-p:text-gray-200 prose-li:marker:text-gray-500 prose-li:my-2 prose-h2:scroll-mt-28 prose-h2:mt-20 md:prose-h2:mt-28 prose-h2:pt-10 md:prose-h2:pt-12 prose-h2:mb-6 prose-h2:border-t prose-h2:border-white/10 prose-h3:mt-6 prose-p:mt-4 prose-ul:mt-4 prose-ol:mt-4 tos">
+              <div className="prose prose-invert prose-lg sm:prose-xl leading-8 prose-headings:text-white prose-strong:text-white prose-a:text-[#D2691E] prose-a:underline prose-p:text-gray-200 prose-li:marker:text-[#D2691E] prose-li:my-3 prose-h2:scroll-mt-28 prose-h2:mt-20 md:prose-h2:mt-28 prose-h2:pt-10 md:prose-h2:pt-12 prose-h2:mb-6 prose-h2:border-t prose-h2:border-white/10 prose-h3:mt-6 prose-p:mt-4 prose-ul:mt-4 prose-ol:mt-4 tos">
                 <h2 id="acceptance-of-terms">1. Acceptance of Terms</h2>
                 <p>By downloading, installing, or using BarrelBook (the “App”), you agree to these Terms of Service (“Terms”). If you do not agree, do not use the App.</p>
 
@@ -120,14 +120,14 @@ export default function TermsPage() {
                 </ul>
                 <h3>You May Not:</h3>
                 <ul>
-                  <li>Use the App for any illegal or regulated alcohol activity, including:</li>
-                </ul>
-                <ul>
-                  <li>Buying, selling, trading, bartering, or otherwise transferring alcohol.</li>
-                  <li>Coordinating or arranging shipments of alcohol.</li>
-                  <li>Posting offers to purchase, solicitations to trade, or raffle/auction postings.</li>
-                </ul>
-                <ul>
+                  <li>
+                    Use the App for any illegal or regulated alcohol activity, including:
+                    <ul>
+                      <li>Buying, selling, trading, bartering, or otherwise transferring alcohol.</li>
+                      <li>Coordinating or arranging shipments of alcohol.</li>
+                      <li>Posting offers to purchase, solicitations to trade, or raffle/auction postings.</li>
+                    </ul>
+                  </li>
                   <li>Upload content that encourages or enables unlicensed alcohol transactions.</li>
                   <li>Promote excessive or irresponsible alcohol consumption.</li>
                   <li>Scrape or harvest data from other users.</li>
@@ -157,12 +157,14 @@ export default function TermsPage() {
                 <h2 id="user-generated-content-and-sharing">7. User-Generated Content &amp; Sharing</h2>
                 <ul>
                   <li>By uploading content, you confirm you have the rights to it.</li>
-                  <li>You agree not to upload or share content that:</li>
-                </ul>
-                <ul>
-                  <li>Infringes on intellectual property rights.</li>
-                  <li>Contains offensive, obscene, or illegal material.</li>
-                  <li>Promotes, arranges, or solicits alcohol sales, trades, raffles, or shipments.</li>
+                  <li>
+                    You agree not to upload or share content that:
+                    <ul>
+                      <li>Infringes on intellectual property rights.</li>
+                      <li>Contains offensive, obscene, or illegal material.</li>
+                      <li>Promotes, arranges, or solicits alcohol sales, trades, raffles, or shipments.</li>
+                    </ul>
+                  </li>
                 </ul>
                 <p>Content you publish publicly (such as public lists or featured photos) is held to the same standards, including the prohibition on offering, soliciting, or arranging alcohol sales, trades, raffles, or shipments. We may unpublish or remove content that violates these Terms. Users can report inappropriate or unlawful content, and we will act on valid reports.</p>
 
