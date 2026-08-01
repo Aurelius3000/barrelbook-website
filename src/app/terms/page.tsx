@@ -210,7 +210,17 @@ export default function TermsPage() {
                 </div>
 
                 <h2 id="copyright-and-dmca">12. Copyright &amp; DMCA Takedowns</h2>
-                <p>We respect intellectual property rights and respond to notices under the Digital Millennium Copyright Act (“DMCA”). If you believe content in the App or on our public pages infringes your copyright, send a notice to our designated agent at <a href="mailto:info@barrelbook.app">info@barrelbook.app</a> including:</p>
+                <p>We respect intellectual property rights and respond to notices under the Digital Millennium Copyright Act (“DMCA”). If you believe content in the App or on our public pages infringes your copyright, send a notice to our designated agent using the contact information below.</p>
+                <address className="not-italic rounded-lg border border-white/10 bg-white/[0.03] p-5">
+                  <strong>DMCA Agent</strong><br />
+                  BarrelBook, LLC<br />
+                  3651 Peachtree Parkway<br />
+                  Suite E141<br />
+                  Suwanee, GA 30024<br />
+                  <strong>Phone:</strong> <a href="tel:+16784270509">678-427-0509</a><br />
+                  <strong>Email:</strong> <a href="mailto:legal@barrelbook.app">legal@barrelbook.app</a>
+                </address>
+                <p>Your notice should include:</p>
                 <ul>
                   <li>Identification of the copyrighted work you claim is infringed.</li>
                   <li>The location of the allegedly infringing material (URL or in-app location).</li>
