@@ -32,7 +32,7 @@ export default function TermsPage() {
 
           <h1 className="text-4xl md:text-5xl mb-2 tos">Terms of Service for BarrelBook</h1>
           <div className="mb-8">
-            <p className="text-gray-400">Last Updated: July 18, 2026</p>
+            <p className="text-gray-400">Last Updated: August 1, 2026</p>
             <p className="mt-2 text-sm text-gray-400">
               Prior version: <Link href="/terms/2025-09-17" className="text-[#D2691E] underline hover:text-[#E07A2B]">September 17, 2025</Link>
             </p>
@@ -72,7 +72,7 @@ export default function TermsPage() {
                 <p>By downloading, installing, or using BarrelBook (the “App”), you agree to these Terms of Service (“Terms”). If you do not agree, do not use the App.</p>
 
                 <h2 id="description-of-service">2. Description of Service</h2>
-                <p>BarrelBook is a whiskey collection manager. You can:</p>
+                <p>BarrelBook is a whiskey collection manager. Depending on the features available to you, you can:</p>
                 <ul className="bullet">
                   <li>Catalog your bottles</li>
                   <li>Use AI to scan and identify labels</li>
@@ -115,7 +115,7 @@ export default function TermsPage() {
                 <ul>
                   <li>Use the App for lawful, personal, non-commercial purposes.</li>
                   <li>Share your collection with friends you choose.</li>
-                  <li>Publish lists or shelves you choose to make public.</li>
+                  <li>Where available, publish lists or shelves you choose to make public.</li>
                   <li>Export your own data for personal reference.</li>
                 </ul>
                 <h3>You May Not:</h3>
@@ -178,7 +178,7 @@ export default function TermsPage() {
                 </ul>
 
                 <h2 id="connected-services">9. Connected Services &amp; API Access</h2>
-                <p>BarrelBook offers an API (including MCP) that lets you connect third-party services you choose — such as AI assistants — to your own catalog.</p>
+                <p>Where available, BarrelBook offers an API (including MCP) that lets you connect third-party services you choose — such as AI assistants — to your own catalog.</p>
                 <ul>
                   <li>Connecting a service is optional and happens at your direction. You authorize what it can access, and you can revoke access at any time in settings.</li>
                   <li>Connector access is read-only: a connected service can request approved information from your catalog but cannot modify your catalog.</li>
@@ -192,7 +192,7 @@ export default function TermsPage() {
                 <h2 id="privacy">10. Privacy</h2>
                 <p>Your use of the App is also governed by our Privacy Policy.</p>
                 <ul>
-                  <li>Some features allow you to share bottles or collections with friends, or to publish lists you choose to make public.</li>
+                  <li>Some features may allow you to share bottles or collections with friends, or to publish lists you choose to make public.</li>
                   <li>You control what is shared or published, and you can revoke a public link at any time.</li>
                   <li>Anyone who can view your shared or published content may still capture it (e.g., screenshots).</li>
                 </ul>
@@ -275,4 +275,3 @@ export default function TermsPage() {
     </main>
   );
 }
-

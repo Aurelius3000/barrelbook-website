@@ -1,6 +1,6 @@
 # Legal Policy Versioning
 
-- Goal: publish the approved July 18, 2026 Terms of Service and Privacy Policy while preserving access to the September 17, 2025 versions.
+- Goal: publish the approved August 1, 2026 Terms of Service and Privacy Policy while preserving access to the September 17, 2025 versions.
 - Status: implementation and local verification complete on `origin/main`; awaiting commit/push/deploy approval.
 - Branch: `codex/update-legal-policies-20260801`
 - Worktree: `/Users/petereilly2021/Projects/barrelbook-website-legal-policy-release`

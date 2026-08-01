@@ -1,7 +1,8 @@
 # Acceptance Criteria
 
-- `/terms` presents the supplied July 18, 2026 Terms of Service.
-- `/privacy` presents the supplied July 18, 2026 Privacy Policy.
+- `/terms` presents the approved August 1, 2026 Terms of Service.
+- `/privacy` presents the approved August 1, 2026 Privacy Policy.
+- Feature-specific processing is described conditionally and does not begin until the feature and corresponding controls are available.
 - `/terms/2025-09-17` preserves the prior Terms of Service.
 - `/privacy/2025-09-17` preserves the prior Privacy Policy.
 - Each current page links to its matching prior version.
