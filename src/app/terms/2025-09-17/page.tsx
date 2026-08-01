@@ -2,8 +2,12 @@ import Link from "next/link";
 import PrintButton from "@/components/PrintButton";
 
 export const metadata = {
-  title: "Terms of Service | BarrelBook",
-  description: "BarrelBook Terms of Service",
+  title: "Terms of Service (September 17, 2025) | BarrelBook",
+  description: "Archived BarrelBook Terms of Service dated September 17, 2025",
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 export default function TermsPage() {
@@ -31,10 +35,10 @@ export default function TermsPage() {
           </div>
 
           <h1 className="text-4xl md:text-5xl mb-2 tos">Terms of Service for BarrelBook</h1>
-          <div className="mb-8">
-            <p className="text-gray-400">Last Updated: July 18, 2026</p>
+          <div className="mb-8 rounded-lg border border-[#333333] bg-[#0F0F0F] p-4">
+            <p className="text-gray-300"><strong>Archived version.</strong> Last Updated: September 17, 2025</p>
             <p className="mt-2 text-sm text-gray-400">
-              Prior version: <Link href="/terms/2025-09-17" className="text-[#D2691E] underline hover:text-[#E07A2B]">September 17, 2025</Link>
+              <Link href="/terms" className="text-[#D2691E] underline hover:text-[#E07A2B]">View the current Terms of Service</Link>
             </p>
           </div>
 
@@ -51,17 +55,15 @@ export default function TermsPage() {
                   <li><a className="text-gray-300 hover:text-white" href="#intellectual-property">6. Intellectual Property</a></li>
                   <li><a className="text-gray-300 hover:text-white" href="#user-generated-content-and-sharing">7. User-Generated Content &amp; Sharing</a></li>
                   <li><a className="text-gray-300 hover:text-white" href="#ai-and-data-processing">8. AI and Data Processing</a></li>
-                  <li><a className="text-gray-300 hover:text-white" href="#connected-services">9. Connected Services &amp; API</a></li>
-                  <li><a className="text-gray-300 hover:text-white" href="#privacy">10. Privacy</a></li>
-                  <li><a className="text-gray-300 hover:text-white" href="#legal-and-compliance-disclaimers">11. Legal &amp; Compliance</a></li>
-                  <li><a className="text-gray-300 hover:text-white" href="#copyright-and-dmca">12. Copyright &amp; DMCA</a></li>
-                  <li><a className="text-gray-300 hover:text-white" href="#no-warranties">13. No Warranties</a></li>
-                  <li><a className="text-gray-300 hover:text-white" href="#limitation-of-liability">14. Limitation of Liability</a></li>
-                  <li><a className="text-gray-300 hover:text-white" href="#indemnification">15. Indemnification</a></li>
-                  <li><a className="text-gray-300 hover:text-white" href="#modifications">16. Modifications</a></li>
-                  <li><a className="text-gray-300 hover:text-white" href="#termination">17. Termination</a></li>
-                  <li><a className="text-gray-300 hover:text-white" href="#governing-law">18. Governing Law</a></li>
-                  <li><a className="text-gray-300 hover:text-white" href="#contact-information">19. Contact</a></li>
+                  <li><a className="text-gray-300 hover:text-white" href="#privacy">9. Privacy</a></li>
+                  <li><a className="text-gray-300 hover:text-white" href="#legal-and-compliance-disclaimers">10. Legal &amp; Compliance</a></li>
+                  <li><a className="text-gray-300 hover:text-white" href="#no-warranties">11. No Warranties</a></li>
+                  <li><a className="text-gray-300 hover:text-white" href="#limitation-of-liability">12. Limitation of Liability</a></li>
+                  <li><a className="text-gray-300 hover:text-white" href="#indemnification">13. Indemnification</a></li>
+                  <li><a className="text-gray-300 hover:text-white" href="#modifications">14. Modifications</a></li>
+                  <li><a className="text-gray-300 hover:text-white" href="#termination">15. Termination</a></li>
+                  <li><a className="text-gray-300 hover:text-white" href="#governing-law">16. Governing Law</a></li>
+                  <li><a className="text-gray-300 hover:text-white" href="#contact-information">17. Contact</a></li>
                 </ul>
               </nav>
             </aside>
@@ -78,10 +80,7 @@ export default function TermsPage() {
                   <li>Use AI to scan and identify labels</li>
                   <li>Track estimated values and personal notes</li>
                   <li>Save photos and tasting impressions</li>
-                  <li>Ask B.B., an AI assistant that answers questions using your collection</li>
                   <li>Share selected bottles or collections with friends you choose</li>
-                  <li>Publish lists or shelves you choose to make public</li>
-                  <li>See community context derived from anonymous, aggregate statistics</li>
                 </ul>
                 <aside className="callout callout--warning" role="note" aria-label="Important">
                   <div className="callout__icon" aria-hidden="true">!</div>
@@ -115,7 +114,6 @@ export default function TermsPage() {
                 <ul>
                   <li>Use the App for lawful, personal, non-commercial purposes.</li>
                   <li>Share your collection with friends you choose.</li>
-                  <li>Publish lists or shelves you choose to make public.</li>
                   <li>Export your own data for personal reference.</li>
                 </ul>
                 <h3>You May Not:</h3>
@@ -144,8 +142,7 @@ export default function TermsPage() {
                 <h3>Your Content</h3>
                 <ul>
                   <li>You retain ownership of photos, notes, and data you upload.</li>
-                  <li>You grant us a limited license to host, store, process, and share your content solely to provide the App’s features, to display content publicly at your direction (for example, lists you publish), and, if you enable community contribution, to use contributed facts, ratings, prices, and corrections to improve shared bottle information and to create de-identified, aggregated statistics that do not identify you, which may be displayed in the App and on public bottle pages. If you opt in to Ask B.B. conversation review, this license also covers temporary copies of those conversations for quality review.</li>
-                  <li>If you choose to feature a photo on a public bottle page, you grant us a non-exclusive, royalty-free license to display that photo on that page and in previews of it, with attribution or anonymously as you choose, until you unfeature it or delete your account.</li>
+                  <li>You grant us a limited license to host, store, process, and share your content solely to provide the App’s features.</li>
                   <li>You are responsible for ensuring you have rights to any content you upload.</li>
                 </ul>
                 <h3>Whiskey Brand Information</h3>
@@ -164,40 +161,24 @@ export default function TermsPage() {
                   <li>Contains offensive, obscene, or illegal material.</li>
                   <li>Promotes, arranges, or solicits alcohol sales, trades, raffles, or shipments.</li>
                 </ul>
-                <p>Content you publish publicly (such as public lists or featured photos) is held to the same standards, including the prohibition on offering, soliciting, or arranging alcohol sales, trades, raffles, or shipments. We may unpublish or remove content that violates these Terms. Users can report inappropriate or unlawful content, and we will act on valid reports.</p>
+                <p>We may remove content that violates these Terms. Users can report inappropriate or unlawful content, and we will act on valid reports.</p>
 
                 <h2 id="ai-and-data-processing">8. AI and Data Processing</h2>
                 <ul>
-                  <li>Images you scan and questions you ask Ask B.B. may be processed by third-party AI providers.</li>
-                  <li>Ask B.B. is an artificial-intelligence assistant. Its responses are generated by AI using your recent conversation history and relevant context from your catalog, and may be inaccurate, incomplete, or out of date.</li>
-                  <li>AI recognition results and Ask B.B. responses may not be 100% accurate; verify independently.</li>
-                  <li>Ask B.B. does not provide professional, financial, valuation, medical, or legal advice.</li>
-                  <li>Do not submit another person’s confidential or sensitive information to Ask B.B.</li>
-                  <li>Feedback you submit may be used to improve the App.</li>
+                  <li>Images you scan may be processed by third-party AI providers.</li>
+                  <li>AI recognition results may not be 100% accurate; verify independently.</li>
                   <li>We are not responsible for AI-generated errors.</li>
                 </ul>
 
-                <h2 id="connected-services">9. Connected Services &amp; API Access</h2>
-                <p>BarrelBook offers an API (including MCP) that lets you connect third-party services you choose — such as AI assistants — to your own catalog.</p>
-                <ul>
-                  <li>Connecting a service is optional and happens at your direction. You authorize what it can access, and you can revoke access at any time in settings.</li>
-                  <li>Connector access is read-only: a connected service can request approved information from your catalog but cannot modify your catalog.</li>
-                  <li>Once data is shared with a service you connect, that provider’s own terms and privacy practices govern its use, retention, and security of your data. We are not responsible for third-party services.</li>
-                  <li>Requests made through your connected clients are attributed to you, and these Terms — including Acceptable Use — apply to API access.</li>
-                  <li>Keep connection credentials secure and do not share them.</li>
-                  <li>We may apply rate limits and may suspend API access for abuse.</li>
-                  <li>Outputs from connected AI assistants may be inaccurate; verify independently.</li>
-                </ul>
-
-                <h2 id="privacy">10. Privacy</h2>
+                <h2 id="privacy">9. Privacy</h2>
                 <p>Your use of the App is also governed by our Privacy Policy.</p>
                 <ul>
-                  <li>Some features allow you to share bottles or collections with friends, or to publish lists you choose to make public.</li>
-                  <li>You control what is shared or published, and you can revoke a public link at any time.</li>
-                  <li>Anyone who can view your shared or published content may still capture it (e.g., screenshots).</li>
+                  <li>Some features allow you to share bottles or collections with friends.</li>
+                  <li>You control what is shared.</li>
+                  <li>Friends who can view your shared content may still capture it (e.g., screenshots).</li>
                 </ul>
 
-                <h2 id="legal-and-compliance-disclaimers">11. Legal &amp; Compliance Disclaimers</h2>
+                <h2 id="legal-and-compliance-disclaimers">10. Legal &amp; Compliance Disclaimers</h2>
                 <div className="rounded-lg border border-[#D2691E]/30 bg-[#D2691E]/10 p-4">
                   <ul>
                     <li><strong>No Marketplace:</strong> BarrelBook is not a platform for buying, selling, or trading alcohol.</li>
@@ -207,30 +188,18 @@ export default function TermsPage() {
                   </ul>
                 </div>
 
-                <h2 id="copyright-and-dmca">12. Copyright &amp; DMCA Takedowns</h2>
-                <p>We respect intellectual property rights and respond to notices under the Digital Millennium Copyright Act (“DMCA”). If you believe content in the App or on our public pages infringes your copyright, send a notice to our designated agent at <a href="mailto:info@barrelbook.app">info@barrelbook.app</a> including:</p>
-                <ul>
-                  <li>Identification of the copyrighted work you claim is infringed.</li>
-                  <li>The location of the allegedly infringing material (URL or in-app location).</li>
-                  <li>Your name, address, email address, and telephone number.</li>
-                  <li>A good-faith statement that the use is not authorized by the copyright owner, its agent, or the law.</li>
-                  <li>A statement, under penalty of perjury, that the notice is accurate and that you are the owner or authorized to act for the owner.</li>
-                  <li>Your physical or electronic signature.</li>
-                </ul>
-                <p>We may remove or disable access to the identified material and may terminate the accounts of repeat infringers. Counter-notices may be submitted to the same address.</p>
-
-                <h2 id="no-warranties">13. No Warranties</h2>
+                <h2 id="no-warranties">11. No Warranties</h2>
                 <p>The App is provided “as is” without warranty of any kind.</p>
                 <ul>
                   <li>We disclaim all express or implied warranties, including merchantability and fitness for a particular purpose.</li>
                   <li>We do not guarantee the accuracy of bottle data, values, or AI results.</li>
                 </ul>
 
-                <h2 id="limitation-of-liability">14. Limitation of Liability</h2>
+                <h2 id="limitation-of-liability">12. Limitation of Liability</h2>
                 <p>To the maximum extent permitted by law, BarrelBook shall not be liable for indirect, incidental, special, or consequential damages.</p>
                 <p>Our total liability will not exceed the amount you paid for the App (if any) or $100, whichever is less.</p>
 
-                <h2 id="indemnification">15. Indemnification</h2>
+                <h2 id="indemnification">13. Indemnification</h2>
                 <p>You agree to indemnify and hold us harmless from claims, damages, or expenses arising from:</p>
                 <ul>
                   <li>Your violation of these Terms.</li>
@@ -238,24 +207,24 @@ export default function TermsPage() {
                   <li>Content you upload or share.</li>
                 </ul>
 
-                <h2 id="modifications">16. Modifications</h2>
+                <h2 id="modifications">14. Modifications</h2>
                 <p>We may modify these Terms or the App at any time.</p>
                 <ul>
                   <li>Material changes will be communicated via in-app notice or email.</li>
                   <li>Continued use of the App constitutes acceptance of the modified Terms.</li>
                 </ul>
 
-                <h2 id="termination">17. Termination</h2>
+                <h2 id="termination">15. Termination</h2>
                 <ul>
                   <li>We may suspend or terminate your account if you violate these Terms.</li>
                   <li>Upon termination, your right to use the App ceases immediately.</li>
                   <li>We may delete your data after a reasonable period.</li>
                 </ul>
 
-                <h2 id="governing-law">18. Governing Law</h2>
+                <h2 id="governing-law">16. Governing Law</h2>
                 <p>These Terms are governed by the laws of the State of Georgia (USA). Disputes shall be resolved in the courts of Georgia.</p>
 
-                <h2 id="contact-information">19. Contact Information</h2>
+                <h2 id="contact-information">17. Contact Information</h2>
                 <p>For questions about these Terms, please contact:</p>
                 <p><strong>Email:</strong> <a href="mailto:info@barrelbook.app">info@barrelbook.app</a><br />
                 <strong>Developer:</strong> BarrelBook</p>
@@ -275,4 +244,3 @@ export default function TermsPage() {
     </main>
   );
 }
-
