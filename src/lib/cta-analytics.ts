@@ -12,7 +12,8 @@ export type AndroidInterestAnalytics = {
 
 export type AndroidInterestEvent =
   | "android_interest_form_view"
-  | "android_interest_form_opened";
+  | "android_interest_form_opened"
+  | "android_interest_homepage_clicked";
 
 type GtagWindow = Window & {
   gtag?: (

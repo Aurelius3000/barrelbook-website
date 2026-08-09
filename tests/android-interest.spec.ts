@@ -33,7 +33,7 @@ test("homepage preserves the App Store CTA and provides an Android early-access 
   await page.goto("/");
 
   await expect(
-    page.getByRole("link", { name: "Join the early-access list." })
+    page.getByRole("link", { name: "Join Android early access" })
   ).toHaveAttribute("href", "/android");
   await expect(
     page.getByRole("link", { name: "Download on the App Store" }).first()

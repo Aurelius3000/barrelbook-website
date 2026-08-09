@@ -14,7 +14,7 @@ import StoryVideo from "@/components/StoryVideo";
 import {
   APP_STORE_URL,
 } from "@/lib/app-store";
-import { trackAppStoreCtaClick } from "@/lib/cta-analytics";
+import { trackAndroidInterest, trackAppStoreCtaClick } from "@/lib/cta-analytics";
 
 export default function LandingPage() {
   const [billingCycle, setBillingCycle] = useState<"yearly" | "monthly">("yearly");
@@ -604,23 +604,26 @@ export default function LandingPage() {
             Capture bottles, organize your collection, and keep your shelf with you wherever you go.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 items-center">
+          <div className="mb-8 flex flex-col items-center gap-4">
             <AppStoreBadgeLink
               width={180}
               height={60}
               analytics={{ page: "/", location: "download" }}
             />
-          </div>
-
-          <p className="text-sm text-gray-500">
-            Available on iPhone and iPad today. Want Android?{" "}
             <Link
               href="/android"
-              className="text-[#D2691E] underline decoration-[#D2691E]/60 underline-offset-4 hover:text-[#E38A49]"
+              onClick={() =>
+                trackAndroidInterest("android_interest_homepage_clicked", {
+                  placement: "homepage_download",
+                })
+              }
+              className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[#D2691E] px-5 py-3 text-sm font-medium text-[#E38A49] transition-colors hover:bg-[#D2691E]/15 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D2691E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]"
             >
-              Join the early-access list.
+              Join Android early access
             </Link>
-          </p>
+          </div>
+
+          <p className="text-sm text-gray-500">Available on iPhone and iPad today.</p>
         </div>
       </section>
 
