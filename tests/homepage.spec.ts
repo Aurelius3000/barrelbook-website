@@ -26,7 +26,7 @@ test('homepage content and order match landing page direction', async ({ page },
     const isKnownHeadlessMediaProbe =
       req.url().startsWith('http://localhost:3000/videos/') &&
       req.url().endsWith('.mp4') &&
-      req.failure()?.errorText === 'cancelled';
+      ['cancelled', 'net::ERR_ABORTED'].includes(req.failure()?.errorText ?? '');
     const isCancelledVercelAnalyticsLoader =
       req.url().startsWith('https://va.vercel-scripts.com/') &&
       req.failure()?.errorText === 'cancelled';
