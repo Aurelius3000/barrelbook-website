@@ -19,6 +19,9 @@ test("Android early-access page routes a visitor to the published consent form w
     page.getByRole("link", { name: "Continue to Google Form" })
   ).toHaveAttribute("href", ANDROID_EARLY_ACCESS_FORM_URL);
   await expect(
+    page.locator('a[href="/#how-it-works"]')
+  ).toHaveCount(1);
+  await expect(
     page.getByRole("link", { name: "Download on the App Store" })
   ).toHaveCount(0);
   await expect(page.locator('input[type="email"]')).toHaveCount(0);

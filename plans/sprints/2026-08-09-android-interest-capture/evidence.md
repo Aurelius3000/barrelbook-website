@@ -24,8 +24,16 @@
 - `npm run build`: passed; output includes `/android`.
 - Fresh local visual inspection passed: desktop and 390px-wide mobile show no App Store link on `/android`, preserve the early-access card, and display the explicit Google Form CTA.
 
+## 2026-08-09 PR review follow-up
+
+- `/android` header links now use homepage-qualified targets (`/#how-it-works`, `/#pricing`, and `/#download`) rather than dead page-local anchors.
+- Homepage video-request suppression is limited to the known local headless cancellation of a `/videos/*.mp4` request; other video failures remain test failures.
+- `npm run test:e2e`: 12 passed, 3 expected responsive-project skips.
+- `npm run lint`: passed with six pre-existing warnings and no errors.
+- `npm run build`: passed; output includes `/android`.
+
 ## External verification pending
 
-- The website feature remains uncommitted and undeployed. Its live `/android` page still returns `404` until a separately approved release.
+- The website feature is committed in PR #20 and remains undeployed. Its live `/android` page still returns `404` until a separately approved release.
 - No real responder submission, campaign, or outbound email was sent.
 - The current Terms and Privacy pages are intentionally unchanged. Deployment approval and the later email-platform/import/send decisions remain separate gates.

@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
 
 async function stabilizeVideoForScreenshot(page: import('@playwright/test').Page) {
+  // Keep visual snapshots deterministic without disabling the page's video
+  // requests; request failures below remain visible test failures.
   await page.addStyleTag({
     content: 'video { opacity: 0 !important; }',
   });
@@ -12,21 +14,24 @@ test('homepage content and order match landing page direction', async ({ page },
   const requestFailures: string[] = [];
 
   page.on('console', (msg) => {
-    // Chromium/WebKit can report a 403 while probing local MP4 media ranges in
-    // headless mode. The page continues to render its poster/fallback normally;
-    // retain all other console errors as regressions.
-    if (msg.type() === 'error' && !msg.text().includes('server responded with a status of 403')) {
+    const isKnownHeadlessVideoRangeProbe =
+      msg.text().includes('/videos/') && msg.text().includes('status of 403');
+
+    if (msg.type() === 'error' && !isKnownHeadlessVideoRangeProbe) {
       consoleErrors.push(msg.text());
     }
   });
   page.on('pageerror', (err) => pageErrors.push(err.message));
   page.on('requestfailed', (req) => {
-    const isHeadlessMediaProbe = req.url().endsWith('.mp4');
+    const isKnownHeadlessMediaProbe =
+      req.url().startsWith('http://localhost:3000/videos/') &&
+      req.url().endsWith('.mp4') &&
+      req.failure()?.errorText === 'cancelled';
     const isCancelledVercelAnalyticsLoader =
       req.url().startsWith('https://va.vercel-scripts.com/') &&
       req.failure()?.errorText === 'cancelled';
 
-    if (!isHeadlessMediaProbe && !isCancelledVercelAnalyticsLoader) {
+    if (!isKnownHeadlessMediaProbe && !isCancelledVercelAnalyticsLoader) {
       requestFailures.push(`${req.url()} (${req.failure()?.errorText || 'unknown'})`);
     }
   });
