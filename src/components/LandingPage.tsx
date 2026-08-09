@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useState } from "react";
+import Link from "next/link";
 import { Star, Check, Images, BookOpen, ChevronDown, Camera, MapPin, Share2, Wine, Sparkles } from "lucide-react";
 import AppStoreBadgeLink from "@/components/AppStoreBadgeLink";
 import AppStoreRatingLink from "@/components/AppStoreRatingLink";
@@ -611,7 +612,15 @@ export default function LandingPage() {
             />
           </div>
 
-          <p className="text-sm text-gray-500">Available on iPhone and iPad today. Android is on the roadmap.</p>
+          <p className="text-sm text-gray-500">
+            Available on iPhone and iPad today. Want Android?{" "}
+            <Link
+              href="/android"
+              className="text-[#D2691E] underline decoration-[#D2691E]/60 underline-offset-4 hover:text-[#E38A49]"
+            >
+              Join the early-access list.
+            </Link>
+          </p>
         </div>
       </section>
 

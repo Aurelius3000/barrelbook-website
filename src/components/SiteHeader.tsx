@@ -14,10 +14,12 @@ const DEFAULT_NAV_ITEMS: SiteHeaderNavItem[] = [
 
 type SiteHeaderProps = {
   navItems?: SiteHeaderNavItem[];
+  showAppStoreBadge?: boolean;
 };
 
 export default function SiteHeader({
   navItems = DEFAULT_NAV_ITEMS,
+  showAppStoreBadge = true,
 }: SiteHeaderProps) {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0A]/95 backdrop-blur-md border-b border-[#333333]">
@@ -44,14 +46,16 @@ export default function SiteHeader({
             ))}
           </nav>
 
-          <AppStoreBadgeLink
-            className="inline-flex items-center"
-            width={140}
-            height={46}
-            imageClassName="h-9 w-auto"
-            analytics={{ location: "header" }}
-            priority
-          />
+          {showAppStoreBadge ? (
+            <AppStoreBadgeLink
+              className="inline-flex items-center"
+              width={140}
+              height={46}
+              imageClassName="h-9 w-auto"
+              analytics={{ location: "header" }}
+              priority
+            />
+          ) : null}
         </div>
       </div>
     </header>
