@@ -6,6 +6,14 @@ export type AppStoreCtaAnalytics = {
   plan?: string;
 };
 
+export type AndroidInterestAnalytics = {
+  placement: "android_page" | "homepage_download";
+};
+
+export type AndroidInterestEvent =
+  | "android_interest_form_view"
+  | "android_interest_form_opened";
+
 type GtagWindow = Window & {
   gtag?: (
     command: "event",
@@ -34,5 +42,18 @@ export function trackAppStoreCtaClick({
 
   if (typeof window !== "undefined") {
     (window as GtagWindow).gtag?.("event", "app_store_cta_clicked", props);
+  }
+}
+
+export function trackAndroidInterest(
+  eventName: AndroidInterestEvent,
+  { placement }: AndroidInterestAnalytics
+) {
+  const props = { placement };
+
+  track(eventName, props);
+
+  if (typeof window !== "undefined") {
+    (window as GtagWindow).gtag?.("event", eventName, props);
   }
 }
