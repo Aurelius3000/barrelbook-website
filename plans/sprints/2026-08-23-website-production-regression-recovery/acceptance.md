@@ -12,3 +12,4 @@
 - [x] TypeScript, focused lint, build, promo tests, focused Playwright, and full end-to-end tests pass.
 - [x] Preview deployment reaches `Ready`; Vercel's production build succeeds and enumerates the expected `/android` and `/support` routes.
 - [x] No production alias is changed without separate approval.
+- [x] The exact merged commit is deployed to production; `www.barrelbook.app` passes the fresh-origin homepage, support, Android, sitemap, legal, App Store destination, and AASA acceptance audit.
