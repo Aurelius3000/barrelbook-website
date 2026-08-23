@@ -190,8 +190,23 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#0A0A0A] text-white">
       <SiteHeader />
 
+      <aside className="pt-20 px-4 sm:px-6 lg:px-8" aria-label="Support notice">
+        <Link
+          href="/support"
+          prefetch
+          className="mx-auto flex max-w-7xl flex-col items-center rounded-b-2xl border border-t-0 border-[#8A4B20] bg-[#21150E] px-5 py-6 text-center transition-colors hover:bg-[#2B1A10]"
+        >
+          <span className="text-xl font-medium text-white md:text-2xl">
+            Having trouble signing in to BarrelBook or seeing your collection?
+          </span>
+          <span className="mt-4 inline-flex items-center rounded-md bg-[#D2691E] px-4 py-2 text-sm font-medium text-white">
+            Get help with BarrelBook 1.7.3 →
+          </span>
+        </Link>
+      </aside>
+
       {/* Hero Section */}
-      <section className="pt-28 pb-12 px-4 sm:px-6 lg:px-8">
+      <section className="pt-8 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             {/* Text column */}
@@ -590,7 +605,7 @@ export default function LandingPage() {
       {/* Support Note */}
       <div className="px-4 sm:px-6 lg:px-8">
         <p className="max-w-5xl mx-auto text-center text-gray-400 text-sm">
-          For help or support, send an email to <a href="mailto:support@barrelbook.app" className="underline hover:text-white">support@barrelbook.app</a>
+          Need help? Visit <Link href="/support" className="underline hover:text-white">BarrelBook Support</Link> or email <a href="mailto:support@barrelbook.app" className="underline hover:text-white">support@barrelbook.app</a>.
         </p>
       </div>
 
