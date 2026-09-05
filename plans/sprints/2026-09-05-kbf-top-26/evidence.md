@@ -1,5 +1,38 @@
 # Evidence
 
+## Recovery preview passed: Sept. 5, 2026
+
+The confirmed production mismatch is fixed in the feature branch. Production and main remain untouched. Stop for Pete's review; no merge or production deploy is approved.
+
+- Recovery commit: `950b351518c726a9a2686f09995a5c66f2a217f6`, `fix(site): recover live Android CTA changes before KBF`.
+- Reviewed and committed 21 exact paths: seven production files, two tests, five existing test snapshots, and seven sprint notes. Staged contents matched working files. Whitespace and focused secret-pattern checks passed. All 19 local doc links resolved. No environment files, local config, generated reports, or unrelated source entered the commit.
+- Pushed only `codex/kbf-release-radar`. The Git integration created the preview; no manual upload, project relink, or production command was used.
+- [Reviewed KBF preview](https://barrelbook-website-eq83pfle4-pete-petereillycs-projects.vercel.app/releases/kbf-2026). Deployment `dpl_5krR4YUJ267ScdPxRBnR3kf3kYe9` is Ready. Its project, branch, and full Git SHA match the recovery commit. It has no production target.
+- Normal sign-in carried over in the existing browser. No auth bypass, cookie export, share token, environment change, or protection change was used.
+
+### Fresh hosted checks
+
+| Check | Result |
+| --- | --- |
+| Existing site parity | All 12 pages match the live captures for title, canonical, visible text, headings, links, media, and CTA counts. No sideways scroll. Home has 3 paired badges; scan, collection, and store picks have 4 each. The old prominent warning is absent. |
+| Master and metadata | Exact 25 slots in order, one open pick with no link, ItemList of 25, and the production canonical URL. |
+| Detail pages | All 29 pass on the new deployment: title, canonical, known facts, gaps, sources, check date, and 3 active related links each. All fit the 532-pixel view. All four parked pages retain their banner and noindex, follow. |
+| Phone filters | All six day counts pass. Search returns Phifer Pavitt 2, MAKERS 1, and parked Thirty-One 0. Status counts are 9 Confirmed, 15 Reported, and 1 Watch. Combined age/proof returns 9. Clear all restores 25 and the open pick. |
+| Visual review | Reviewed the phone KBF index and desktop homepage inline. The phone homepage matches live at 390 pixels. The desktop homepage and KBF index fit 1440 pixels. Browser viewport reset; the tab remains on the reviewed KBF page. |
+| Scripts and logs | One Vercel Analytics script on the KBF page. No errors or warnings in the inspected KBF logs. Google Analytics stays absent under the existing preview scope; no setting changed. |
+
+All earlier local tests still apply to this exact source. Event payload tests use local capture, not analytics dashboard receipt. Real iPhone handoff, production event receipt, hosted sitemap XML, and source freshness remain the limits described below. No form, offer, gift, or App Store action was submitted during hosted QA.
+
+### Preservation and handoff
+
+- Production postflight: Ready deployment `dpl_Baw2jeR53uJrANbfEUEAbY5FdSH2`, unchanged before and after the feature push. Retain it as the rollback reference.
+- Remote main remains `a8acc0c6334336f49f3fb96fe296cdecf9c5014e`. The feature branch matched its remote and was clean after the source push.
+- The original dirty checkout's status, staged diff, and unstaged diff hashes match preflight. No branch switch, reset, stash, merge, PR, or production deploy was made.
+- The five KBF source files remain unchanged. Photos, Meta posts, bottle facts, and the open pick remain outside this recovery.
+- Generated test reports were preserved under ignored `output/playwright/kbf-recovery-reports.QzcX45/`. They are not release assets.
+- This five-file follow-up QA receipt changes sprint notes only. Its reviewed source is commit `950b351`; later docs-only branch builds do not change that app source.
+- The Vercel deploy checklist kept all publishing preview-only and preserved normal sign-in. The Playwright workflow supplied local test and screenshot checks; the existing browser supplied signed-in parity evidence.
+
 ## Approved recovery: local checks passed on Sept. 5, 2026
 
 Pete approved recovery, tests, commit, and feature-branch push with "proceed." Main and production remain out of scope. The full plan and file list are in `plan.md`.
@@ -30,7 +63,7 @@ The restored tests capture events locally. They check all 15 paired CTA groups a
 
 The standalone Playwright CLI could not load its uncached package because of sandbox DNS. No dependency was installed. The repository's browser suite passed; manual parity checks used the existing browser. Reviewed screenshots appeared inline. Generated HTML reports stay local and are not staged.
 
-Next: staged review, approved feature commit and push, then a fresh hosted preview check. No merge or production deploy is approved. The historical blocker below stays open until that preview passes.
+The later source commit and hosted preview checks above close this local checkpoint. No merge or production deploy is approved.
 
 ## Historical launch blocker: live-only changes missing from Git
 

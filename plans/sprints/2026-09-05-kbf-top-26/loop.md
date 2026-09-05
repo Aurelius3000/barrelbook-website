@@ -2,9 +2,9 @@
 
 Outcome: launch a source-backed KBF 2026 watchlist at `/releases/kbf-2026` with reusable bottle details.
 
-Status: master sync and approved live-source recovery complete locally. The restored build matches 12 live pages. Typecheck, lint, build, promo tests, and 22 browser tests pass. Read the current recovery record at the top of `evidence.md`, then `master-list.md`. Production is unchanged.
+Status: master sync and live-source recovery complete. Commit `950b351` is pushed. Preview `dpl_5krR4YUJ267ScdPxRBnR3kf3kYe9` is Ready and passes signed-in checks: 12 live pages match, all 29 details work, and filters pass. Typecheck, lint, build, promo tests, and 22 local browser tests pass. Read the current recovery record at the top of `evidence.md`, then `master-list.md`. Production is unchanged.
 
-Next: inspect the staged recovery, commit and push the feature branch under Pete's approval, then verify the new preview. The old preview lacks the live fixes and must not be promoted. Stop for review after the fresh preview passes. Before launch, recheck sources and production parity. Get separate approval to merge and publish. Do not weaken preview protection. Do not repeat the master sync. Do not treat social slots as sale dates or rankings. Do not rebuild the prototype or repeat the old primary-source gate.
+Next: stop for Pete's review of the fresh preview. The old preview lacks the live fixes and must not be promoted. Before launch, recheck sources, remote main, and production parity. Get separate approval to merge and publish a reviewed Git commit. Keep the recorded rollback target. Do not upload a dirty checkout or weaken preview protection. Do not repeat the recovery or master sync. Do not treat social slots as sale dates or rankings. Do not rebuild the prototype or repeat the old primary-source gate.
 
 Test limits: Google Analytics is not configured for this preview branch. App-association IDs are production-only. Event delivery and real iPhone handoff remain launch checks. The browser blocked hosted sitemap XML; local sitemap QA passed. Do not change settings to hide these limits.
 

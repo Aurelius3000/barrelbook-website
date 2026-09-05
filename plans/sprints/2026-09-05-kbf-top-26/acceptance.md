@@ -1,7 +1,7 @@
 # Production acceptance criteria
 
 Local QA for the master sync passed on Sept. 5, 2026. See `evidence.md` for results and known local warnings.
-The first hosted preview passed KBF checks but failed live-site parity. The approved recovery now restores the missing live changes. Local comparisons match 12 live pages. Typecheck, lint, build, promo checks, and all 22 browser tests pass, with 5 expected skips. The five refreshed screenshot baselines were reviewed. A fresh hosted preview still needs checks before any launch request.
+The first hosted preview passed KBF checks but failed live-site parity. Recovery commit `950b351` fixes that mismatch. The fresh hosted preview matches all 12 checked live pages and passes all 29 detail checks. Typecheck, lint, build, promo checks, and all 22 local browser tests pass, with 5 expected skips. The five refreshed screenshot baselines were reviewed. Pete's review and separate merge/launch approval are next.
 
 Hosted checks cover all 29 detail pages, master order, filters, phone and desktop layout, metadata, and existing handoff links. Google Analytics has no setting for this preview branch, and app-association IDs are production-only. Event delivery and real iPhone handoff remain launch checks. The browser blocked hosted sitemap XML; the same code passed its local sitemap test.
 

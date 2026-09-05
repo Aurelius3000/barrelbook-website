@@ -1,6 +1,6 @@
 # KBF 2026 master list
 
-Status: master roster synced. Pete also approved recovery of the live site's missing homepage and Android CTA fixes. That recovery passes local tests and live-page comparisons. The roster and all five KBF source files remain unchanged from `6202bb4`. A fresh preview check is next. See `evidence.md`. Production is unchanged.
+Status: master roster synced. Recovery commit `950b351` restores the live site's homepage and Android CTA fixes. The new preview passes live-page and KBF checks. The roster and all five KBF source files remain unchanged from `6202bb4`. Pete's preview review is next. See `evidence.md`. Production is unchanged.
 
 This file controls the selected bottles, social slots, parked list, and swaps.
 It replaces the old 26-bottle roster as the editorial master.
