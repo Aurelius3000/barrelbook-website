@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
 import Link from "next/link";
-import { Star, Check, Images, BookOpen, ChevronDown, Camera, MapPin, Share2, Wine, Sparkles, ArrowRight } from "lucide-react";
+import { Star, Check, Images, BookOpen, ChevronDown, Camera, MapPin, Share2, Wine, Sparkles } from "lucide-react";
 import AppStoreRatingLink from "@/components/AppStoreRatingLink";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import HeroVideo from "@/components/HeroVideo";
@@ -188,7 +188,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white">
-      <SiteHeader />
+      <SiteHeader showMobileMenu />
 
       {/* Hero Section */}
       <section className="pt-28 pb-12 px-4 sm:px-6 lg:px-8">
@@ -208,16 +208,6 @@ export default function LandingPage() {
               <p className="text-xl text-gray-400 mb-6 max-w-3xl mx-auto lg:mx-0 leading-relaxed">
                 BarrelBook captures the details bourbon collectors care about — store picks, barrel numbers, batches — straight from a photo. No barcodes, no typing, no spreadsheets.
               </p>
-
-              <div className="mb-6">
-                <Link
-                  href="/releases/kbf-2026"
-                  className="inline-flex min-h-11 items-center gap-2 rounded-md text-base font-medium text-[#E38A49] underline decoration-[#E38A49]/50 underline-offset-4 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E38A49] focus-visible:ring-offset-4 focus-visible:ring-offset-[#0A0A0A]"
-                >
-                  KBF 2026 Release Radar
-                  <ArrowRight aria-hidden="true" className="h-4 w-4 shrink-0" />
-                </Link>
-              </div>
 
               {/* WEB-005: Social proof from the current App Store listing. */}
               <AppStoreRatingLink className="inline-flex items-center gap-2 mb-6 text-sm text-gray-300 hover:text-white transition-colors" />

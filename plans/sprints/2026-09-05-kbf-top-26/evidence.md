@@ -1,5 +1,35 @@
 # Evidence
 
+## Homepage menu: approved Sept. 5, 2026
+
+Pete approved this ten-file change, tests, commit, and feature-branch push. No merge or production deploy is approved.
+
+1. Remove the link below the homepage intro. Add `KBF 2026` to the homepage menu, pointing to `/releases/kbf-2026` in the same tab.
+2. Add a compact Menu control on phones and tablets. Keep it opt-in for the homepage so other shared headers retain their current behavior. Support keyboard use, Escape, and closing after a menu link is chosen.
+3. Preserve the App Store and Android buttons, their destinations, and their tracking. Leave KBF data, routes, photos, and all other pages unchanged.
+4. Change only `SiteHeader.tsx`, `LandingPage.tsx`, `tests/homepage.spec.ts`, its five existing screenshot baselines, this evidence file, and the sprint README.
+5. Run typecheck, lint, build, promo tests, and the browser suite. Review the five updated baselines and check phone, tablet, desktop, keyboard access, and narrow-screen fit. Commit the exact reviewed scope, push only `codex/kbf-release-radar`, and check the new protected preview.
+
+Preflight: the feature branch is clean at `2464112079b6c37a4aacc24a69efaf15b09fc43b`, matching its remote. Main remains `a8acc0c6334336f49f3fb96fe296cdecf9c5014e`. Production remains Ready deployment `dpl_Baw2jeR53uJrANbfEUEAbY5FdSH2`, with main as its production branch. The original checkout's status and diff hashes match the prior check. No production setting changed.
+
+### Local checks
+
+- The homepage now has `KBF 2026` in its header menu. Phones and tablets use the Menu control. The intro link is removed. Other pages do not opt into the phone menu.
+- `npx tsc --noEmit`, `npm run build`, and `npm run test:promo` passed. Build output contains 56 static pages. Full lint passed with 0 errors and 6 existing warnings in unchanged files; focused lint passed.
+- The full browser suite passed: 31 tests, 8 expected skips. It covers keyboard access to KBF, Escape with focus return, closing after a link choice or focus leaves, outside clicks, resizing, and the existing Android tracking checks. All 15 paired download groups remain covered.
+- Reviewed all five updated screenshot baselines. Browser checks also confirmed the menu at 320, 390, 834, 1024, and 1440 pixels. The automated sweep includes 640 pixels. No horizontal overflow or control overlap appeared. Phone menu targets are at least 44 pixels tall. Both desktop and phone menus open the 25-bottle radar.
+- Compared `/scan`, `/collection`, `/store-picks`, and `/android` with the prior reviewed preview at 1440 pixels. Titles, canonical links, text, headings, links, media, and CTA counts match. None gained a KBF link or phone menu.
+- Only `LandingPage.tsx` and `SiteHeader.tsx` changed in app source. KBF records, index, detail pages, sitemap, download components, tracking helpers, assets, packages, and route files are unchanged.
+- Browser reports stay in ignored `output/playwright/kbf-home-menu/`. No generated report or local configuration belongs in the commit.
+
+### Issues found and test limits
+
+The first run caught rem-based touch targets below 44 pixels under the site's 14-pixel root font. They now use a fixed 44-pixel minimum. WebKit's default link-tab shortcut is Option-Tab, confirmed in an isolated browser check; the tests now use that shortcut. A resize check also exposed an event timing issue. The handler now reads the event's breakpoint state, and the test waits for the closed state before resizing back.
+
+Later full runs reached a blocked third-party development script at `https://va.vercel-scripts.com/v1/script.debug.js`. WebKit reported HTTP 403; Chromium reported `net::ERR_BLOCKED_BY_ORB`. The homepage test records these two exact debug-script failures as `external-check-limit` annotations. All other console and request error checks remain active. No production script, analytics helper, event payload, or environment setting changed. Hosted script loading still needs a separate check; these tests do not prove analytics delivery.
+
+Next: stage and review the exact ten-file scope, commit, push only the feature branch, and check its new protected preview. The Playwright workflow supplied browser and screenshot checks. The Vercel checklist keeps publishing preview-only.
+
 ## Homepage link: preview passed on Sept. 5, 2026
 
 Pete approved a homepage link, then the nine-file scope, tests, commit, and feature-branch push. Production remains out of scope.
