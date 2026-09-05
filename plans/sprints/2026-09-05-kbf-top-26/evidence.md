@@ -1,6 +1,6 @@
 # Evidence
 
-## Approved homepage link: Sept. 5, 2026
+## Homepage link: preview passed on Sept. 5, 2026
 
 Pete approved a homepage link, then the nine-file scope, tests, commit, and feature-branch push. Production remains out of scope.
 
@@ -25,7 +25,17 @@ The link is built and local checks pass. It sits below the intro copy, above the
 - KBF records, index, detail pages, sitemap, shared header, platform buttons, and tracking helpers are unchanged. No new event, source claim, image, or bottle was added.
 - Browser reports and run artifacts stay in ignored `output/playwright/kbf-home-link/`. Test-only video hiding is unchanged. The live video renders in the local production build.
 
-Next: review the nine staged paths, commit and push the approved feature branch, then check the hosted homepage link. No merge or production deploy is approved.
+### Commit, preview, and handoff
+
+- Committed the nine reviewed files as `efc5921faa3400843a6efaa34b3aba2c52f79929`, `feat(releases): link KBF radar from homepage`. Exact staged contents, whitespace, and focused secret-pattern checks passed. All 18 local doc links resolved. No local config or generated report was staged.
+- Pushed only `codex/kbf-release-radar`. Vercel's Git integration created Ready preview `dpl_J8J7uuxVMJcVmSpoqgZn2eYPDtYX` for that exact commit and project. It has no production target.
+- [Reviewed homepage preview](https://barrelbook-website-eiwysckys-pete-petereillycs-projects.vercel.app/). Normal sign-in worked in the existing browser. No auth bypass, access change, or manual deploy was used.
+- Hosted checks passed at 390 and 1440 pixels: the link opens `/releases/kbf-2026` in the same tab with 25 bottles and one open pick. The hosted homepage matches the local build's text, headings, links, metadata, media, and CTA counts. There is no horizontal overflow at 1440 pixels and no old support warning.
+- Reviewed the hosted phone and desktop screenshots. The homepage retains three App Store badges and three Android waitlist badges. The inspected radar logs have no errors or warnings. The browser viewport was reset, and the tab was left on the new homepage.
+- Postflight: production remains Ready deployment `dpl_Baw2jeR53uJrANbfEUEAbY5FdSH2`; remote main remains `a8acc0c6334336f49f3fb96fe296cdecf9c5014e`. The original checkout's status and diff hashes still match preflight. The feature branch was clean and matched its remote after the source push.
+- This follow-up receipt changes only the two approved sprint notes. Its reviewed app source remains `efc5921`. The Vercel checklist kept publishing preview-only; Playwright supplied keyboard, layout, screenshot, and regression checks.
+
+Next: Pete's preview review. No merge or production deploy is approved. Bottle facts were not rechecked in this link-only pass. Existing source-freshness, live analytics, and real iPhone handoff checks remain launch gates.
 
 ## Recovery preview passed: Sept. 5, 2026
 

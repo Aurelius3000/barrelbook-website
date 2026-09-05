@@ -1,6 +1,6 @@
 # KBF 2026 Release Radar
 
-Status: master roster synced and live-source recovery complete. The approved homepage link is built and passes local checks, including 25 browser tests with 5 expected skips. A fresh feature-branch preview is next. Production is unchanged.
+Status: the homepage now links to the radar. Commit `efc5921` is pushed, and its protected preview is Ready. Hosted phone and desktop checks passed. Local checks passed, including 25 browser tests with 5 expected skips. Production is unchanged.
 
 The local and hosted previews show Pete's 25 named bottles in master order, with slot 26 open. Four parked bottles keep their detail pages. Production is unchanged.
 
@@ -8,7 +8,7 @@ Branch: `codex/kbf-release-radar`, based on `origin/main` at `a8acc0c`.
 Worktree: `/Users/petereilly2021/Projects/barrelbook-website-kbf-release-radar`.
 The original checkout and its unrelated edits remain in place.
 
-[Master list and match-up](master-list.md) | [Reviewed preview, Vercel sign-in required](https://barrelbook-website-eq83pfle4-pete-petereillycs-projects.vercel.app/releases/kbf-2026) | [Recovered local preview](http://127.0.0.1:4175/releases/kbf-2026) | [Plan](plan.md) | [QA and changed files](evidence.md)
+[Preview homepage](https://barrelbook-website-eiwysckys-pete-petereillycs-projects.vercel.app/) | [KBF radar preview](https://barrelbook-website-eiwysckys-pete-petereillycs-projects.vercel.app/releases/kbf-2026) | [Master list and match-up](master-list.md) | [Local preview](http://127.0.0.1:4175/) | [Plan](plan.md) | [QA and changed files](evidence.md)
 
 ## Goal
 
@@ -33,7 +33,7 @@ The prototype stays here as a visual reference. It is not production content.
 
 ## Next step
 
-Commit and push the approved homepage link, then review the new preview. The new link sits below the homepage intro and opens the radar. The existing App Store and Android paths remain intact. The earlier recovery matched 12 live pages and passed all 29 bottle detail checks. No merge or production deploy is approved. See `evidence.md` for the current plan and results.
+Review the preview homepage. Click `KBF 2026 Release Radar` below the intro to open the watchlist. The existing App Store and Android paths remain intact. The earlier recovery matched 12 live pages and passed all 29 bottle detail checks; the KBF source is unchanged. No merge or production deploy is approved. See `evidence.md` for the current plan and results.
 Do not promote the original preview or upload a dirty checkout. Any launch must use a reviewed Git commit, a fresh live-site comparison, and the recorded rollback target. Keep production and preview protection unchanged until launch approval.
 Google Analytics is not configured for this preview branch. App-association IDs are production-only. Event delivery and real iPhone handoff remain launch checks. The browser blocked the hosted sitemap XML; its local check passed. See `evidence.md` for the limits.
 Before launch, compare again with the latest main branch and live deployment, then recheck sources and get production approval. Meta, photos, and production deploys remain separate steps. Slot 26 and the Barrell fallback need an approved pick or swap.
