@@ -28,7 +28,17 @@ The first run caught rem-based touch targets below 44 pixels under the site's 14
 
 Later full runs reached a blocked third-party development script at `https://va.vercel-scripts.com/v1/script.debug.js`. WebKit reported HTTP 403; Chromium reported `net::ERR_BLOCKED_BY_ORB`. The homepage test records these two exact debug-script failures as `external-check-limit` annotations. All other console and request error checks remain active. No production script, analytics helper, event payload, or environment setting changed. Hosted script loading still needs a separate check; these tests do not prove analytics delivery.
 
-Next: stage and review the exact ten-file scope, commit, push only the feature branch, and check its new protected preview. The Playwright workflow supplied browser and screenshot checks. The Vercel checklist keeps publishing preview-only.
+### Commit and hosted preview
+
+- Committed the ten reviewed files as `6f1766e63d0445ac629e139f779fd98332693305`, `feat(releases): move KBF link into homepage menu`. Exact staging, whitespace, and focused secret-pattern checks passed. All 18 local doc links resolved. No local config, generated report, or unrelated change entered the commit.
+- Pushed only `codex/kbf-release-radar`. Vercel's Git integration created Ready preview `dpl_BZm6MJCJb4srCdkWvpUyDxNPmYuB` for that exact SHA and project. It has no production target. No manual upload, auth bypass, project relink, or access-setting change was used.
+- [Reviewed homepage preview](https://barrelbook-website-q2i56h45c-pete-petereillycs-projects.vercel.app/). Normal sign-in carried over in the existing browser. Phone and desktop menu links open the radar in the same tab, with 25 bottles and one open pick.
+- Hosted phone Escape closes the menu and returns focus to its button. Reviewed phone and desktop screenshots. The 1440-pixel homepage matches the local build's metadata, text, headings, links, media, and CTA counts with no horizontal overflow. It retains three App Store and three Android waitlist placements.
+- The hosted homepage has one production Vercel Analytics script tag at `/_vercel/insights/script.js`. The inspected homepage and radar logs have no errors or warnings. This is not proof of event receipt. Google Analytics and app-association preview settings remain unchanged; live event delivery and real iPhone handoff remain launch checks.
+- Production postflight remains Ready deployment `dpl_Baw2jeR53uJrANbfEUEAbY5FdSH2`, and remote main remains `a8acc0c6334336f49f3fb96fe296cdecf9c5014e`. The feature branch was clean and matched its remote after the source push. The original checkout's status and diff hashes still match preflight.
+- The viewport was reset. The existing preview tab now opens the new homepage. This follow-up receipt changes only the two approved sprint notes; the reviewed app source stays `6f1766e`.
+
+Next: Pete's preview review. No merge or production deploy is approved. The Playwright workflow supplied browser and screenshot checks. The Vercel checklist kept publishing preview-only. Bottle facts and photos were not rechecked or changed in this menu-only pass.
 
 ## Homepage link: preview passed on Sept. 5, 2026
 
