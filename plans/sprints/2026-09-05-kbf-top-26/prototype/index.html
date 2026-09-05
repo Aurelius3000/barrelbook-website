@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BarrelBook Release Radar — KBF 2026</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="BarrelBook Release Radar home">
+        <img src="/public/BarrelBook%20Logo%20Large.png" alt="BarrelBook" />
+        <span></span><strong>Release Radar</strong>
+      </a>
+      <p class="prototype-label">Concept prototype · release facts require verification</p>
+    </header>
+
+    <main>
+      <section class="hero shell">
+        <div>
+          <p class="eyebrow">Kentucky Bourbon Festival 2026</p>
+          <h1>Plan your KBF<br />bottle hunt.</h1>
+          <p class="intro">A ranked watchlist for collectors—not a generic festival guide. Every detail is anchored to a source, and unknown timing stays visibly unknown.</p>
+          <div class="meta-line"><span class="status-dot"></span> Last reviewed Sep 5, 2026 <i></i> Sep 10–13 · Bardstown, Kentucky</div>
+        </div>
+        <aside class="hero-note">
+          <b>26</b>
+          <div><strong>collector releases</strong><span>Ranked by what serious whiskey nerds will be hunting.</span></div>
+        </aside>
+      </section>
+
+      <nav class="day-tabs shell" aria-label="Festival day">
+        <button class="tab active" data-day="all">All releases <small>26</small></button>
+        <button class="tab" data-day="Friday, Sep 11">Fri Sep 11 <small>1</small></button>
+        <button class="tab" data-day="Saturday, Sep 12">Sat Sep 12 <small>1</small></button>
+        <button class="tab" data-day="Sunday, Sep 13">Sun Sep 13 <small>1</small></button>
+        <button class="tab" data-day="Festival weekend">Festival weekend <small>23</small></button>
+      </nav>
+
+      <section class="shell workspace">
+        <aside class="filters" aria-label="Release filters">
+          <div class="filter-heading"><span>Refine the hunt</span><button id="clearFilters">Clear</button></div>
+          <label class="search"><span>Search releases</span><input id="search" type="search" placeholder="Bottle or distillery" /></label>
+          <fieldset>
+            <legend>Editorial tier</legend>
+            <label><input type="checkbox" value="1" class="tier-filter" /> Tier 1 · Absolutely post <em>18</em></label>
+            <label><input type="checkbox" value="2" class="tier-filter" /> Tier 2 · Worth posting <em>8</em></label>
+          </fieldset>
+          <fieldset>
+            <legend>Release signals</legend>
+            <label><input type="checkbox" id="exclusive" /> KBF exclusive</label>
+            <label><input type="checkbox" id="confirmedDay" /> Day confirmed</label>
+            <label><input type="checkbox" id="age10" /> 10+ years</label>
+            <label><input type="checkbox" id="proof120" /> 120+ proof</label>
+          </fieldset>
+          <div class="trust-card"><strong>Timing truth</strong><p>Only confirmed day and location information appears as a firm plan. Everything else stays “pending.”</p></div>
+        </aside>
+
+        <section class="release-area" aria-live="polite">
+          <div class="list-header">
+            <div><p class="eyebrow">BarrelBook Watchlist</p><h2>What collectors will chase.</h2></div>
+            <p id="resultCount">26 releases</p>
+          </div>
+          <div class="legend"><span><i class="tier-one"></i> Tier 1</span><span><i class="tier-two"></i> Tier 2</span><span><i class="timing-dot"></i> Day confirmed</span></div>
+          <div id="releaseList" class="release-list"></div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="shell footer"><p>BarrelBook Release Radar is a planning concept. Confirm availability directly with the release source before making travel or purchase decisions.</p></footer>
+    <script src="releases.js"></script>
+    <script>
+      const state = { day: 'all', query: '', tiers: [], exclusive: false, confirmed: false, age: false, proof: false };
+      const list = document.querySelector('#releaseList');
+      const count = document.querySelector('#resultCount');
+      const normalize = (text) => text.toLowerCase().replace(/[^0-9.]/g, '');
+      const hasNumber = (text, min) => Number.parseFloat(normalize(text)) >= min;
+      function filtered() {
+        return RELEASES.filter((r) => {
+          const haystack = `${r.name} ${r.distillery} ${r.why}`.toLowerCase();
+          return (state.day === 'all' || r.day === state.day) &&
+            (!state.query || haystack.includes(state.query)) &&
+            (!state.tiers.length || state.tiers.includes(String(r.tier))) &&
+            (!state.exclusive || r.availability.toLowerCase().includes('exclusive')) &&
+            (!state.confirmed || r.timing === 'Day confirmed') &&
+            (!state.age || hasNumber(r.age, 10)) &&
+            (!state.proof || hasNumber(r.proof, 120));
+        });
+      }
+      function render() {
+        const records = filtered();
+        count.textContent = `${records.length} ${records.length === 1 ? 'release' : 'releases'}`;
+        list.innerHTML = records.map(r => `
+          <a class="release-row" href="release.html?slug=${encodeURIComponent(r.slug)}">
+            <span class="rank">${String(r.rank).padStart(2,'0')}</span>
+            <span class="release-main"><small>${r.distillery}</small><strong>${r.name}</strong><span>${r.why}</span></span>
+            <span class="spec"><small>Age</small><b>${r.age}</b></span>
+            <span class="spec"><small>Proof</small><b>${r.proof}</b></span>
+            <span class="availability ${r.tier === 1 ? 'priority' : ''}"><small>${r.availability}</small><b>${r.day}</b><span>${r.timing}</span></span>
+            <span class="row-action">View details <b>→</b></span>
+          </a>`).join('') || `<div class="empty"><h3>No releases match those filters.</h3><p>Clear a filter or try a broader search.</p></div>`;
+      }
+      document.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', () => {
+        state.day = btn.dataset.day; document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x === btn)); render();
+      }));
+      document.querySelector('#search').addEventListener('input', e => { state.query = e.target.value.trim().toLowerCase(); render(); });
+      document.querySelectorAll('.tier-filter').forEach(el => el.addEventListener('change', () => { state.tiers = [...document.querySelectorAll('.tier-filter:checked')].map(x => x.value); render(); }));
+      document.querySelector('#exclusive').addEventListener('change', e => { state.exclusive = e.target.checked; render(); });
+      document.querySelector('#confirmedDay').addEventListener('change', e => { state.confirmed = e.target.checked; render(); });
+      document.querySelector('#age10').addEventListener('change', e => { state.age = e.target.checked; render(); });
+      document.querySelector('#proof120').addEventListener('change', e => { state.proof = e.target.checked; render(); });
+      document.querySelector('#clearFilters').addEventListener('click', () => { document.querySelectorAll('input').forEach(x => { x.checked = false; x.value = x.type === 'search' ? '' : x.value; }); Object.assign(state, {query:'', tiers:[], exclusive:false, confirmed:false, age:false, proof:false}); render(); });
+      render();
+    </script>
+  </body>
+</html>
