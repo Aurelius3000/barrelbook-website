@@ -1,6 +1,6 @@
 # KBF 2026 Release Radar
 
-Status: master roster synced and live-source recovery complete. Recovery commit `950b351` is pushed. The fresh protected preview is Ready. Local tests and signed-in hosted checks passed on Sept. 5. The confirmed live-site mismatch is fixed. Production is unchanged.
+Status: master roster synced and live-source recovery complete. The approved homepage link is built and passes local checks, including 25 browser tests with 5 expected skips. A fresh feature-branch preview is next. Production is unchanged.
 
 The local and hosted previews show Pete's 25 named bottles in master order, with slot 26 open. Four parked bottles keep their detail pages. Production is unchanged.
 
@@ -33,7 +33,7 @@ The prototype stays here as a visual reference. It is not production content.
 
 ## Next step
 
-Review the fresh preview. It matches 12 live pages and passes all 29 bottle detail checks. All 22 local browser tests pass, with 5 expected skips. No merge or production deploy is approved. See `evidence.md` for recovery provenance, the exact source commit, and test results.
+Commit and push the approved homepage link, then review the new preview. The new link sits below the homepage intro and opens the radar. The existing App Store and Android paths remain intact. The earlier recovery matched 12 live pages and passed all 29 bottle detail checks. No merge or production deploy is approved. See `evidence.md` for the current plan and results.
 Do not promote the original preview or upload a dirty checkout. Any launch must use a reviewed Git commit, a fresh live-site comparison, and the recorded rollback target. Keep production and preview protection unchanged until launch approval.
 Google Analytics is not configured for this preview branch. App-association IDs are production-only. Event delivery and real iPhone handoff remain launch checks. The browser blocked the hosted sitemap XML; its local check passed. See `evidence.md` for the limits.
 Before launch, compare again with the latest main branch and live deployment, then recheck sources and get production approval. Meta, photos, and production deploys remain separate steps. Slot 26 and the Barrell fallback need an approved pick or swap.

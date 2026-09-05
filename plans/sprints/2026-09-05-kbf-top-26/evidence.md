@@ -1,5 +1,32 @@
 # Evidence
 
+## Approved homepage link: Sept. 5, 2026
+
+Pete approved a homepage link, then the nine-file scope, tests, commit, and feature-branch push. Production remains out of scope.
+
+Plan:
+
+1. Add one `KBF 2026 Release Radar` link below the homepage intro. Use the existing brand colors, an arrow, and a clear keyboard focus state. Point to `/releases/kbf-2026` in the same tab.
+2. Keep the existing App Store and Android button groups, destinations, and tracking. Add no analytics event. Leave all KBF data and routes unchanged.
+3. Update `tests/homepage.spec.ts` to check the link and keyboard navigation. Review the five existing homepage screenshot baselines after refresh. Run typecheck, lint, build, promo tests, and the full browser suite. Check phone and desktop in the browser.
+4. Change only nine files: `src/components/LandingPage.tsx`, the homepage test, its five existing screenshot baselines, this evidence file, and the sprint README. Review the exact staged diff, commit and push only `codex/kbf-release-radar`, then check the fresh preview. Stop before any merge or production deploy.
+
+Preflight: clean feature branch at `07a72aa7a50853dd0485b25743b06163831ce348`, matching its remote. Main remains `a8acc0c6334336f49f3fb96fe296cdecf9c5014e`. Production remains Ready deployment `dpl_Baw2jeR53uJrANbfEUEAbY5FdSH2`. The original checkout's status and diff hashes match the prior recovery check.
+
+The link is built and local checks pass. It sits below the intro copy, above the App Store rating. The existing button groups and their code remain intact. Only the new link text and destination differ in the homepage content comparison with the recovery preview.
+
+- `npx tsc --noEmit`: passed.
+- `npm run lint`: 0 errors, 6 existing warnings in unchanged files.
+- `npm run build`: passed, 56 static pages.
+- `npm run test:promo`: passed.
+- Homepage test and screenshot refresh: 9 passed, 3 expected skips. All five refreshed images were reviewed.
+- Full `npm run test:e2e` with the refreshed baselines: 25 passed, 5 expected skips. This includes keyboard navigation to the radar at desktop, tablet, and phone sizes, existing Android tracking tests, and all paired download links.
+- Manual browser checks: the phone link opens the radar and shows 25 bottles. The homepage fits 320, 390, and 1440 pixels. Both download paths retain three homepage placements and their existing destinations. Phone and desktop screenshots were reviewed inline.
+- KBF records, index, detail pages, sitemap, shared header, platform buttons, and tracking helpers are unchanged. No new event, source claim, image, or bottle was added.
+- Browser reports and run artifacts stay in ignored `output/playwright/kbf-home-link/`. Test-only video hiding is unchanged. The live video renders in the local production build.
+
+Next: review the nine staged paths, commit and push the approved feature branch, then check the hosted homepage link. No merge or production deploy is approved.
+
 ## Recovery preview passed: Sept. 5, 2026
 
 The confirmed production mismatch is fixed in the feature branch. Production and main remain untouched. Stop for Pete's review; no merge or production deploy is approved.

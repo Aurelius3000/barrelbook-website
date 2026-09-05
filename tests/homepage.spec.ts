@@ -42,6 +42,10 @@ test('homepage content and order match landing page direction', async ({ page },
   await expect(page.getByText(/Get help with BarrelBook 1\.7\.3/i)).toHaveCount(0);
   await expect(page.getByRole('heading', { level: 1, name: 'Your whiskey shelf, in your pocket.' })).toBeVisible();
   await expect(page.getByText('BarrelBook captures the details bourbon collectors care about — store picks, barrel numbers, batches — straight from a photo. No barcodes, no typing, no spreadsheets.')).toBeVisible();
+  const radarLink = page.getByRole('link', { name: 'KBF 2026 Release Radar', exact: true });
+  await expect(radarLink).toHaveCount(1);
+  await expect(radarLink).toBeVisible();
+  await expect(radarLink).toHaveAttribute('href', '/releases/kbf-2026');
   await expect(
     page.getByRole('link', { name: "Open BarrelBook's 4.8-star App Store rating" })
   ).toBeVisible();
@@ -105,6 +109,21 @@ test('homepage content and order match landing page direction', async ({ page },
     fullPage: true,
     animations: 'disabled',
   });
+});
+
+test('homepage opens the KBF release radar with the keyboard', async ({ page }) => {
+  await page.goto('/');
+
+  const radarLink = page.getByRole('link', { name: 'KBF 2026 Release Radar', exact: true });
+  await expect(radarLink).toBeVisible();
+  await radarLink.focus();
+  await expect(radarLink).toBeFocused();
+  await radarLink.press('Enter');
+
+  await expect(page).toHaveURL(/\/releases\/kbf-2026$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Plan your KBF bottle hunt.' })).toBeVisible();
+  await expect(page.locator('li[data-release-slug]')).toHaveCount(25);
+  await expect(page.getByRole('complementary', { name: 'Open pick 26' })).toBeVisible();
 });
 
 test('tablet layout keeps the story and pricing sections readable', async ({ page }, testInfo) => {
