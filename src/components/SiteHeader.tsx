@@ -1,5 +1,5 @@
 import Image from "next/image";
-import AppStoreBadgeLink from "@/components/AppStoreBadgeLink";
+import PlatformDownloadCtas from "@/components/PlatformDownloadCtas";
 
 export type SiteHeaderNavItem = {
   href: string;
@@ -38,7 +38,7 @@ export default function SiteHeader({
             </div>
           </div>
 
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-8">
             {navItems.map((item) => (
               <a key={item.href} href={item.href} className="text-gray-300 hover:text-white transition-colors">
                 {item.label}
@@ -47,11 +47,8 @@ export default function SiteHeader({
           </nav>
 
           {showAppStoreBadge ? (
-            <AppStoreBadgeLink
-              className="inline-flex items-center"
-              width={140}
-              height={46}
-              imageClassName="h-9 w-auto"
+            <PlatformDownloadCtas
+              variant="header"
               analytics={{ location: "header" }}
               priority
             />

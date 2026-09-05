@@ -1,5 +1,113 @@
 # Evidence
 
+## Approved recovery: local checks passed on Sept. 5, 2026
+
+Pete approved recovery, tests, commit, and feature-branch push with "proceed." Main and production remain out of scope. The full plan and file list are in `plan.md`.
+
+- Starting KBF commit: `6202bb4`. The five dirty sprint notes at preflight were from this task; no app code was dirty before recovery.
+- Fresh Vercel preflight: live deployment remains `dpl_Baw2jeR53uJrANbfEUEAbY5FdSH2`, Ready. The project still uses main for production.
+- Recovered the seven production files and two tests from successful Aug. 23 patches. Matched the saved final diff and file list. Failed attempts were skipped. Historical commands were read as data, not run. No local Vercel configuration, environment file, or old sprint file was copied.
+- Source record: saved session `01a02f0a-3548-7360-9924-045c40b659dc`, Aug. 23. Recovery includes the final badge styling, grouping selectors, and tracking tests, not just the first patch.
+- The five KBF source files are byte-for-byte unchanged from `6202bb4`. Promo, gift, support, AASA, layout, package, and environment files are unchanged.
+
+### Local verification
+
+| Check | Result |
+| --- | --- |
+| Typecheck and focused ESLint | Passed; no focused lint warnings. |
+| Full lint | Passed: 0 errors, 6 pre-existing warnings in unchanged files. |
+| Production build | Passed: 56 static pages, including all 29 KBF details. |
+| Promo tests | Passed. |
+| Browser tests without snapshots | 22 passed, 5 expected skips. |
+| Homepage baseline refresh | 6 passed, 3 expected skips. All five changed images reviewed at desktop, tablet, and phone sizes. |
+| Full browser tests with snapshots | 22 passed, 5 expected skips. |
+| Live/local page comparison | All 12 pages match: home, scan, collection, store picks, Android, support, privacy, terms, and four promo pages. Compared title, canonical, text, headings, links, images, videos, and CTA counts. Only the image deployment cache key was ignored. |
+| Responsive comparison | The four main pages match live at 1440 pixels with no sideways scroll. The homepage also matches at 390 pixels. All 12 pages fit the default 532-pixel view. |
+| KBF smoke check | Exact 25 master slots, one open slot, expected title, and no sideways scroll at 1440 pixels. All five KBF files match the earlier tested commit. |
+| Whitespace | `git diff --check` passed. |
+
+The restored tests capture events locally. They check all 15 paired CTA groups across four pages and retain the homepage download event without double-counting. No live form, offer, App Store, or gift action was submitted. These tests do not prove analytics dashboard receipt.
+
+The standalone Playwright CLI could not load its uncached package because of sandbox DNS. No dependency was installed. The repository's browser suite passed; manual parity checks used the existing browser. Reviewed screenshots appeared inline. Generated HTML reports stay local and are not staged.
+
+Next: staged review, approved feature commit and push, then a fresh hosted preview check. No merge or production deploy is approved. The historical blocker below stays open until that preview passes.
+
+## Historical launch blocker: live-only changes missing from Git
+
+The KBF pages pass, but this branch is not safe to launch yet. A final live comparison found production changes that are absent from current main and this preview.
+
+| Homepage behavior | Live production | KBF preview |
+| --- | --- | --- |
+| Android waitlist badges | 3 links labeled Join the BarrelBook Android waitlist | No matching badges; one older Join Android early access link |
+| Prominent 1.7.3 warning | Removed | Present |
+| App Store destination | App ID `6751737898` | Same |
+
+- Verified both homepages in the browser. This is current UI evidence, not a conclusion from old notes alone.
+- Vercel metadata for live deployment `dpl_Baw2jeR53uJrANbfEUEAbY5FdSH2` reports branch `codex/android-waitlist-platform-parity`, base SHA `a8acc0c6334336f49f3fb96fe296cdecf9c5014e`, and `gitDirty: 1`. This confirms that its uploaded source included uncommitted changes.
+- Remote main still points to that base SHA. The local parity branch also points to it. The KBF commit sits directly above that base. A clean branch and a matching main revision did not capture the extra files used for the live deploy.
+- Current KBF source lacks `PlatformDownloadCtas` and `android_waitlist_cta_clicked`; `LandingPage.tsx` still contains the old warning and single Android link.
+- The prior release record identifies `/private/tmp/barrelbook-website-android-waitlist-parity` as the upload source. That folder remains, but its Git link and `src/components/PlatformDownloadCtas.tsx` are absent. Do not assume that folder is a complete recovery source. Recover and inspect the full change set before copying anything.
+- Launching this preview unchanged would undo at least the two live UI fixes above. The full live-only diff still needs review, including its tracking and tests.
+
+Proposed next scope at discovery, since approved by Pete:
+
+1. Recover and review the source changes used for the current live deployment. Preserve existing worktrees and all KBF work.
+2. Add the live homepage, Android CTA, and tracking fixes to `codex/kbf-release-radar`. Restore their tests. This exceeds the current five-file KBF scope and affects conversion code, so it requires approval.
+3. Run typecheck, lint, build, promo and browser tests. Commit and push only the reviewed files if approved. Check a fresh preview against both production and the KBF master before requesting any merge or launch.
+
+No production change, code fix, new commit, push, PR, or merge was made after finding this blocker. The earlier hosted results below remain valid for the KBF feature itself.
+
+## Signed-in hosted page QA: Sept. 5, 2026
+
+- Pete completed normal Vercel sign-in. Checked the existing preview in the signed-in browser. No cookie export, auth bypass, access change, or new deploy was used.
+- The preview still serves commit `6202bb42131b4665be040933a6567c868469f9ca` from `codex/kbf-release-radar`. Deployment `dpl_9SdR1UeJX74kj7bzGwgayQLC18Tz` remains Ready.
+
+| Hosted check | Result |
+| --- | --- |
+| Master list | All 25 named bottles match the master order. Slot 26 is separate and has no link. ItemList has 25 entries. Canonical URL uses `www.barrelbook.app`. |
+| Sale-day filters | Passed: Thu 2, Fri 4, Sat 6, Sun 6, Day TBD 17, All 25. The open pick is hidden during filtering. |
+| Search | Passed: Silk Velvet 1, Dark Arts 2, Phifer Pavitt 2, MAKERS 1, cuvee 1, Thirty-One Lengths 0. The empty state and Show all 25 reset work. |
+| Other filters | Passed: Confirmed 9, Reported 15, Watch 1; KBF only 6, age 10+ 20, proof 120+ 11, age plus proof 9. Clear all restores the full list. Desktop search also passed. |
+| Detail pages | All 29 render with the expected title, canonical URL, check date, known facts, gaps, sources, and BreadcrumbList. Each has 3 active related links, 87 in total. |
+| Parked pages | All 4 show the parked banner and `noindex, follow`. They stay out of active search and related links. |
+| Missing pages | Fake flex and unknown bottle URLs show the 404 page and noindex. This browser check confirms rendering, not the HTTP status. Local HTTP checks passed earlier. |
+| Phone and desktop | Index has no sideways scroll at 320, 390, and 1440 pixels. All 25 active details fit 1440; all 4 parked pages and the 3 new details fit 390. Mobile filters work. The skip link focuses `radar-content`. |
+| New bottle facts | The two Phifer pages retain distinct ages, proofs, and finishes. Sale hours stay TBD. Jackson Purchase keeps unknown age and numeric proof visible. |
+| Existing pages and links | Home, scan, collection, Android, and the FNF and Bourbon Trail promo pages render. `/fnf` and `/thebourbontrail` reach their existing `/p/` routes. App Store links still use app ID `6751737898`. Android retains its Google Form link. |
+| Gift fallback | A dummy test path renders the gift page, correct app link, and `noindex, nofollow`. No user gift token was used. No App Store, redeem, app-open, or form-submit control was clicked. |
+
+Screenshots were reviewed inline for the phone index and filters, desktop index and first detail page, and a parked phone page. No new screenshot files were added. The browser viewport was reset, and the tab was left on the KBF index.
+
+### Tracking and test limits
+
+- The KBF page has one Vercel Analytics script element. No warnings or errors appeared in the inspected KBF browser logs. The logo renders and reports a loaded image. This does not prove event receipt in an analytics dashboard.
+- Google Analytics does not load on this branch. A read-only settings check explains why: `NEXT_PUBLIC_GA_MEASUREMENT_ID` applies to production, development, and the `codex/website-redesign` preview branch only. It does not apply to `codex/kbf-release-radar`. No environment values were printed or saved, and no setting changed.
+- `BARRELBOOK_AASA_APP_IDS` is production-only. Actual iPhone universal-link handoff and analytics event delivery remain launch checks. Existing tracking helpers, CTA destinations, and app-association source code are unchanged.
+- The browser refused `/sitemap.xml` with `net::ERR_BLOCKED_BY_CLIENT`. Hosted XML was not verified. The same code passed the earlier local sitemap check. No alternate access method or protection bypass was used.
+- Bottle sources were not rechecked in this hosted QA pass. Visible TBD facts and live stock remain source-check work before launch. Photos and Meta posts remain separate.
+
+### Postflight and handoff
+
+- Remote main remains `a8acc0c6334336f49f3fb96fe296cdecf9c5014e`; the feature branch remains `6202bb4`. Production remains Ready deployment `dpl_Baw2jeR53uJrANbfEUEAbY5FdSH2`, unchanged from the pre-push check.
+- Only the five already-dirty sprint notes changed: README, acceptance, evidence, loop, and master-list. No app code changed. No new commit, push, PR, merge, or production deploy was made.
+- `git diff --check` passed, and all 18 local links in the five notes resolve. No rebuild was needed for these docs-only edits. The index is empty; the notes remain uncommitted.
+- The Vercel deploy checklist kept hosted QA separate from production approval and preserved preview protection. The final production comparison then found the launch blocker above. Resolve it under an approved expanded scope before preparing a merge or launch.
+
+## Feature-branch push and protected preview: Sept. 5, 2026
+
+- Pete approved pushing the feature branch and preparing a Vercel preview with “yes.” No PR, merge, or production deploy was requested.
+- Pushed `6202bb42131b4665be040933a6567c868469f9ca` to `origin/codex/kbf-release-radar` with `git push -u origin codex/kbf-release-radar`.
+- Remote `main` remained `a8acc0c6334336f49f3fb96fe296cdecf9c5014e` before and after the push. The reviewed commit is based on that same main revision.
+- Checked the live Vercel project before pushing: `barrelbook-website`, project `prj_INbcZxxkEQg6O4CqkLEptDE3K1qp`, team `team_HnY2wuONsG0zAfCLX8of7yUJ`. Its Git link is `Aurelius3000/barrelbook-website`; production branch is `main`.
+- The existing Git integration created one preview for the push. No separate CLI upload, project creation, project relink, environment change, or access-setting change was needed.
+- Preview: [KBF watchlist](https://barrelbook-website-848wt6j74-pete-petereillycs-projects.vercel.app/releases/kbf-2026). [Vercel deployment](https://vercel.com/pete-petereillycs-projects/barrelbook-website/9SdR1UeJX74kj7bzGwgayQLC18Tz).
+- Deployment ID: `dpl_9SdR1UeJX74kj7bzGwgayQLC18Tz`. Vercel inspect reports target Preview and status Ready. The deployment API confirms the correct project, Git branch, and exact commit SHA. GitHub's Vercel status is Success.
+- A read-only request to the KBF preview returned HTTP 302 to Vercel SSO. The in-app browser reached the Vercel login page. This confirms that protection is active, not that the KBF page works after sign-in.
+- Hosted checks are pending: list/detail rendering, filters, existing route behavior, App Store links, and analytics. The earlier local checks passed. Normal Vercel sign-in is needed to finish the hosted checks. No auth bypass, shared-access link, or security change was used.
+- Production postflight passed: `www.barrelbook.app` still points to Ready deployment `dpl_Baw2jeR53uJrANbfEUEAbY5FdSH2`, the same deployment recorded before the push.
+- The branch was clean and matched its remote after the push. These follow-up sprint notes are local and uncommitted. No app code changed in this pass.
+- Tooling note: sandbox DNS blocked the first Git read, and the Vercel CLI updater hit a cache-write restriction. Approved network reads worked. No CLI update was installed. The Vercel deploy skill kept the release scoped to a preview; Playwright page checks remain behind the sign-in step.
+
 ## Local Git checkpoint review: Sept. 5, 2026
 
 - Pete approved review and a local commit with “lets proceed.” This does not approve a push, PR, merge, or deploy.

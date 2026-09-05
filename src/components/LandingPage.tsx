@@ -4,17 +4,17 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import Link from "next/link";
 import { Star, Check, Images, BookOpen, ChevronDown, Camera, MapPin, Share2, Wine, Sparkles } from "lucide-react";
-import AppStoreBadgeLink from "@/components/AppStoreBadgeLink";
 import AppStoreRatingLink from "@/components/AppStoreRatingLink";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import HeroVideo from "@/components/HeroVideo";
+import PlatformDownloadCtas from "@/components/PlatformDownloadCtas";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 import StoryVideo from "@/components/StoryVideo";
 import {
   APP_STORE_URL,
 } from "@/lib/app-store";
-import { trackAndroidInterest, trackAppStoreCtaClick } from "@/lib/cta-analytics";
+import { trackAppStoreCtaClick } from "@/lib/cta-analytics";
 
 export default function LandingPage() {
   const [billingCycle, setBillingCycle] = useState<"yearly" | "monthly">("yearly");
@@ -180,7 +180,7 @@ export default function LandingPage() {
     },
     {
       q: "Which devices are supported?",
-      a: "BarrelBook is available on iPhone and iPad. Download from the App Store to get started.",
+      a: "BarrelBook is available on iPhone and iPad today. Android is in development, and collectors can join the waitlist to hear when it is ready.",
     },
   ];
 
@@ -190,23 +190,8 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#0A0A0A] text-white">
       <SiteHeader />
 
-      <aside className="pt-20 px-4 sm:px-6 lg:px-8" aria-label="Support notice">
-        <Link
-          href="/support"
-          prefetch
-          className="mx-auto flex max-w-7xl flex-col items-center rounded-b-2xl border border-t-0 border-[#8A4B20] bg-[#21150E] px-5 py-6 text-center transition-colors hover:bg-[#2B1A10]"
-        >
-          <span className="text-xl font-medium text-white md:text-2xl">
-            Having trouble signing in to BarrelBook or seeing your collection?
-          </span>
-          <span className="mt-4 inline-flex items-center rounded-md bg-[#D2691E] px-4 py-2 text-sm font-medium text-white">
-            Get help with BarrelBook 1.7.3 →
-          </span>
-        </Link>
-      </aside>
-
       {/* Hero Section */}
-      <section className="pt-8 pb-12 px-4 sm:px-6 lg:px-8">
+      <section className="pt-28 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             {/* Text column */}
@@ -228,9 +213,7 @@ export default function LandingPage() {
               <AppStoreRatingLink className="inline-flex items-center gap-2 mb-6 text-sm text-gray-300 hover:text-white transition-colors" />
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center mb-6">
-                <AppStoreBadgeLink
-                  width={180}
-                  height={60}
+                <PlatformDownloadCtas
                   priority
                   analytics={{ page: "/", location: "hero" }}
                 />
@@ -620,25 +603,13 @@ export default function LandingPage() {
           </p>
 
           <div className="mb-8 flex flex-col items-center gap-4">
-            <AppStoreBadgeLink
-              width={180}
-              height={60}
+            <PlatformDownloadCtas
               analytics={{ page: "/", location: "download" }}
+              legacyAndroidPlacement="homepage_download"
             />
-            <Link
-              href="/android"
-              onClick={() =>
-                trackAndroidInterest("android_interest_homepage_clicked", {
-                  placement: "homepage_download",
-                })
-              }
-              className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[#D2691E] px-5 py-3 text-sm font-medium text-[#E38A49] transition-colors hover:bg-[#D2691E]/15 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D2691E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]"
-            >
-              Join Android early access
-            </Link>
           </div>
 
-          <p className="text-sm text-gray-500">Available on iPhone and iPad today.</p>
+          <p className="text-sm text-gray-500">Available on iPhone and iPad today. Android is in development.</p>
         </div>
       </section>
 

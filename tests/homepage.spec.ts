@@ -38,20 +38,34 @@ test('homepage content and order match landing page direction', async ({ page },
 
   await page.goto('/', { waitUntil: 'networkidle' });
 
-  const supportNotice = page.getByRole('complementary', { name: 'Support notice' });
-  await expect(supportNotice).toBeVisible();
-  await expect(
-    supportNotice.getByRole('link', {
-      name: 'Having trouble signing in to BarrelBook or seeing your collection? Get help with BarrelBook 1.7.3 →',
-    })
-  ).toHaveAttribute('href', '/support');
+  await expect(page.getByRole('complementary', { name: 'Support notice' })).toHaveCount(0);
+  await expect(page.getByText(/Get help with BarrelBook 1\.7\.3/i)).toHaveCount(0);
   await expect(page.getByRole('heading', { level: 1, name: 'Your whiskey shelf, in your pocket.' })).toBeVisible();
   await expect(page.getByText('BarrelBook captures the details bourbon collectors care about — store picks, barrel numbers, batches — straight from a photo. No barcodes, no typing, no spreadsheets.')).toBeVisible();
   await expect(
     page.getByRole('link', { name: "Open BarrelBook's 4.8-star App Store rating" })
   ).toBeVisible();
   await expect(page.getByText(/24 five-star ratings/i)).toHaveCount(0);
-  await expect(page.getByRole('link', { name: 'Join Android early access' })).toHaveAttribute('href', '/android');
+  await expect(page.getByRole('link', { name: 'Download on the App Store' })).toHaveCount(3);
+  const androidWaitlistLinks = page.getByRole('link', { name: 'Join the BarrelBook Android waitlist' });
+  await expect(androidWaitlistLinks).toHaveCount(3);
+  for (const link of await androidWaitlistLinks.all()) {
+    await expect(link).toHaveAttribute('href', '/android');
+  }
+
+  const layout = await page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    clientWidth: document.documentElement.clientWidth,
+  }));
+  expect(layout.scrollWidth).toBeLessThanOrEqual(layout.clientWidth);
+
+  const headerBox = await page.getByRole('banner').boundingBox();
+  const heroHeadingBox = await page
+    .getByRole('heading', { level: 1, name: 'Your whiskey shelf, in your pocket.' })
+    .boundingBox();
+  expect(headerBox).not.toBeNull();
+  expect(heroHeadingBox).not.toBeNull();
+  expect(heroHeadingBox!.y).toBeGreaterThanOrEqual(headerBox!.y + headerBox!.height);
 
   await expect(page.getByText('Snap a photo, not a barcode', { exact: true })).toBeVisible();
   await expect(page.getByText('Built for bourbon bottle details', { exact: true })).toBeVisible();
@@ -112,8 +126,9 @@ test('mobile navigation and hero proof strip are visible', async ({ page, isMobi
 
   await page.goto('/', { waitUntil: 'networkidle' });
 
-  await expect(page.getByRole('complementary', { name: 'Support notice' })).toBeVisible();
+  await expect(page.getByRole('complementary', { name: 'Support notice' })).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'Download on the App Store' }).first()).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Join the BarrelBook Android waitlist' }).first()).toBeVisible();
   await expect(page.getByRole('heading', { level: 1, name: 'Your whiskey shelf, in your pocket.' })).toBeVisible();
   await expect(page.getByText('Snap a photo, not a barcode', { exact: true })).toBeVisible();
   await expect(page.getByText('Built for bourbon bottle details', { exact: true })).toBeVisible();

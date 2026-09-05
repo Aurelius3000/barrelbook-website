@@ -1,7 +1,9 @@
 # Production acceptance criteria
 
 Local QA for the master sync passed on Sept. 5, 2026. See `evidence.md` for results and known local warnings.
-Staged-diff review passed for the approved local checkpoint. Public launch and deploy approval remain pending.
+The first hosted preview passed KBF checks but failed live-site parity. The approved recovery now restores the missing live changes. Local comparisons match 12 live pages. Typecheck, lint, build, promo checks, and all 22 browser tests pass, with 5 expected skips. The five refreshed screenshot baselines were reviewed. A fresh hosted preview still needs checks before any launch request.
+
+Hosted checks cover all 29 detail pages, master order, filters, phone and desktop layout, metadata, and existing handoff links. Google Analytics has no setting for this preview branch, and app-association IDs are production-only. Event delivery and real iPhone handoff remain launch checks. The browser blocked hosted sitemap XML; the same code passed its local sitemap test.
 
 ## Data quality
 
@@ -23,6 +25,6 @@ Staged-diff review passed for the approved local checkpoint. Public launch and d
 
 ## Safety and quality
 
-- Existing deep-link pages, App Store handoff, CTA analytics, and public route behavior are unchanged unless separately approved.
+- Existing App Store handoff, public routes, promo attribution, gift links, and app-association handlers stay unchanged. The separately approved recovery restores live Android buttons and their existing events.
 - Desktop and mobile browser QA pass; keyboard controls, search/filter states, source-link labels, contrast, and focus states are verified.
 - TypeScript, lint, build, focused tests, source audit, and staged-diff review pass before an explicitly approved deploy.

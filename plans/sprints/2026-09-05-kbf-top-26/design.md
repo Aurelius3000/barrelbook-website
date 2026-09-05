@@ -11,6 +11,12 @@ The visual language uses BarrelBook's near-black surfaces, charcoal dividers, wh
 
 The build uses the existing BarrelBook logo. It uses no bottle photos. A later photo needs rights and an exact bottle match.
 
+## Live-site recovery review: Sept. 5, 2026
+
+The approved recovery preserves the live site's design. It restores paired Apple and Android waitlist badges, the wider header breakpoint, and homepage spacing without the old prominent warning. It does not change KBF copy or design.
+
+Reviewed five updated homepage test images across desktop, tablet, and phone. The existing test helper hides playing video only while taking stable snapshots. Real video renders in the manual browser checks. Phone and desktop homepage screenshots match the live layout. The four main marketing pages have no sideways scroll at 1440 pixels; the homepage also fits 390 pixels.
+
 ## Browser review
 
 The built pages keep the approved dark layout, serif headings, numbered rows, and side filters. List numbers follow the master order, not a quality rank. Tier labels and the tier filter are gone.

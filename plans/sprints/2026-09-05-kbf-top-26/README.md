@@ -1,15 +1,14 @@
 # KBF 2026 Release Radar
 
-Status: master roster synced to the website. Local build and QA passed on Sept. 5.
-Pete approved a local Git checkpoint after preview review. Push and deploy approval remain pending.
+Status: master roster synced. The approved recovery of the live homepage, Android buttons, and tracking is complete locally. Build, tests, and live-page comparisons passed on Sept. 5. A fresh feature-branch preview is the next gate.
 
-The local preview shows Pete's 25 named bottles in master order, with slot 26 open. Four parked bottles keep their detail pages. Deploy approval is still pending.
+The local and hosted previews show Pete's 25 named bottles in master order, with slot 26 open. Four parked bottles keep their detail pages. Production is unchanged.
 
 Branch: `codex/kbf-release-radar`, based on `origin/main` at `a8acc0c`.
 Worktree: `/Users/petereilly2021/Projects/barrelbook-website-kbf-release-radar`.
 The original checkout and its unrelated edits remain in place.
 
-[Master list and match-up](master-list.md) | [Local preview](http://127.0.0.1:4174/releases/kbf-2026) | [Plan](plan.md) | [QA and changed files](evidence.md)
+[Master list and match-up](master-list.md) | [Earlier KBF preview, missing live fixes](https://barrelbook-website-848wt6j74-pete-petereillycs-projects.vercel.app/releases/kbf-2026) | [Recovered local preview](http://127.0.0.1:4175/releases/kbf-2026) | [Plan](plan.md) | [QA and changed files](evidence.md)
 
 ## Goal
 
@@ -30,9 +29,11 @@ The prototype stays here as a visual reference. It is not production content.
 - Cite KBF, brand, and named press sources. Mark reported facts as reported.
 - Show unknown details as TBD.
 - Do not use a product image without rights to use it.
-- Do not add a Want List link or new analytics event in this work.
+- Do not add a Want List link or new KBF analytics event. The approved recovery restores existing live-site Android events only.
 
 ## Next step
 
-After the local checkpoint, get approval to push the feature branch for a hosted preview. Before launch, compare with the latest main branch and live deployment, then recheck sources.
-Meta, photos, pushes, and deploys remain separate steps. Slot 26 and the Barrell fallback need an approved pick or swap.
+Pete approved the full live-source recovery, tests, commit, and feature-branch push. The restored build matches 12 live pages. All 22 browser tests pass, with 5 expected skips. Review the staged recovery, push the feature branch, and check the new preview before any launch request. Keep production and preview protection unchanged.
+The original preview is historical. Do not promote it. No merge or production deploy is approved. See `evidence.md` for recovery provenance and test results.
+Google Analytics is not configured for this preview branch. App-association IDs are production-only. Event delivery and real iPhone handoff remain launch checks. The browser blocked the hosted sitemap XML; its local check passed. See `evidence.md` for the limits.
+Before launch, compare again with the latest main branch and live deployment, then recheck sources and get production approval. Meta, photos, and production deploys remain separate steps. Slot 26 and the Barrell fallback need an approved pick or swap.

@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { Check, ChevronDown } from "lucide-react";
-import AppStoreBadgeLink from "@/components/AppStoreBadgeLink";
 import AppStoreRatingLink from "@/components/AppStoreRatingLink";
 import HeroVideo from "@/components/HeroVideo";
 import PhoneFrame from "@/components/PhoneFrame";
+import PlatformDownloadCtas from "@/components/PlatformDownloadCtas";
 import PricingTeaser from "@/components/PricingTeaser";
 import ReviewCard from "@/components/ReviewCard";
 import SiteFooter from "@/components/SiteFooter";
@@ -89,9 +89,7 @@ export default function DeepLinkLandingPage({
                 <AppStoreRatingLink className="inline-flex items-center gap-2 mb-6 text-sm text-gray-300 hover:text-white transition-colors" />
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center mb-4">
-                  <AppStoreBadgeLink
-                    width={180}
-                    height={60}
+                  <PlatformDownloadCtas
                     priority
                     analytics={{ page: config.path, location: "hero" }}
                   />
@@ -258,9 +256,7 @@ export default function DeepLinkLandingPage({
             </p>
 
             <div className="flex justify-center mb-4">
-              <AppStoreBadgeLink
-                width={180}
-                height={60}
+              <PlatformDownloadCtas
                 analytics={{ page: config.path, location: "download" }}
               />
             </div>

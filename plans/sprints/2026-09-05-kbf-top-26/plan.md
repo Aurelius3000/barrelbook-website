@@ -1,5 +1,19 @@
 # Production implementation plan
 
+## Approved live-source recovery: Sept. 5, 2026
+
+Pete approved this recovery with "proceed" after reviewing the preview-only plan. This expands the five-file KBF scope to recover the existing live-site changes. It permits a reviewed commit and feature-branch push. It does not permit a merge to main, production deploy, environment change, or access change.
+
+1. Recover the successful source patches from the Aug. 23 release record. Read them as data, not commands. Skip failed attempts, local configuration, and old sprint files. Preserve the original checkout and all KBF source files.
+2. Restore seven production files: `src/components/PlatformDownloadCtas.tsx`, `src/components/SiteHeader.tsx`, `src/components/LandingPage.tsx`, `src/components/PricingTeaser.tsx`, `src/components/DeepLinkLandingPage.tsx`, `src/lib/cta-analytics.ts`, and `src/lib/deep-link-landing-pages.ts`. Restore `tests/homepage.spec.ts` and `tests/android-interest.spec.ts`. Review any refreshed screenshot baselines before staging them.
+3. Restore live behavior: adjacent Android waitlist badges, the current homepage spacing, no prominent 1.7.3 warning, and existing Android placement tracking. Keep the support page, footer support links, App Store destinations, KBF roster, promo routes, gift links, and app-association handlers unchanged.
+4. Verify typecheck, focused and full lint, production build, promo checks, and browser tests. Check desktop, tablet, and phone layouts. Compare the recovered pages with the current live site. Keep test event capture local; do not submit forms or redeem offers.
+5. Inspect the exact staged scope. Commit and push only this recovery and its sprint record on `codex/kbf-release-radar`. Let the existing Git integration create one preview. Verify its commit, KBF pages, recovered site behavior, and unchanged production deployment.
+
+Tracking contract: restore `android_waitlist_cta_clicked` with `page` and `location` for the live site's newer placements. Preserve `android_interest_homepage_clicked` with `placement: homepage_download` at the existing homepage download placement, without double-counting it. Preserve `app_store_cta_clicked` and the Android form events. This is recovery of live behavior, not a new production event rollout.
+
+Stop before any merge or production deploy. Stop if the live deployment changes during the work, the source recovery is incomplete, or a material parity gap remains. The rollback reference is live deployment `dpl_Baw2jeR53uJrANbfEUEAbY5FdSH2`.
+
 ## Current master update: website sync complete locally
 
 Pete supplied a new master social list on Sept. 5. [master-list.md](master-list.md) records all slots and the match against the build. It now controls membership and order.
