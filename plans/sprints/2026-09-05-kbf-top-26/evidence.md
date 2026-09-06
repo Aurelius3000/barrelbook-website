@@ -1,5 +1,46 @@
 # Evidence
 
+## Production release: approved Sept. 6, 2026
+
+Pete approved committing and pushing the two QA notes, opening and merging the release PR into main, and publishing through Vercel. Approval includes checking the new live site. It does not permit source changes, environment or protection changes, or changes to the dirty original checkout.
+
+Preflight: no existing PR for `codex/kbf-release-radar`. Remote main remains `a8acc0c`; the feature branch and its remote remain `0aba037`. Production remains Ready deployment `dpl_Baw2jeR53uJrANbfEUEAbY5FdSH2`. The original checkout's branch, HEAD, status hash, and both diff hashes match the final check. Only the two QA notes are dirty. App source, assets, tests, packages, and hosting configuration still match reviewed source `6f1766e`.
+
+Release plan: commit the two reviewed notes, push the feature branch, open a PR into main, review its exact diff and checks, then merge without bypassing any branch rule. Let Vercel build production from that merge. Do not promote a preview artifact. Verify the live routes, menu, metadata, sitemap, analytics scripts, and app-association responses. Keep the prior deployment as the rollback reference. Analytics receipt and a real iPhone handoff still need direct verification.
+
+## Final pre-launch check: Sept. 6, 2026
+
+Pete approved the preview, then approved a final check against the live site. This pass does not approve a merge or production deploy. Only this file and the sprint README changed. The QA notes remain local and uncommitted.
+
+### Git and production safety
+
+- Checked again at 19:34 UTC. Remote main remains `a8acc0c6334336f49f3fb96fe296cdecf9c5014e`. The feature branch and its remote remain `0aba0379af09afc848086b962c0a0343e27845c3`. The feature worktree was clean before the notes update.
+- The app, public assets, and tests at HEAD match reviewed source commit `6f1766e63d0445ac629e139f779fd98332693305`. The later commit holds QA notes only. The recovery commit `950b351` remains in the branch. Later app changes touch only the homepage and its menu.
+- Production remains Ready deployment `dpl_Baw2jeR53uJrANbfEUEAbY5FdSH2`, at `barrelbook-website-74ob0y6ym-pete-petereillycs-projects.vercel.app`. Keep this as the rollback reference. Its historical `gitDirty: 1` flag has not changed; do not use a dirty checkout as the release source.
+- The original checkout stays on `codex/preserve-paid-conversion-instrumentation-20260530` at `a1c8ade`. Its status and staged/unstaged diff hashes match preflight. No work was reset, stashed, copied over, or lost.
+- No commit, push, PR, merge, deploy, environment change, auth bypass, or protection change was made.
+
+### Fresh checks
+
+- `npm run build`: passed, 56 static pages. `npx tsc --noEmit` and `npm run test:promo`: passed. `npm run lint`: 0 errors and the same 6 existing warnings in unchanged files.
+- `PLAYWRIGHT_HTML_OUTPUT_DIR=output/playwright/kbf-final-check/report npm run test:e2e -- --output=output/playwright/kbf-final-check/results`: 31 passed and 8 expected skips. No test or screenshot baseline changed. The existing, narrowly scoped Vercel development-script test limits still apply.
+- Compared live and reviewed preview pages at `/`, `/scan`, `/collection`, `/store-picks`, `/android`, `/support`, `/privacy`, `/terms`, `/p/fnf`, `/p/garysplus`, `/p/blackshirt`, and `/p/thebourbontrail`. Titles, canonical links, page copy, headings, links, media, and CTA counts match, apart from the approved homepage navigation. Each page fits the 532-pixel browser view. The homepage retains 3 paired download groups; scan, collection, and store picks retain 4 each.
+- The reviewed preview's desktop menu and phone Menu control both open the 25-bottle radar. Reviewed screenshots at 1440 and 390 pixels. Phone search for WhistlePig returns the single master-list record at slot 11. Its detail link opens the right page with the production canonical URL and no sideways scroll. Reset the viewport and left the existing tab on the reviewed preview homepage.
+- Fresh local HTTP checks passed for all 29 detail pages and their canonical URLs. The 4 parked pages retain `noindex`; the 25 active pages remain indexable. The index plus 25 active pages appear in the sitemap. Parked pages are excluded. Invalid and fake-flex slugs return 404. Record validation passed.
+- The live and preview short promo links resolve to their existing offer pages. `/fnf` is a Vercel redirect in unchanged `vercel.json`; its local Next.js 404 is expected. The hosted redirect reaches `/p/fnf`. No offer was redeemed and no App Store action or form was submitted.
+- Both public app-association routes return 200 with the existing app ID and paths. The local build returns the same paths without an app ID because the setting is production-only. This does not test a real iPhone handoff.
+- Reopened the five named source pages: [KBF Distillers' Row](https://kybourbonfestival.com/distillers-row-series/), [Bourbon & Banter](https://www.bourbonbanter.com/the-ultimate-insiders-guide-to-the-2026-kentucky-bourbon-festival/), [Larrikin](https://www.thebourbonflight.com/larrikin-bourbon-co-unveils-the-australia-series-for-the-2026-kentucky-bourbon-festival/), [Phifer Pavitt](https://bevnet.com/pr/2026/09/01/phifer-pavitt-spirits-opens-late-night-and-reserve-for-public-sale-for-the-first-time), and [Maker's Mark](https://www.makersmark.com/en-us/bourbons/makers-mark-cellar-aged). No conflicting update was found in the checked claims. Reported facts and unknown sale details keep their labels. No bottle data, public check date, photo, social slot, or open pick changed.
+
+### Release path and remaining limits
+
+The live homepage loads Google Analytics and Vercel Analytics. Its inspected browser log has no errors or warnings. Script loading is not proof of event receipt.
+
+A read-only check of environment key names and scopes confirms that `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set for production, but not for this preview branch. `BARRELBOOK_AASA_APP_IDS` is production-only. No values were printed or changed. Do not promote the preview artifact into production. A fresh production build from a reviewed main commit must use the existing production settings.
+
+Next approval should cover committing these two QA notes, opening and merging a release PR into main, and checking the resulting Vercel production build. Recheck remote refs and the active deployment immediately before that action. After launch, check the homepage menu, radar, existing offer redirects, app-association responses, hosted sitemap, and analytics receipt. A real iPhone check is still needed for app handoff. If a release regression appears, stop and request approval to restore the recorded production target. Do not change credentials, environment values, or access protection to complete QA.
+
+The Playwright workflow supplied regression and browser checks. The Vercel checklist kept production untouched and identified the need for a fresh production build. Generated local reports stay ignored. No new build was needed after this docs-only receipt.
+
 ## Homepage menu: approved Sept. 5, 2026
 
 Pete approved this ten-file change, tests, commit, and feature-branch push. No merge or production deploy is approved.

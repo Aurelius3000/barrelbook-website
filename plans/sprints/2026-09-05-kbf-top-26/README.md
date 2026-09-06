@@ -1,6 +1,6 @@
 # KBF 2026 Release Radar
 
-Status: the homepage menu change is pushed in commit `6f1766e`. Its protected preview is Ready. Hosted phone and desktop checks passed. Local checks passed, including 31 browser tests with 8 expected skips. Production is unchanged.
+Status: Pete approved launch on Sept. 6, 2026. Release is in progress. The final pre-launch check passed. Main and production still match that check. The build, promo checks, typecheck, and 31 browser tests passed, with 8 expected skips. Only QA notes changed since the reviewed app source.
 
 The local and hosted previews show Pete's 25 named bottles in master order, with slot 26 open. Four parked bottles keep their detail pages. Production is unchanged.
 
@@ -33,7 +33,8 @@ The prototype stays here as a visual reference. It is not production content.
 
 ## Next step
 
-Review the new preview homepage. Choose `KBF 2026` on desktop, or `Menu` then `KBF 2026` on phones and tablets. The intro link is gone. The existing App Store and Android paths remain intact. The earlier recovery matched 12 live pages and passed all 29 bottle detail checks; the KBF source is unchanged. No merge or production deploy is approved. See `evidence.md` for the current plan and results.
-Do not promote the original preview or upload a dirty checkout. Any launch must use a reviewed Git commit, a fresh live-site comparison, and the recorded rollback target. Keep production and preview protection unchanged until launch approval.
-Google Analytics is not configured for this preview branch. App-association IDs are production-only. Event delivery and real iPhone handoff remain launch checks. The browser blocked the hosted sitemap XML; its local check passed. See `evidence.md` for the limits.
-Before launch, compare again with the latest main branch and live deployment, then recheck sources and get production approval. Meta, photos, and production deploys remain separate steps. Slot 26 and the Barrell fallback need an approved pick or swap.
+Commit and push the QA notes, open and merge the release PR into main, then check the fresh Vercel production build. Pete approved these steps. The Sept. 6 check matched 12 existing live pages, apart from the approved homepage menu. All 29 local bottle detail URLs passed. Fresh phone and desktop menu checks passed. See `evidence.md` for the checks and limits.
+
+Use a fresh production build from the reviewed main commit. Do not promote a preview artifact or upload the dirty original checkout. This preview branch has no Google Analytics setting, and app-association IDs are production-only. Keep both settings and access protection unchanged. The live site loads Google Analytics; event receipt and real iPhone handoff still need post-launch checks. Check the hosted sitemap too; its local check passed.
+
+Recheck main and the live deployment just before release. Keep `dpl_Baw2jeR53uJrANbfEUEAbY5FdSH2` as the rollback reference. No commit, push, PR, merge, or production deploy was made in the final check. Meta and photos remain separate steps. Slot 26 and the Barrell fallback need an approved pick or swap.
