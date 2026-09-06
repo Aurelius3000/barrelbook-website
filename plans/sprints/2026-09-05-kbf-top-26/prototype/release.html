@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Release detail — BarrelBook Release Radar</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header"><a class="brand" href="index.html"><img src="/public/BarrelBook%20Logo%20Large.png" alt="BarrelBook" /><span></span><strong>Release Radar</strong></a><a class="back" href="index.html">← Back to Top 26</a></header>
+    <main class="shell detail" id="detail"></main>
+    <footer class="shell footer"><p>Prototype data is source-aware but not publication-ready. Confirm availability directly with the release source.</p></footer>
+    <script src="releases.js"></script>
+    <script>
+      const slug = new URLSearchParams(location.search).get('slug');
+      const release = RELEASES.find(r => r.slug === slug) || RELEASES[0];
+      const related = RELEASES.filter(r => r.slug !== release.slug && (r.distillery === release.distillery || r.tier === release.tier)).slice(0,3);
+      document.title = `${release.distillery} ${release.name} — BarrelBook Release Radar`;
+      document.querySelector('#detail').innerHTML = `
+        <nav class="breadcrumbs"><a href="index.html">KBF 2026 Top 26</a><span>/</span><span>${release.distillery}</span></nav>
+        <section class="detail-hero">
+          <div class="detail-rank"><span>Watchlist rank</span><b>#${String(release.rank).padStart(2,'0')}</b><small>Tier ${release.tier}</small></div>
+          <div><p class="eyebrow">${release.distillery}</p><h1>${release.name}</h1><p class="detail-why">${release.why}</p><div class="detail-tags"><span>${release.availability}</span><span>${release.day}</span><span>${release.timing}</span></div></div>
+        </section>
+        <section class="detail-grid">
+          <div class="details-panel"><p class="eyebrow">Collector facts</p><h2>What we know now.</h2>
+            <dl><div><dt>Age</dt><dd>${release.age}</dd></div><div><dt>Proof</dt><dd>${release.proof}</dd></div><div><dt>MSRP</dt><dd>${release.msrp}</dd></div><div><dt>Bottle count</dt><dd>${release.bottles}</dd></div></dl>
+          </div>
+          <aside class="plan-panel"><p class="eyebrow">Find it at KBF</p><h2>${release.day}</h2><p><strong>${release.venue}</strong><br />${release.timing}</p><div class="pending-note">If a time is not source-confirmed, the planner does not invent one. Check the source again before you head over.</div></aside>
+        </section>
+        <section class="source-section"><div><p class="eyebrow">Source ledger</p><h2>Facts, not folklore.</h2><p>Last reviewed September 5, 2026. This record is a prototype of a pre-publication workflow: every public fact needs a fresh primary-source check.</p></div><a class="source-link" href="${release.sourceUrl}" target="_blank" rel="noreferrer">${release.source} <b>↗</b></a></section>
+        <section class="related"><p class="eyebrow">Keep exploring</p><h2>Related releases</h2><div class="related-grid">${related.map(r => `<a href="release.html?slug=${r.slug}"><small>${r.distillery}</small><strong>#${String(r.rank).padStart(2,'0')} · ${r.name}</strong><span>${r.age} · ${r.proof} proof</span></a>`).join('')}</div></section>`;
+    </script>
+  </body>
+</html>

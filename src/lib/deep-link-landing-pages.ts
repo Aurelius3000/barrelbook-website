@@ -227,7 +227,7 @@ export const scanLandingPageConfig: LandingPageConfig = {
     title: "Download BarrelBook and scan your next bottle.",
     description:
       "If the bottle is worth buying, it is worth capturing cleanly. BarrelBook keeps that work fast.",
-    note: "Available on iPhone and iPad today. Android is on the roadmap.",
+    note: "Available on iPhone and iPad today. Android users can join the waitlist above.",
   },
 };
 
@@ -342,7 +342,7 @@ export const collectionLandingPageConfig: LandingPageConfig = {
     title: "Put your shelf in your pocket.",
     description:
       "Start with the bottles you already own, keep them searchable, and stop rebuilding the same list in three different places.",
-    note: "Available on iPhone and iPad today. Android is on the roadmap.",
+    note: "Available on iPhone and iPad today. Android users can join the waitlist above.",
   },
 };
 
@@ -454,7 +454,7 @@ export const storePicksLandingPageConfig: LandingPageConfig = {
     title: "Track your next store pick the right way.",
     description:
       "If the barrel number, store, or batch matters, the record should keep it front and center. BarrelBook does that from the first scan.",
-    note: "Available on iPhone and iPad today. Android is on the roadmap.",
+    note: "Available on iPhone and iPad today. Android users can join the waitlist above.",
   },
 };
 

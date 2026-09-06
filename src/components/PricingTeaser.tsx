@@ -1,4 +1,4 @@
-import AppStoreBadgeLink from "@/components/AppStoreBadgeLink";
+import PlatformDownloadCtas from "@/components/PlatformDownloadCtas";
 
 const PLANS = [
   {
@@ -60,13 +60,11 @@ export default function PricingTeaser() {
         </div>
 
         <div className="mt-8 flex flex-col items-center gap-3 text-center">
-          <AppStoreBadgeLink
-            width={180}
-            height={60}
+          <PlatformDownloadCtas
             analytics={{ location: "pricing_teaser" }}
           />
           <p className="text-sm text-gray-500">
-            Available on iPhone and iPad. Android is on the roadmap.
+            Available on iPhone and iPad today. Android users can join the waitlist above.
           </p>
         </div>
       </div>
