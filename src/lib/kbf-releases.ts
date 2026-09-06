@@ -2,7 +2,9 @@
 export const KBF_PATH = "/releases/kbf-2026";
 export const KBF_URL = `https://www.barrelbook.app${KBF_PATH}`;
 export const KBF_CHECKED_AT = "2026-09-05T18:23:00Z";
-export const KBF_UPDATED_AT = "2026-09-05T19:14:04Z";
+const KBF_MASTER_SYNCED_AT = "2026-09-05T19:14:04Z";
+const HEAVEN_HILL_PROOF_CHECKED_AT = "2026-09-06T20:34:43Z";
+export const KBF_UPDATED_AT = HEAVEN_HILL_PROOF_CHECKED_AT;
 export const MASTER_SLOT_COUNT = 26;
 export const openSlots: readonly number[] = [26];
 
@@ -18,6 +20,12 @@ export const releaseSources = {
     kind: "report",
     url: "https://www.bourbonbanter.com/the-ultimate-insiders-guide-to-the-2026-kentucky-bourbon-festival/",
     note: "Patrick Pho's KBF guide, published Sept. 2, 2026.",
+  },
+  heavenHillLabel: {
+    name: "Heaven Hill bottle label",
+    kind: "label",
+    url: "https://storage.ghost.io/c/1f/bc/1fbc7ea1-d6e2-43ab-9661-246c6f0c07f9/content/images/2026/08/728512055_18109277113970126_5500915705456488426_n-1.png",
+    note: "The label reads 113.5 proof (56.75% ABV). Its image appears in the KBF guide.",
   },
   larrikin: {
     name: "Larrikin press release",
@@ -117,15 +125,20 @@ const phiferRelease: Partial<Release> = {
     note: "The brand lists sales from Sept. 10 to 13, while stock lasts. Exact sale hours are TBD.",
   },
   unknowns: ["Price and KBF bottle count", "Exact sale hours"],
-  lastCheckedAt: KBF_UPDATED_AT,
-  updates: [{ date: KBF_UPDATED_AT, note: "Added after checking the brand's KBF announcement." }],
+  lastCheckedAt: KBF_MASTER_SYNCED_AT,
+  updates: [{ date: KBF_MASTER_SYNCED_AT, note: "Added after checking the brand's KBF announcement." }],
 };
 
 // Parked records keep their URLs and facts, but have no active list slot.
 export const allReleases: Release[] = [
   record({ slot: 1, slug: "heaven-hill-kbf-35th", brand: "Heaven Hill", name: "KBF 35th Anniversary Commemorative Release",
-    age: fact("10, 12 & 13 year blend", "guide", 10), proof: fact("133.5", "guide", 133.5),
+    age: fact("10, 12 & 13 year blend", "guide", 10), proof: fact("113.5", "heavenHillLabel", 113.5),
     why: "A special blend for the festival's 35th year.",
+    lastCheckedAt: HEAVEN_HILL_PROOF_CHECKED_AT,
+    updates: [
+      { date: KBF_CHECKED_AT, note: "Added to our KBF watchlist. Sources checked." },
+      { date: HEAVEN_HILL_PROOF_CHECKED_AT, note: "Corrected proof to 113.5 from the bottle label." },
+    ],
   }),
   record({ slot: 5, slug: "king-of-kentucky-2026", brand: "Brown-Forman", name: "King of Kentucky",
     statusNote: "The guide lists King of Kentucky. It does not state the release year or confirm bottle sales.",
@@ -202,10 +215,10 @@ export const allReleases: Release[] = [
     age: fact("12 years", "guide", 12), finish: fact("Cabernet Franc, Amaro, and Syrah casks"), exclusive: fact("KBF only"),
     batch: fact("Single barrel"),
     statusNote: "The guide lists this 12-year KBF pick, chosen by the Vault team. Brand confirmation is pending.",
-    lastCheckedAt: KBF_UPDATED_AT,
+    lastCheckedAt: KBF_MASTER_SYNCED_AT,
     updates: [
       { date: KBF_CHECKED_AT, note: "Added to our KBF watchlist. Sources checked." },
-      { date: KBF_UPDATED_AT, note: "Checked the Vault team's 12-year KBF pick against the guide." },
+      { date: KBF_MASTER_SYNCED_AT, note: "Checked the Vault team's 12-year KBF pick against the guide." },
     ],
     why: "A mix of wine and Amaro casks makes this rye stand out.",
     unknowns: ["Proof, price, and bottle count", "Sale day, time, and place"],
@@ -270,8 +283,8 @@ export const allReleases: Release[] = [
     statusNote: "The guide lists Jackson Purchase's cask-strength KBF barrel pick. Brand confirmation is pending.",
     why: "A festival single barrel we want to try at cask strength.",
     unknowns: ["Age and exact proof", "Price and bottle count", "Sale day, time, and place"],
-    lastCheckedAt: KBF_UPDATED_AT,
-    updates: [{ date: KBF_UPDATED_AT, note: "Added after checking the guide's KBF barrel pick." }],
+    lastCheckedAt: KBF_MASTER_SYNCED_AT,
+    updates: [{ date: KBF_MASTER_SYNCED_AT, note: "Added after checking the guide's KBF barrel pick." }],
   }),
   record({ slot: 21, slug: "phifer-pavitt-reserve", brand: "Phifer Pavitt", name: "RESERVE",
     ...phiferRelease,
@@ -282,9 +295,9 @@ export const allReleases: Release[] = [
 ].map((release) => ({
   ...release,
   updates: [...release.updates, {
-    date: KBF_UPDATED_AT,
+    date: KBF_MASTER_SYNCED_AT,
     note: release.slot === null ? "Parked. Not on the current watchlist." : `Matched to the master list at no. ${release.slot}.`,
-  }],
+  }].sort((a, b) => Date.parse(a.date) - Date.parse(b.date)),
 }));
 
 export const releases = allReleases
