@@ -6,6 +6,14 @@ This is research. It is not a public release list.
 
 Update: Pete approved all 26 as a watchlist. The Hold and Partial states below record the first research pass. They no longer block a detail page. The build uses Confirmed, Reported, and Watch, with a source for each known fact. See `src/lib/kbf-releases.ts` for current content.
 
+## Heaven Hill proof correction: Sept. 6, 2026
+
+The [bottle label image](https://storage.ghost.io/c/1f/bc/1fbc7ea1-d6e2-43ab-9661-246c6f0c07f9/content/images/2026/08/728512055_18109277113970126_5500915705456488426_n-1.png) reads **113.5 proof** and **56.75% ABV**. This agrees with Scout's Sept. 4 post. The image appears in the Heaven Hill section of [Bourbon & Banter's KBF guide](https://www.bourbonbanter.com/the-ultimate-insiders-guide-to-the-2026-kentucky-bourbon-festival/). The guide's text says 133.5, which conflicts with the label.
+
+Use the label for proof. Both the display and numeric filter value are 113.5. The proof source links to the label, not the guide's conflicting text. No image was copied or added to the site.
+
+The bottle stays Reported. Its other facts and sale details still use their existing sources. Only Heaven Hill's check date and the list update date advance. Other records keep their prior dates and history. The earlier research below remains a historical record.
+
 ## Master sync source check: Sept. 5, 19:14 UTC
 
 The master now has 25 named bottles and one open slot. Earlier ranks and research gates below are history, not the current roster. See `master-list.md` for order and membership.

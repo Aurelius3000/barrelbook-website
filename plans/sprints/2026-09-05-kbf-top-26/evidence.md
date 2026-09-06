@@ -1,5 +1,33 @@
 # Evidence
 
+## Heaven Hill proof correction: approved Sept. 6, 2026
+
+Pete approved the four-file fix and its release through a fresh branch, PR, and production build.
+
+1. Set Heaven Hill's displayed proof and numeric filter value to 113.5. Use the bottle label as the proof source. Keep its Reported status and all other bottle facts.
+2. Add one regression test for the list, detail page, source link, and 120+ proof filter. Run it before and after the fix, then run typecheck, lint, build, promo tests, and the browser suite.
+3. Log the label evidence in `sources.md` and the checks here. Keep the other bottles' check dates and update history unchanged.
+4. Change only `src/lib/kbf-releases.ts`, `tests/kbf-release-radar.spec.ts`, `sources.md`, and this file. Commit the exact scope, push the new branch, check its PR and preview, then merge without a bypass. Let Vercel build production from the merge. Do not promote a preview artifact.
+5. Check the live list, detail page, filter, and existing production links. Stop if main or production changes before release. Leave the original dirty checkout alone. Do not change environment settings, access, tracking, assets, social posts, or the roster.
+
+Preflight: fresh branch `codex/kbf-heaven-hill-proof` starts at remote main `fdc7f190ccdf250d1f9eb46e8b86976fa0bbcbfc` in the clean release worktree. Production is Ready deployment `dpl_6BX5RpYFtYYWZxKv2oWvqhUNnx8A` at that same commit. Keep it as this fix's rollback reference. The original checkout remains on `codex/preserve-paid-conversion-instrumentation-20260530` at `a1c8ade`; its status and both diff hashes match the prior check.
+
+### Regression check
+
+The new desktop regression test failed on the old data as intended: expected `113.5`, received `133.5`. The failure came from the rendered list proof, not a test setup error. The report stays ignored under `output/playwright/kbf-heaven-hill-proof/red-report/`.
+
+The first post-fix run passed both proof values, source links, and filter checks. Its final assertion needed to include the date prefix shown in each update. The test now checks the full three-entry history in order. No UI code changed for that test adjustment.
+
+### Local verification
+
+- The focused test passed on desktop Chromium, tablet Chromium, and phone WebKit. It checks 113.5 on both pages, label links, Reported status, exclusion from 120+ proof, return after clearing that filter, the correction history, and the canonical detail URL.
+- `npm run build` and `npx tsc --noEmit` passed. The build still has 56 static pages. `npm run test:promo` passed. `npm run lint` passed with 0 errors and the same 6 warnings in unchanged files.
+- The full Playwright suite passed: 34 tests, 8 expected skips. Existing homepage snapshots, navigation, Android tracking, and App Store placement checks passed without changed baselines or test exclusions. Reports stay ignored under `output/playwright/kbf-heaven-hill-proof/`.
+- A runtime comparison with main `fdc7f19` passed. All 28 other records and all existing source entries are identical, including check dates and history. Only Heaven Hill's proof, check date, and correction history changed. The list still has 25 active bottles, 4 parked bottles, and open slot 26.
+- `git diff --check` passed. Only the four approved files changed. The original checkout's branch, HEAD, status hash, and both diff hashes still match preflight. Remote main and the live production deployment remain unchanged.
+
+The Playwright workflow supplied the regression and browser checks. The Vercel checklist requires a fresh production build after the reviewed merge. Existing limits remain: local script checks do not prove analytics event receipt or a real iPhone app handoff.
+
 ## Production release: approved Sept. 6, 2026
 
 Pete approved committing and pushing the two QA notes, opening and merging the release PR into main, and publishing through Vercel. Approval includes checking the new live site. It does not permit source changes, environment or protection changes, or changes to the dirty original checkout.
