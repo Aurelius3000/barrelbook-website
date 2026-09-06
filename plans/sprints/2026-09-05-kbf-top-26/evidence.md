@@ -28,6 +28,20 @@ The first post-fix run passed both proof values, source links, and filter checks
 
 The Playwright workflow supplied the regression and browser checks. The Vercel checklist requires a fresh production build after the reviewed merge. Existing limits remain: local script checks do not prove analytics event receipt or a real iPhone app handoff.
 
+### Release and live checks: Sept. 6, 20:48 UTC
+
+- Committed the four reviewed files as `34f922883f9488464f53ea5c275fd571984b82be`, `fix(releases): correct Heaven Hill proof from label`. Exact staged scope, whitespace, and focused secret-pattern checks passed. No generated output or local config entered the commit.
+- Pushed only `codex/kbf-heaven-hill-proof` and opened [PR 25](https://github.com/Aurelius3000/barrelbook-website/pull/25). Ready preview `dpl_EGLTJ1MweUg6H2on9fA9hXu3g5HF` used that exact commit. The hosted list, detail proof, source link, correction history, and filter passed. The detail screenshot showed no layout issue or horizontal overflow. Normal sign-in worked. No access bypass was used.
+- Before merge, GitHub's source tree matched the reviewed local tree. The worktree was clean, PR checks passed, and main and production still matched preflight. Merged PR 25 without a bypass at 20:43:44 UTC. Merge `cf58f14a064da504d9c7276349f45aee2a7ae1be` has the expected main and feature parents and exactly the reviewed tree.
+- Vercel built fresh production from that main merge. Ready deployment `dpl_9rokt87YWDsZC9eBoWc9qBDeAnFk` now serves both `www.barrelbook.app` and `barrelbook.app`. The preview was not promoted. No environment, tracking, protection, or project setting changed.
+- The live [watchlist](https://www.barrelbook.app/releases/kbf-2026) and [Heaven Hill page](https://www.barrelbook.app/releases/kbf-2026/heaven-hill-kbf-35th) show 113.5 and link to the label. The detail page has the Sept. 6 correction after its two Sept. 5 entries, keeps its canonical URL, and contains no 133.5 text. The label link returns 200 as `image/png`; no image was downloaded or added.
+- Live search for Heaven Hill shows 1 of 25 bottles. Enabling 120+ proof shows 0 and removes Heaven Hill. Clearing that checkbox restores 1. The homepage Menu > KBF 2026 path opens all 25 bottles. The live list and detail page have no horizontal overflow at the current browser size. The corrected detail page is left open.
+- Homepage, `/scan`, `/collection`, `/store-picks`, and `/android` return 200. `/fnf`, `/blackshirt`, and `/thebourbontrail` still resolve to their existing offer pages. Both app-association routes return 200 with matching, nonempty app details. The sitemap includes Heaven Hill and the new list update date. No form, offer, or App Store handoff was submitted.
+- The live homepage retains one Google Analytics script and one Vercel Analytics script. This is a script-presence check, not proof of event receipt. A real iPhone handoff remains outside this proof fix.
+- The original dirty checkout's branch, HEAD, status hash, and both diff hashes still match preflight. Other bottle records, assets, routes, CTAs, and tracking code remain unchanged. Keep `dpl_6BX5RpYFtYYWZxKv2oWvqhUNnx8A` as this release's rollback reference; no rollback was needed or performed.
+
+This post-launch receipt changes only this evidence file. It does not change the reviewed app source or require another production deployment.
+
 ## Production release: approved Sept. 6, 2026
 
 Pete approved committing and pushing the two QA notes, opening and merging the release PR into main, and publishing through Vercel. Approval includes checking the new live site. It does not permit source changes, environment or protection changes, or changes to the dirty original checkout.
