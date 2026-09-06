@@ -1,14 +1,14 @@
 # KBF 2026 Release Radar
 
-Status: Pete approved launch on Sept. 6, 2026. Release is in progress. The final pre-launch check passed. Main and production still match that check. The build, promo checks, typecheck, and 31 browser tests passed, with 8 expected skips. Only QA notes changed since the reviewed app source.
+Status: live on Sept. 6, 2026. PR #24 merged as `fdc7f19`. Vercel built production from that exact commit. Live route, menu, sitemap, app-association, and Google Analytics receipt checks passed. The pre-launch build, promo checks, typecheck, and 31 browser tests passed, with 8 expected skips. Only the real iPhone handoff check remains.
 
-The local and hosted previews show Pete's 25 named bottles in master order, with slot 26 open. Four parked bottles keep their detail pages. Production is unchanged.
+The live site shows Pete's 25 named bottles in master order, with slot 26 open. Four parked bottles keep their detail pages. The original checkout and its unrelated edits remain untouched.
 
 Branch: `codex/kbf-release-radar`, based on `origin/main` at `a8acc0c`.
 Worktree: `/Users/petereilly2021/Projects/barrelbook-website-kbf-release-radar`.
 The original checkout and its unrelated edits remain in place.
 
-[Preview homepage](https://barrelbook-website-q2i56h45c-pete-petereillycs-projects.vercel.app/) | [KBF radar preview](https://barrelbook-website-q2i56h45c-pete-petereillycs-projects.vercel.app/releases/kbf-2026) | [Master list and match-up](master-list.md) | [Local preview](http://127.0.0.1:4175/) | [Plan](plan.md) | [QA and changed files](evidence.md)
+[Live KBF radar](https://www.barrelbook.app/releases/kbf-2026) | [Live homepage](https://www.barrelbook.app/) | [Release PR](https://github.com/Aurelius3000/barrelbook-website/pull/24) | [Reviewed preview](https://barrelbook-website-q2i56h45c-pete-petereillycs-projects.vercel.app/) | [Master list and match-up](master-list.md) | [Plan](plan.md) | [QA and changed files](evidence.md)
 
 ## Goal
 
@@ -33,8 +33,8 @@ The prototype stays here as a visual reference. It is not production content.
 
 ## Next step
 
-Commit and push the QA notes, open and merge the release PR into main, then check the fresh Vercel production build. Pete approved these steps. The Sept. 6 check matched 12 existing live pages, apart from the approved homepage menu. All 29 local bottle detail URLs passed. Fresh phone and desktop menu checks passed. See `evidence.md` for the checks and limits.
+Check an existing app link on a real iPhone. Desktop and phone-size browser checks pass, but they cannot prove that iOS opens the installed app. Google Analytics Realtime shows receipt for the live radar and LATE NIGHT detail page. These are QA visits, not a launch metric.
 
-Use a fresh production build from the reviewed main commit. Do not promote a preview artifact or upload the dirty original checkout. This preview branch has no Google Analytics setting, and app-association IDs are production-only. Keep both settings and access protection unchanged. The live site loads Google Analytics; event receipt and real iPhone handoff still need post-launch checks. Check the hosted sitemap too; its local check passed.
+Keep future website changes based on fresh main. Production is deployment `dpl_6BX5RpYFtYYWZxKv2oWvqhUNnx8A` from merge commit `fdc7f190ccdf250d1f9eb46e8b86976fa0bbcbfc`. It used the existing production settings. No preview was promoted. No credential, environment, access, package, or app-source change was made during launch. The final QA receipt is a docs-only follow-up on the feature branch; it does not trigger another production build.
 
-Recheck main and the live deployment just before release. Keep `dpl_Baw2jeR53uJrANbfEUEAbY5FdSH2` as the rollback reference. No commit, push, PR, merge, or production deploy was made in the final check. Meta and photos remain separate steps. Slot 26 and the Barrell fallback need an approved pick or swap.
+Keep `dpl_Baw2jeR53uJrANbfEUEAbY5FdSH2` as the rollback reference. A rollback needs approval. Meta and photos remain separate steps. Slot 26 and the Barrell fallback need an approved pick or swap. Source checks and updates are manual; no monitor or posting schedule was created.

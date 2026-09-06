@@ -1,5 +1,21 @@
 # Evidence
 
+## Production release passed: Sept. 6, 2026
+
+- Committed the two reviewed QA notes as `cd27c425e811bb25d4f7d3a50d015415b33cba85` and pushed only `codex/kbf-release-radar`. Exact staged-path, content, whitespace, local-link, and focused secret-pattern checks passed. No app code changed in this release pass.
+- Opened and merged [PR #24](https://github.com/Aurelius3000/barrelbook-website/pull/24). Both Vercel checks passed. GitHub reported the PR clean and mergeable. The 32-file PR scope and remote Git tree matched the reviewed local branch. Main and the live deployment were checked again immediately before merge. No branch rule was bypassed.
+- Merge commit: `fdc7f190ccdf250d1f9eb46e8b86976fa0bbcbfc`, merged at 19:55:47 UTC. Its parents are prior main `a8acc0c` and reviewed feature head `cd27c42`. Its Git tree matches the reviewed source exactly.
+- Vercel built Ready production deployment `dpl_6BX5RpYFtYYWZxKv2oWvqhUNnx8A` from that merge on main. Deployment URL: [production build](https://barrelbook-website-ow2cmta0i-pete-petereillycs-projects.vercel.app). Both `www.barrelbook.app` and `barrelbook.app` are assigned to it. No preview promotion or manual upload was used.
+- [Live radar](https://www.barrelbook.app/releases/kbf-2026). Desktop `KBF 2026` and phone `Menu` then `KBF 2026` open it in the same tab. Reviewed live desktop and phone screenshots. The index has 25 named bottles and one open pick. Phone search for Phifer returns the two correct entries; LATE NIGHT opens its detail page. Inspected live page logs have no errors or warnings. Reset the viewport and left the live radar open.
+- Fresh public HTTP checks passed for the index and all 29 detail pages. Canonical URLs are correct. All 4 parked pages retain `noindex`; active pages remain indexable. Invalid and fake-flex slugs return 404. The hosted sitemap now passes too: 33 total URLs, including exactly the index and 25 active KBF detail pages.
+- All 12 existing pages return 200. The homepage retains 3 paired download groups, and scan, collection, and store picks retain 4 each. The four checked offer aliases return 308 to their original `/p/` pages. Both app-association routes return 200 with one configured app ID and the same six paths. The apex KBF link reaches the canonical `www` URL.
+- The live radar loads Google Analytics and Vercel Analytics. The existing signed-in Google Analytics property, BarrelBook, shows the radar and LATE NIGHT paths in Realtime pages. At the check, the last-30-minute view included 2 radar views and 1 LATE NIGHT view. This confirms page-view receipt from QA; it is not an adoption measure or proof of paid-conversion event receipt. No form, purchase, offer redemption, or custom test event was submitted.
+- No app source, bottle facts, check dates, photos, package, credential, environment, or access setting changed during launch. The final follow-up changes only this file and README. It stays on the feature branch as a docs-only receipt, with a release summary on PR #24. It does not request another merge or production build.
+
+Remaining manual check: open an existing app link on a real iPhone with BarrelBook installed. Browser-size checks and the app-association response do not prove device handoff. Keep prior deployment `dpl_Baw2jeR53uJrANbfEUEAbY5FdSH2` as the rollback reference; no rollback was needed or performed.
+
+The Vercel checklist kept the release tied to the exact merged Git source and the existing production settings. Browser checks verified the published result, not just build success. The pre-launch build, typecheck, lint, promo, and 31-test browser results still apply to the unchanged app source. No build is needed for this docs-only receipt.
+
 ## Production release: approved Sept. 6, 2026
 
 Pete approved committing and pushing the two QA notes, opening and merging the release PR into main, and publishing through Vercel. Approval includes checking the new live site. It does not permit source changes, environment or protection changes, or changes to the dirty original checkout.
