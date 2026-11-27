@@ -3,7 +3,7 @@ import { clampZoom, pinchZoom, zoomedOffset } from '../src/lib/photo-viewer';
 
 describe('photo zoom geometry', () => {
   it('bounds extreme and invalid input while allowing fractional pinch scales', () => {
-    expect([0, 1, 1.37, 9, Infinity, NaN].map(clampZoom)).toEqual([1, 1, 1.37, 5, 1, 1]);
+    expect([0, 1, 1.37, 9, Infinity, NaN].map(clampZoom)).toEqual([1, 1, 1.37, 4, 1, 1]);
   });
   it('keeps the same image point beneath the zoom anchor', () => {
     const offset = zoomedOffset(200, 100, 2, 4);
@@ -18,7 +18,7 @@ describe('photo zoom geometry', () => {
   it('scales from the initial two-finger distance without compounding move events', () => {
     expect(pinchZoom(1.5, 100, 200)).toBe(3);
     expect(pinchZoom(1.5, 100, 150)).toBe(2.25);
-    expect(pinchZoom(1.5, 100, 1000)).toBe(5);
+    expect(pinchZoom(1.5, 100, 1000)).toBe(4);
     expect(pinchZoom(1.5, 100, 10)).toBe(1);
   });
   it('ignores zero/invalid pinch geometry rather than jumping the image', () => {

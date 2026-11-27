@@ -1,5 +1,5 @@
 export const MIN_ZOOM = 1;
-export const MAX_ZOOM = 5;
+export const MAX_ZOOM = 4;
 
 export function clampZoom(value: number): number {
   return Number.isFinite(value) ? Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, value)) : MIN_ZOOM;

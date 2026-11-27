@@ -27,9 +27,8 @@ export interface CollectionView {
   limit: number;
   selectedId: string | null;
   detailId: string | null;
-  photoViewer: boolean;
 }
-export const INITIAL_VIEW: CollectionView = { chip: 'All', query: '', status: 'Active', rating: '0', tag: '', sort: 'Collection order', view: 'grid', limit: RENDER_PAGE_SIZE, selectedId: null, detailId: null, photoViewer: false };
+export const INITIAL_VIEW: CollectionView = { chip: 'All', query: '', status: 'Active', rating: '0', tag: '', sort: 'Collection order', view: 'grid', limit: RENDER_PAGE_SIZE, selectedId: null, detailId: null };
 
 const normalize = (value: string) => value.normalize('NFKD').replace(/\p{Diacritic}/gu, '').toLocaleLowerCase();
 

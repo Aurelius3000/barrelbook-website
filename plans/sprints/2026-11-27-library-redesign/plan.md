@@ -45,7 +45,7 @@ Start from the handoff’s Standard/Large/Extra large tile widths of 250/300/400
 - [ ] At Large on a 1280×800 laptop, the first row of bottle photos is visible without scrolling. Compare a long name and an unrated bottle beside a priced bottle. Names wrap fully, prices remain secondary and no blank bands surround portrait photos.
 - [ ] Grid and Table return the same IDs and ordering for the same query, chips and advanced filters. Exercise each chip, existing sort, combined filters, clear, zero results, incomplete loading, collection load failure/retry, and a genuinely empty shelf. Confirm “Open” maps to the stored Opened status.
 - [ ] Check 0, 1, 24, 25, 48 and 49 matches. Initially reveal up to 24. Each press reveals the next 24 or the remainder, once each. Report “Showing X of Y” using matching records after loading completes. Search finds a match beyond the first rendered page. Preserve paging and scroll when returning from detail.
-- [ ] Use fixtures with quantity >1, missing prices, null and zero values, legacy records, a store pick, archived/finished records, and photos that fail to load. Unit tests verify each summary against a hand-calculated result. Open a gallery from a tile to confirm the uncropped image is available.
+- [ ] Use fixtures with quantity >1, missing prices, null and zero values, legacy records, a store pick, archived/finished records, and photos that fail to load. Unit tests verify each summary against a hand-calculated result. Open Details from a Grid or Table thumbnail, then open the large detail photo to confirm the uncropped image is available. Returning restores the original thumbnail and collection scroll position.
 
 ### R3 · B1 bottle detail and return
 
@@ -59,6 +59,8 @@ Start from the handoff’s Standard/Large/Extra large tile widths of 250/300/400
 - [ ] Inspect browser requests across the complete flow. Opening details, viewing photos, and pressing Back issue no bottle/list writes or edit-service calls. Read back disposable fixtures before and after. Reuse existing Ask B.B. consent/access behavior and mocked answers in regression checks.
 
 **Local review gate.** Capture the Library and B1 at Standard, Large and Extra large, plus a narrow layout. Record a short Alice walkthrough showing a long name, a multi-photo bottle, zoom, and return. Pete reviews the hierarchy and laptop density here. R1–R3 can ship together while R4 is still in development.
+
+The [read-only D1 photo viewer plan](d1-photo-viewer.md) extends R3 with the Booker’s laptop and phone review, test matrix and acceptance criteria.
 
 ### R4 · Bar Display
 

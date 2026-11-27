@@ -12,7 +12,7 @@ import { observeAccount, type SessionState } from '../lib/session';
 import { planLabel, statusLabel, type BottleRecord, type PlanSnapshot } from '../lib/records';
 import { friendlyAuthError } from '../lib/services';
 import { ConfigurationError, canEditBottle } from '../lib/config';
-import { clampZoom, pinchZoom, zoomedOffset } from '../lib/photo-viewer';
+import { clampZoom, MAX_ZOOM, pinchZoom, zoomedOffset } from '../lib/photo-viewer';
 import { collectPages, collectionResults, collectionSummary, INITIAL_VIEW, QUICK_FILTERS, visiblePage, shelfTotals, money as formatMoney, priceComparison, RENDER_PAGE_SIZE, SORTS, type CollectionView } from '../lib/collection';
 
 function Button({ children, onClick, disabled = false, secondary = false, type = 'button' }: { children: ReactNode; onClick?: () => void; disabled?: boolean; secondary?: boolean; type?: 'button' | 'submit' }) {
@@ -60,7 +60,7 @@ function PhotoViewer({ bottle, runtime, index, onSelect, onClose }: { bottle: Bo
     root.current?.querySelector<HTMLButtonElement>('button')?.focus();
     return () => cancelAnimationFrame(frame.current);
   }, []);
-  const zoomTo = (value: number, anchor?: { x: number; y: number }) => {
+  const zoomTo = useCallback((value: number, anchor?: { x: number; y: number }) => {
     const host = viewport.current;
     if (!host) return;
     const next = clampZoom(value), before = zoomValue.current;
@@ -70,12 +70,40 @@ function PhotoViewer({ bottle, runtime, index, onSelect, onClose }: { bottle: Bo
     zoomValue.current = next; setZoom(next);
     cancelAnimationFrame(frame.current);
     frame.current = requestAnimationFrame(() => { if (host.isConnected) { host.scrollLeft = left; host.scrollTop = top; } });
-  };
-  const choose = (next: number) => {
-    if (next < 0 || next >= bottle.photos.length || next === index) return;
+  }, []);
+  useEffect(() => {
+    const host = viewport.current;
+    if (!host) return;
+    const wheel = (event: WheelEvent) => {
+      if (event.ctrlKey || event.metaKey || !event.deltaY) return;
+      event.preventDefault();
+      const bounds = host.getBoundingClientRect();
+      const delta = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? host.clientHeight : 1);
+      zoomTo(zoomValue.current * Math.exp(-delta * 0.002), { x: event.clientX - bounds.left, y: event.clientY - bounds.top });
+    };
+    host.addEventListener('wheel', wheel, { passive: false });
+    return () => host.removeEventListener('wheel', wheel);
+  }, [zoomTo]);
+  const photoCount = bottle.photos.length;
+  const multiple = photoCount > 1;
+  const photoLabel = (i: number) => i === bottle.primaryImageIndex ? 'Cover photo' : `Photo ${i + 1}`;
+  const facts = [
+    ['Proof', bottle.proof?.toString()], ['Age', bottle.ageStatement], ['Release', bottle.release],
+    ['Distilled by', bottle.distilledBy], ['Size', bottle.size],
+  ].filter(([, value]) => value);
+  const choose = (position: number) => {
+    const next = (position + photoCount) % photoCount;
+    if (next === index) return;
     zoomTo(1); pointers.current.clear(); drag.current = null; pinch.current = null; onSelect(next);
+    // On phones, choosing a thumbnail below the stage should reveal the new photo.
+    const body = viewport.current?.closest('.d1-body');
+    if (body) body.scrollTop = 0;
   };
-  return <section ref={root} className="fullscreen-photo-viewer" role="dialog" aria-modal="true" aria-labelledby="photo-viewer-title" aria-describedby="photo-viewer-help" onKeyDown={e => {
+  return <section ref={root} className="fullscreen-photo-viewer d1-viewer" role="dialog" aria-modal="true" aria-labelledby="photo-viewer-title" aria-describedby="photo-viewer-help"
+    onClickCapture={event => {
+      // WebKit leaves clicked buttons unfocused. Keep subsequent keyboard input inside the viewer.
+      (event.target as Element).closest('button')?.focus({ preventScroll: true });
+    }} onKeyDown={e => {
     e.stopPropagation();
     if (e.key === 'Escape') { e.preventDefault(); onClose(); return; }
     if (e.key === 'Tab') {
@@ -89,8 +117,16 @@ function PhotoViewer({ bottle, runtime, index, onSelect, onClose }: { bottle: Bo
     if (e.key === '0') { e.preventDefault(); zoomTo(1); }
     if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && !(e.target === viewport.current && zoomValue.current > 1)) { e.preventDefault(); choose(index + (e.key === 'ArrowLeft' ? -1 : 1)); }
   }}>
-    <header className="viewer-heading"><div><span className="eyebrow">YOUR BOTTLE PHOTOS</span><h2 id="photo-viewer-title">{bottle.name}</h2></div><button className="icon-button" aria-label="Close photo viewer" onClick={onClose}><X /></button></header>
-    <div className="viewer-toolbar"><div className="viewer-zoom-controls" role="group" aria-label="Photo zoom"><button className="icon-button" aria-label="Zoom out" disabled={zoom <= 1} onClick={() => zoomTo(zoomValue.current - 0.5)}><ZoomOut size={19} /></button><span role="status" aria-label="Zoom level">{Math.round(zoom * 100)}%</span><button className="icon-button" aria-label="Zoom in" disabled={zoom >= 5} onClick={() => zoomTo(zoomValue.current + 0.5)}><ZoomIn size={19} /></button><button className="fit-photo" onClick={() => zoomTo(1)}>Fit</button></div><div className="viewer-photo-navigation"><button className="icon-button" aria-label="Previous photo" disabled={index === 0} onClick={() => choose(index - 1)}><ChevronLeft size={20} /></button><span role="status">Photo {index + 1} of {bottle.photos.length}</span><button className="icon-button" aria-label="Next photo" disabled={index === bottle.photos.length - 1} onClick={() => choose(index + 1)}><ChevronRight size={20} /></button></div></div>
+    <header className="d1-header">
+      <div>
+        <h2 id="photo-viewer-title">{bottle.name}</h2>
+        <p role="status">Photo {index + 1} of {photoCount}{index === bottle.primaryImageIndex && ' · Cover photo'}</p>
+      </div>
+      <button className="d1-control" aria-label="Close photo viewer" onClick={onClose}><X size={20} /> Close</button>
+    </header>
+    <div className="d1-body">
+    <div className="d1-stage">
+      {multiple && <button className="d1-arrow" aria-label="Previous photo" onClick={() => choose(index - 1)}><ChevronLeft /></button>}
     <div ref={viewport} className={`viewer-viewport ${zoom > 1 ? 'is-zoomed' : ''}`} tabIndex={0} role="region" aria-label="Bottle photo; drag to pan when zoomed" onDoubleClick={e => { const bounds = e.currentTarget.getBoundingClientRect(); zoomTo(zoomValue.current === 1 ? 2 : 1, { x: e.clientX - bounds.left, y: e.clientY - bounds.top }); }} onDragStart={e => e.preventDefault()} onPointerDown={e => {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       e.currentTarget.focus({ preventScroll: true }); e.currentTarget.setPointerCapture(e.pointerId);
@@ -110,17 +146,38 @@ function PhotoViewer({ bottle, runtime, index, onSelect, onClose }: { bottle: Bo
       drag.current = remaining ? { ...remaining, left: e.currentTarget.scrollLeft, top: e.currentTarget.scrollTop } : null;
       if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
     }} onPointerCancel={() => { pointers.current.clear(); drag.current = null; pinch.current = null; }}>
-      <div className="viewer-canvas" style={{ width: `${zoom * 100}%`, height: `${zoom * 100}%` }}><Photo key={bottle.photos[index]} runtime={runtime} uid={bottle.ownerId} location={bottle.photos[index]} name={`${bottle.name}, photo ${index + 1}`} /></div>
+      <div className="viewer-canvas" style={{ width: `${zoom * 100}%`, height: `${zoom * 100}%` }}><Photo key={bottle.photos[index]} runtime={runtime} uid={bottle.ownerId} location={bottle.photos[index]} name={`${bottle.name}, ${photoLabel(index)}`} /></div>
     </div>
-    <div className="viewer-thumbnails" role="group" aria-label="All bottle photos">{bottle.photos.map((location, i) => <button key={i} aria-label={`Show photo ${i + 1}`} aria-pressed={index === i} onClick={() => choose(i)}><Photo runtime={runtime} uid={bottle.ownerId} location={location} name={`Photo ${i + 1}`} /><span>{i + 1}</span></button>)}</div>
-    <p id="photo-viewer-help" className="viewer-help">Double-click or pinch to zoom · Drag or scroll to pan · + / − to zoom · 0 to fit · Esc to close</p>
+      {multiple && <button className="d1-arrow" aria-label="Next photo" onClick={() => choose(index + 1)}><ChevronRight /></button>}
+    </div>
+    <aside className="d1-panel" aria-label="Bottle photos and zoom">
+      <div className="d1-tools">
+        <div className="d1-tool-heading"><h3>Zoom</h3><span role="status" aria-label="Zoom level">{Math.round(zoom * 100)}%</span></div>
+        <div className="d1-buttons" role="group" aria-label="Photo zoom">
+          <button className="d1-control" disabled={zoom >= MAX_ZOOM} onClick={() => zoomTo(zoom + 0.5)}><ZoomIn size={18} />Zoom in</button>
+          <button className="d1-control" disabled={zoom <= 1} onClick={() => zoomTo(zoom - 0.5)}><ZoomOut size={18} />Zoom out</button>
+          <button className="d1-control" onClick={() => zoomTo(1)}><Maximize2 size={18} />Fit to screen</button>
+        </div>
+        <p id="photo-viewer-help">Scroll or pinch on the photo to zoom. Drag to pan.</p>
+      </div>
+      {multiple && <div className="d1-photos" role="group" aria-label="All bottle photos">
+        {bottle.photos.map((location, i) => <button key={i} aria-label={`Show photo ${i + 1}${i === bottle.primaryImageIndex ? ', cover photo' : ''}`} aria-pressed={index === i} onClick={() => choose(i)}>
+          <Photo runtime={runtime} uid={bottle.ownerId} location={location} name={photoLabel(i)} />
+          <span>{index === i && <Check size={16} aria-hidden="true" />}{photoLabel(i)}</span>
+        </button>)}
+      </div>}
+      {facts.length > 0 && <section className="d1-facts"><h3>About this bottle</h3>
+        <dl>{facts.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
+      </section>}
+    </aside>
+    </div>
   </section>;
 }
 
-function BottleDetails({ bottle, origin = 'collection', runtime, onClose, onSaved, navigationGuard, initialPhotoViewer = false }: { bottle: BottleRecord; origin?: string; runtime: Runtime; onClose: () => void; onSaved?: (bottle: BottleRecord) => void; navigationGuard: { current: NavigationGuard | null }; initialPhotoViewer?: boolean }) {
+function BottleDetails({ bottle, origin = 'collection', runtime, onClose, onSaved, navigationGuard }: { bottle: BottleRecord; origin?: string; runtime: Runtime; onClose: () => void; onSaved?: (bottle: BottleRecord) => void; navigationGuard: { current: NavigationGuard | null } }) {
   const [editing, setEditing] = useState(false), [saved, setSaved] = useState(false);
   const requestClose = useCallback(() => { if (navigationGuard.current) navigationGuard.current(onClose); else onClose(); }, [navigationGuard, onClose]);
-  const [tab, setTab] = useState(initialPhotoViewer ? 'Photos' : 'Details'), [photoIndex, setPhotoIndex] = useState(bottle.primaryImageIndex), [viewerOpen, setViewerOpen] = useState(initialPhotoViewer && bottle.photos.length > 0);
+  const [tab, setTab] = useState('Details'), [photoIndex, setPhotoIndex] = useState(bottle.primaryImageIndex), [viewerOpen, setViewerOpen] = useState(false);
   const viewerTrigger = useRef<HTMLElement | null>(null);
   const openViewer = (trigger: HTMLElement) => { viewerTrigger.current = trigger; setViewerOpen(true); };
   const closeViewer = () => { setViewerOpen(false); requestAnimationFrame(() => { const trigger = viewerTrigger.current?.isConnected ? viewerTrigger.current : root.current?.querySelector<HTMLElement>('[aria-label="Open photo viewer"]'); trigger?.focus({ preventScroll: true }); }); };
@@ -313,7 +370,7 @@ function Workspace({ runtime, session, onSignOut, onExpired }: { runtime: Runtim
   const askDetail = showAskBB && browse.detailId ? referencedBottles.get(browse.detailId) : undefined;
   const openAskBottle = (bottle: BottleRecord) => {
     setReferencedBottles(records => new Map(records).set(bottle.id, bottle));
-    update({ detailId: bottle.id, photoViewer: false }, true);
+    update({ detailId: bottle.id }, true);
   };
   const selected = matches.find(b => b.id === browse.selectedId);
   const detail = showLists || showAskBB ? undefined : bottles.find(b => b.id === browse.detailId);
@@ -321,11 +378,15 @@ function Workspace({ runtime, session, onSignOut, onExpired }: { runtime: Runtim
   const filterCount = Number(browse.chip !== 'All') + Number(browse.status !== 'Active') + Number(browse.rating !== '0') + Number(!!browse.tag);
   const filter = (patch: Partial<CollectionView>) => update({ ...patch, limit: RENDER_PAGE_SIZE, selectedId: null });
   const resetFilters = () => filter({ chip: 'All', query: '', status: 'Active', rating: '0', tag: '' });
-  const openDetails = (bottle: BottleRecord, photoViewer = false) => update({ detailId: bottle.id, photoViewer }, true);
+  const openDetails = (bottle: BottleRecord, trigger: HTMLButtonElement) => {
+    // WebKit does not focus a clicked button. Capture the opener for Back navigation.
+    trigger.focus({ preventScroll: true });
+    update({ detailId: bottle.id }, true);
+  };
   const planText = planLoading ? 'Checking your plan…' : planError ? 'Plan unavailable' : plan ? `${planLabel(plan.tier)} · ${plan.cycle}` : 'Plan unavailable';
   const accountPanel = account && <section className="account-panel" aria-label="Your account"><div><span className="eyebrow">YOUR ACCOUNT</span><h2>{session.profile.displayName}</h2>{session.identity.email && <p>{session.identity.email}</p>}</div><div><span className="eyebrow">MEMBERSHIP</span><p className="plan-label" aria-live="polite">{planText}</p>{planError && <button className="text-button" onClick={() => { setPlanLoading(true); setPlanError(false); void refreshPlan(); }}>Retry plan check</button>}</div><p className="account-help">Your current BarrelBook plan applies here. Manage purchases and account settings in the iPhone app.</p></section>;
   const selectSurface = (surface: WorkspaceView['surface']) => {
-    if (surface !== browse.surface) update({ surface, listId: null, detailId: null, photoViewer: false }, true);
+    if (surface !== browse.surface) update({ surface, listId: null, detailId: null }, true);
   };
   return <ReadingSize runtime={runtime} uid={uid}>{sizeControl => <>
     <nav className="workspace-nav" aria-label="Workspace navigation">
@@ -372,25 +433,25 @@ function Workspace({ runtime, session, onSignOut, onExpired }: { runtime: Runtim
         <span>Showing {visible.length} of {matches.length} {complete ? 'records' : 'loaded records'}</span>
         {(browse.query || filterCount > 0) && <button className="text-button" onClick={resetFilters}>Clear search &amp; filters</button>}
       </div>
-      {selected && <section className="selected-summary" aria-label="Selected bottle"><Photo runtime={runtime} uid={uid} location={selected.photos[selected.primaryImageIndex]} name={selected.name} /><div className="summary-main"><span className="eyebrow">SELECTED BOTTLE</span><h2>{selected.name}</h2><dl>{[['Barrel', selected.barrelNumber], ['Warehouse', selected.warehouse], ['Proof', selected.proof?.toFixed(1)], ['Type', selected.type]].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value || 'Not recorded'}</dd></div>)}</dl><div className="tags">{selected.tags.map(tag => <button key={tag} onClick={() => filter({ tag })}>{tag}</button>)}</div></div><button className="text-button" onClick={() => openDetails(selected)}>View details<ArrowRight size={15} /></button><button className="icon-button" aria-label="Clear selected bottle" onClick={() => update({ selectedId: null })}><X size={16} /></button></section>}
+      {selected && <section className="selected-summary" aria-label="Selected bottle"><Photo runtime={runtime} uid={uid} location={selected.photos[selected.primaryImageIndex]} name={selected.name} /><div className="summary-main"><span className="eyebrow">SELECTED BOTTLE</span><h2>{selected.name}</h2><dl>{[['Barrel', selected.barrelNumber], ['Warehouse', selected.warehouse], ['Proof', selected.proof?.toFixed(1)], ['Type', selected.type]].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value || 'Not recorded'}</dd></div>)}</dl><div className="tags">{selected.tags.map(tag => <button key={tag} onClick={() => filter({ tag })}>{tag}</button>)}</div></div><button className="text-button" onClick={event => openDetails(selected, event.currentTarget)}>View details<ArrowRight size={15} /></button><button className="icon-button" aria-label="Clear selected bottle" onClick={() => update({ selectedId: null })}><X size={16} /></button></section>}
       {loading && !bottles.length ? <div className="loading-state" role="status"><RefreshCw className="spinning" /><p>Loading your collection…</p></div> : !matches.length ? <section className="empty-state"><Wine size={30} /><h2>{!complete ? 'No matches in loaded records yet' : bottles.length || browse.query || filterCount ? 'No matching bottles' : 'Your collection starts in the app.'}</h2><p>{!complete ? 'Results are incomplete until your collection finishes loading.' : bottles.length || browse.query || filterCount ? 'Try another search or filter.' : 'Bottles saved in BarrelBook will appear here.'}</p>{(browse.query || filterCount > 0) && <Button secondary onClick={resetFilters}>Clear filters</Button>}</section> : browse.view === 'grid' ? <div className="bottle-grid" aria-label="Collection grid">{visible.map(bottle =>
         <article key={bottle.id} className="library-tile">
-          <button className="tile-photo" aria-label={bottle.photos.length ? `View photos for ${bottle.name}` : `Open ${bottle.name}`} onClick={() => openDetails(bottle, !!bottle.photos.length)}>
+          <button className="tile-photo" aria-label={`Open bottle details for ${bottle.name}`} onClick={event => openDetails(bottle, event.currentTarget)}>
             <Photo runtime={runtime} uid={uid} location={bottle.photos[bottle.primaryImageIndex]} name={bottle.name} />
             {bottle.isStorePick && <span className="pick-badge">Store pick</span>}
             {!!bottle.photos.length && <span className="tile-photo-count"><Images size={16} />{bottle.photos.length}</span>}
           </button>
           <div className="tile-copy">
-            <h2><button aria-label={`Details for ${bottle.name}`} onClick={() => openDetails(bottle)}>{bottle.name}</button></h2>
+            <h2><button aria-label={`Details for ${bottle.name}`} onClick={event => openDetails(bottle, event.currentTarget)}>{bottle.name}</button></h2>
             <p>{[bottle.type, bottle.proof !== null && `${bottle.proof} proof`, statusLabel(bottle.status)].filter(Boolean).join(' · ')}</p>
             <div className="tile-meta"><Rating value={bottle.rating} />{bottle.quantity > 1 && <span>Qty {bottle.quantity}</span>}</div>
             {bottle.secondaryPrice !== null && <p className="tile-value">Est. value <strong>{formatMoney(bottle.secondaryPrice)}</strong></p>}
             <div className="tile-fill">{bottle.fillLevel === null ? 'Fill not recorded' : <Fill value={bottle.fillLevel} />}</div>
           </div>
-        </article>)}</div> : <div className="collection-table"><table><caption className="sr-only">Your private collection, {matches.length} matching records</caption><thead><tr><th scope="col">Bottle</th><th scope="col">Proof</th><th scope="col">Status</th><th scope="col">Fill</th><th scope="col">My rating</th></tr></thead><tbody>{visible.map(bottle => <tr key={bottle.id} className={selected?.id === bottle.id ? 'selected' : ''}><td className="bottle-cell"><button className="bottle-photo-button" aria-label={`View photos for ${bottle.name}`} onClick={() => openDetails(bottle, true)}><Photo runtime={runtime} uid={uid} location={bottle.photos[bottle.primaryImageIndex]} name={bottle.name} /></button><div><button className="bottle-name" onClick={() => openDetails(bottle)}>{bottle.name}</button><span className="bottle-subtitle">{[bottle.edition, bottle.barrelNumber ? `Barrel ${bottle.barrelNumber}` : null, bottle.brand].filter(Boolean).join(' · ') || bottle.type || 'Bottle details'}{bottle.quantity > 1 ? ` · Qty ${bottle.quantity}` : ''}</span><span className="mobile-meta">{bottle.proof === null ? 'Proof unknown' : `${bottle.proof.toFixed(1)} proof`}<Status value={bottle.status} /></span></div></td><td className="proof-cell">{bottle.proof?.toFixed(1) ?? '—'}</td><td className="status-cell"><Status value={bottle.status} /></td><td className="fill-cell"><Fill value={bottle.fillLevel} /></td><td className="rating-cell"><Rating value={bottle.rating} /><button className="icon-button preview-button" aria-label={`Preview ${bottle.name}`} aria-pressed={selected?.id === bottle.id} onClick={() => update({ selectedId: selected?.id === bottle.id ? null : bottle.id })}><Eye size={16} /></button><button className="mobile-details text-button" onClick={() => openDetails(bottle)} aria-label={`Details for ${bottle.name}`}>Details<ArrowRight size={12} /></button></td></tr>)}</tbody></table></div>}
+        </article>)}</div> : <div className="collection-table"><table><caption className="sr-only">Your private collection, {matches.length} matching records</caption><thead><tr><th scope="col">Bottle</th><th scope="col">Proof</th><th scope="col">Status</th><th scope="col">Fill</th><th scope="col">My rating</th></tr></thead><tbody>{visible.map(bottle => <tr key={bottle.id} className={selected?.id === bottle.id ? 'selected' : ''}><td className="bottle-cell"><button className="bottle-photo-button" aria-label={`Open bottle details for ${bottle.name}`} onClick={event => openDetails(bottle, event.currentTarget)}><Photo runtime={runtime} uid={uid} location={bottle.photos[bottle.primaryImageIndex]} name={bottle.name} /></button><div><button className="bottle-name" onClick={event => openDetails(bottle, event.currentTarget)}>{bottle.name}</button><span className="bottle-subtitle">{[bottle.edition, bottle.barrelNumber ? `Barrel ${bottle.barrelNumber}` : null, bottle.brand].filter(Boolean).join(' · ') || bottle.type || 'Bottle details'}{bottle.quantity > 1 ? ` · Qty ${bottle.quantity}` : ''}</span><span className="mobile-meta">{bottle.proof === null ? 'Proof unknown' : `${bottle.proof.toFixed(1)} proof`}<Status value={bottle.status} /></span></div></td><td className="proof-cell">{bottle.proof?.toFixed(1) ?? '—'}</td><td className="status-cell"><Status value={bottle.status} /></td><td className="fill-cell"><Fill value={bottle.fillLevel} /></td><td className="rating-cell"><Rating value={bottle.rating} /><button className="icon-button preview-button" aria-label={`Preview ${bottle.name}`} aria-pressed={selected?.id === bottle.id} onClick={() => update({ selectedId: selected?.id === bottle.id ? null : bottle.id })}><Eye size={16} /></button><button className="mobile-details text-button" onClick={event => openDetails(bottle, event.currentTarget)} aria-label={`Details for ${bottle.name}`}>Details<ArrowRight size={12} /></button></td></tr>)}</tbody></table></div>}
       {nextCount > 0 && <div className="pagination"><p>Showing {visible.length} of {matches.length} matching records.</p><Button secondary onClick={() => update({ limit: browse.limit + RENDER_PAGE_SIZE })}>Show {nextCount} more bottles<ChevronDown size={16} /></Button></div>}
       <footer className="collection-footer"><span><LockKeyhole size={12} />Your shelf stays private.</span><span><Smartphone size={14} />{runtime.config.emulators && runtime.config.localEditingEnabled ? 'Add bottles in the iPhone app.' : 'Add and manage bottles in the iPhone app.'}</span></footer>
-    </main>{detail && <BottleDetails key={detail.id} bottle={detail} runtime={runtime} onClose={closeDetails} navigationGuard={leaveGuard} onSaved={next => setBottles(previous => previous.map(record => record.id === next.id ? next : record))} initialPhotoViewer={browse.photoViewer} />}
+    </main>{detail && <BottleDetails key={detail.id} bottle={detail} runtime={runtime} onClose={closeDetails} navigationGuard={leaveGuard} onSaved={next => setBottles(previous => previous.map(record => record.id === next.id ? next : record))} />}
     </>}
   </>}</ReadingSize>;
 }

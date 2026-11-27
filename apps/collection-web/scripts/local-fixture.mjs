@@ -29,6 +29,25 @@ const samples = [
   ['fitzgerald', 'Old Fitzgerald 10 Year', 'Heaven Hill', 100],
   ['elijah', 'Elijah Craig Barrel Proof', 'Heaven Hill', 124.2],
 ];
+async function seedBookers() {
+  const id = 'bottle-004';
+  const files = ['bookers-1-front.jpg', 'bookers-2-batch.jpg', 'bookers-3-back.jpg'];
+  const imageURLs = [];
+  for (const filename of files) {
+    const file = bucket.file(`users/web-qa-alice/bottles/${id}/${filename}`);
+    const bytes = await readFile(new URL(`../tests/fixtures/${filename}`, import.meta.url));
+    await file.save(bytes, { metadata: { contentType: 'image/jpeg' } });
+    imageURLs.push(`gs://${bucket.name}/${file.name}`);
+  }
+  await db.doc(`users/web-qa-alice/bottles/${id}`).update({
+    name: 'Booker’s Barry’s Batch', release: '2025-01 · Barry’s Batch', proof: 125.7,
+    ageStatement: '7 years, 2 months, 4 days', imageURLs, primaryImageIndex: 0,
+  });
+}
+if (process.argv.includes('--bookers-only')) {
+  await seedBookers();
+  process.exit(0);
+}
 if (process.argv.includes('--seed')) {
 for (const account of accounts) {
   try { await auth.createUser({ uid: account.uid, email: account.email, password: 'Local-Test-Only-2026!', emailVerified: true }); }
@@ -63,6 +82,7 @@ for (let index = 0; index < 103; index++) {
 }
 batch.set(db.doc('users/web-qa-bob/bottles/private-b'), { userId: 'web-qa-bob', name: 'Collector B private bottle', brand: 'Local Fixture', release: 'Private B', status: 'Unopened', proof: 90, size: '750 mL', quantity: 1, fillLevel: 100 });
 await batch.commit();
+await seedBookers();
 }
 
 const require = createRequire(import.meta.url);
