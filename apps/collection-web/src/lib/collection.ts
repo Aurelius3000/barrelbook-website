@@ -25,10 +25,9 @@ export interface CollectionView {
   sort: string;
   view: 'table' | 'grid';
   limit: number;
-  selectedId: string | null;
   detailId: string | null;
 }
-export const INITIAL_VIEW: CollectionView = { chip: 'All', query: '', status: 'Active', rating: '0', tag: '', sort: 'Collection order', view: 'grid', limit: RENDER_PAGE_SIZE, selectedId: null, detailId: null };
+export const INITIAL_VIEW: CollectionView = { chip: 'All', query: '', status: 'Active', rating: '0', tag: '', sort: 'Collection order', view: 'grid', limit: RENDER_PAGE_SIZE, detailId: null };
 
 const normalize = (value: string) => value.normalize('NFKD').replace(/\p{Diacritic}/gu, '').toLocaleLowerCase();
 
