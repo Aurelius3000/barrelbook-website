@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { parseEnvironment } from '../src/lib/config';
+import { parseEnvironment, canEditBottle } from '../src/lib/config';
 import { friendlyAuthError, readServerPlan, requestService, requestBottleEdit, ServiceError } from '../src/lib/services';
 
 const config = parseEnvironment({ apiKey: 'key', authDomain: 'project.firebaseapp.com', projectId: 'project', appId: 'app', storageBucket: 'project.appspot.com', appCheckSiteKey: 'key' }, 'production', 'app.barrelbook.app');
@@ -19,8 +19,27 @@ describe('existing backend contracts', () => {
 });
 
 describe('local M3 edit transport', () => {
-  const local = parseEnvironment({ apiKey: 'key', authDomain: 'demo-barrelbook-web.firebaseapp.com', projectId: 'demo-barrelbook-web', appId: 'app', storageBucket: 'demo-barrelbook-web.appspot.com', emulators: 'true' }, 'development', '127.0.0.1');
+  const localEnvironment = { apiKey: 'key', authDomain: 'demo-barrelbook-web.firebaseapp.com', projectId: 'demo-barrelbook-web', appId: 'app', storageBucket: 'demo-barrelbook-web.appspot.com', emulators: 'true' };
+  const local = parseEnvironment({ ...localEnvironment, localBottleEditing: 'true' }, 'development', '127.0.0.1');
   const body = { bottleId: 'one', expectedVersion: '123:000000001', patch: { notes: 'Edit' } };
+  it.each([undefined, 'false', 'TRUE'])('keeps the local preview read-only for edit option %s', async localBottleEditing => {
+    const preview = parseEnvironment({ ...localEnvironment, localBottleEditing }, 'development', '127.0.0.1');
+    const fetcher = vi.fn();
+    vi.stubGlobal('fetch', fetcher);
+    expect(canEditBottle(preview, 'one')).toBe(false);
+    for (const endpoint of ['getBottleForEdit', 'updateBottleDetails'] as const) {
+      await expect(requestBottleEdit(preview, endpoint, { idToken: 'id' }, body)).rejects.toMatchObject({ status: 503, uncertain: false });
+    }
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+  it('keeps hosted editing disabled when the local edit option is supplied', async () => {
+    const hosted = parseEnvironment({ apiKey: 'key', authDomain: 'project.firebaseapp.com', projectId: 'project', appId: 'app', storageBucket: 'project.appspot.com', appCheckSiteKey: 'key', localBottleEditing: 'true' }, 'production', 'app.barrelbook.app');
+    const fetcher = vi.fn();
+    vi.stubGlobal('fetch', fetcher);
+    expect(canEditBottle(hosted, 'one')).toBe(false);
+    await expect(requestBottleEdit(hosted, 'updateBottleDetails', { idToken: 'id', appCheckToken: 'check' }, body)).rejects.toMatchObject({ status: 503 });
+    expect(fetcher).not.toHaveBeenCalled();
+  });
   it('prevents live/staging edit requests and refuses missing identity before dispatch', async () => {
     const { requestBottleEdit } = await import('../src/lib/services'); const fetcher = vi.fn(); vi.stubGlobal('fetch', fetcher);
     await expect(requestBottleEdit(config, 'updateBottleDetails', { idToken: 'id', appCheckToken: 'check' }, body)).rejects.toMatchObject({ status: 503, uncertain: false });

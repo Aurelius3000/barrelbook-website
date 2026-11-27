@@ -1,6 +1,6 @@
 export interface WebEnvironment {
   apiKey?: string; authDomain?: string; projectId?: string; storageBucket?: string;
-  appId?: string; region?: string; appCheckSiteKey?: string; emulators?: string; stagingEditBottleId?: string; stagingPilot?: string;
+  appId?: string; region?: string; appCheckSiteKey?: string; emulators?: string; stagingEditBottleId?: string; stagingPilot?: string; localBottleEditing?: string;
 }
 
 export interface WebConfig {
@@ -8,6 +8,7 @@ export interface WebConfig {
   functionsOrigin: string;
   appCheckSiteKey: string;
   emulators: boolean;
+  localEditingEnabled?: boolean;
   pilotRequired?: boolean;
   stagingEditBottleId?: string;
 }
@@ -30,6 +31,7 @@ export function parseEnvironment(env: WebEnvironment, mode: string, hostname: st
     firebase: { apiKey: apiKey!, authDomain: authDomain!, projectId: projectId!, storageBucket: storageBucket!, appId: appId! },
     functionsOrigin: emulators ? `http://127.0.0.1:9501/${projectId}/${region}` : `https://${region}-${projectId}.cloudfunctions.net`,
     appCheckSiteKey: env.appCheckSiteKey || '', emulators,
+    localEditingEnabled: emulators && env.localBottleEditing === 'true',
     ...(pilotRequired ? { pilotRequired: true } : {}),
     ...(!pilotRequired && projectId === 'barrelbook-staging' && appId === '1:560188226898:web:ea8c36fdcce8b2a4018e8b'
       && hostname === 'localhost' && origin === 'http://localhost:4181' && !emulators
@@ -40,7 +42,7 @@ export function parseEnvironment(env: WebEnvironment, mode: string, hostname: st
 
 export function canEditBottle(config: WebConfig, bottleId: string): boolean {
   if (config.pilotRequired) return false;
-  return config.emulators || (config.firebase.projectId === 'barrelbook-staging'
+  return (config.emulators && config.localEditingEnabled === true) || (config.firebase.projectId === 'barrelbook-staging'
     && config.firebase.appId === '1:560188226898:web:ea8c36fdcce8b2a4018e8b'
     && config.stagingEditBottleId === 'web-m3-staging-qualification-20261029'
     && bottleId === config.stagingEditBottleId);
@@ -57,6 +59,7 @@ export function browserEnvironment(): WebEnvironment {
     region: process.env.NEXT_PUBLIC_FIREBASE_FUNCTIONS_REGION,
     appCheckSiteKey: process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_SITE_KEY,
     emulators: process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS,
+    localBottleEditing: process.env.NEXT_PUBLIC_LOCAL_BOTTLE_EDITING,
     stagingEditBottleId: process.env.NEXT_PUBLIC_STAGING_EDIT_BOTTLE_ID,
     stagingPilot: process.env.NEXT_PUBLIC_BARRELBOOK_STAGING_PILOT,
   };

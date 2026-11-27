@@ -44,8 +44,20 @@ npm run dev:emulator
 npm run test:emulator
 ```
 
+The default `npm run dev:emulator` preview is read-only and uses Alice's populated sample collection. Bottle details direct users to the iPhone app. For explicit local edit qualification, use `npm run dev:emulator -- --edit`. The launcher sets the local edit option explicitly for each run.
+
 The fixture adapter reads the eight retained prototype bottle images under `plans/sprints/2026-10-24-web-collection/prototype/public/bottles/` and imports the canonical editing handler from a sibling `../BarrelBook/functions/bottleEdits.js` checkout. That backend dependency is required for the local edit demo. The optimized synthetic browser suite is self-contained within this repository.
 
 The staging helpers (`dev:staging`, `build:staging`, `start:staging`) read an operator-provided ignored `.env.staging.local`. They require the previously approved staging project and localhost origin. Live configuration, native testing, backend deployments, and production changes need explicit approval.
 
 The Git import and verification record is in [baseline.md](../../plans/sprints/2026-11-27-collection-app-baseline/baseline.md).
+
+## Local review adjustment · November 27, 2026
+
+Goal: use Alice's populated emulator account to review the read-only pilot interface.
+
+Implemented: default local editing is disabled, with an explicit `--edit` option for edit qualification. Hosted edit rules retain their existing gates. The collection badge and bottle detail actions follow the selected mode.
+
+Verified: typecheck and lint passed, all 135 unit tests passed, and the optimized synthetic browser suite passed. Browser review signed Alice into 103 sample records, confirmed Grid and Read-only access, confirmed the iPhone management message with no Edit action, and opened, zoomed, and closed a photo back to Grid. The edit transport tests exercise explicit opt-in and reject default, false, or invalid edit options before any request. Independent review found no remaining issue.
+
+The existing Next.js dependency advisory appeared during startup/build; retry completed. The advisory remains recorded in the baseline verification note. Next: review the populated read-only interface for the redesign.

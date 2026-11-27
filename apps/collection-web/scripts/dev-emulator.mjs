@@ -13,6 +13,7 @@ const child = spawn(process.execPath, [fileURLToPath(new URL('../node_modules/ne
     NEXT_PUBLIC_FIREBASE_APP_ID: '1:123456:web:local-tests',
     NEXT_PUBLIC_FIREBASE_FUNCTIONS_REGION: 'us-central1',
     NEXT_PUBLIC_USE_FIREBASE_EMULATORS: 'true',
+    NEXT_PUBLIC_LOCAL_BOTTLE_EDITING: process.argv.includes('--edit') ? 'true' : 'false',
     NEXT_TELEMETRY_DISABLED: '1',
   },
 });
