@@ -47,6 +47,11 @@ try {
   const flight = page.getByRole('group', { name: 'Choose flight bottles' });
   for (const box of (await flight.getByRole('checkbox').all()).slice(0, 8)) await box.check();
   await page.getByLabel('Show star ratings').uncheck();
+  await page.getByText('Choose bottle details', { exact: true }).click();
+  await page.getByLabel('Warehouse', { exact: true }).uncheck();
+  await page.getByLabel('Type', { exact: true }).uncheck();
+  await page.getByLabel('Personal tags', { exact: true }).uncheck();
+  await page.getByText('Choose bottle details', { exact: true }).click();
   const previewRoute = async (route) => {
     if (route.request().method() === 'POST' && route.request().postDataJSON()?.action === 'preview-photo')
       return route.fulfill({ status: 503, body: '' });
@@ -60,6 +65,9 @@ try {
   await page.unroute('**/api/bar-display', previewRoute);
   await button(page, 'Preview the display').click();
   await page.getByLabel('Set a six-digit display PIN').waitFor();
+  const previewLine = await page.locator('.display-preview li').first().innerText();
+  assert.ok(previewLine.includes('Barrel number · 2168'));
+  assert.ok(!/Warehouse ·|Type ·|Personal tags ·/.test(previewLine));
   assert.equal((await ctx.request.get(endpoint + '?shelf')).status(), 403);
   await page.getByLabel('Set a six-digit display PIN').fill('314159');
   await button(page, 'Start guest display').click();
@@ -79,6 +87,8 @@ try {
   await page.getByRole('button', { name: 'Browse shelf', exact: true }).waitFor();
   await button(page, 'Browse shelf').click();
   assert.equal(await page.getByRole('button', { name: 'Five stars', exact: true }).count(), 0);
+  assert.equal(await button(page, 'Bourbon').count(), 0);
+  assert.equal(await button(page, 'Rye').count(), 0);
   await button(page, 'Back to showcase').click();
   assert.equal(shelf.cards[0].name, 'Blanton’s Straight from the Barrel');
   assert.equal(shelf.cards[0].proof, 122.6);
@@ -86,8 +96,12 @@ try {
   for (const card of shelf.cards)
     assert.deepEqual(
       Object.keys(card).sort(),
-      ['name', 'brand', 'type', 'proof', 'age', 'status', 'fill', 'pick', 'photos'].sort(),
+      ['name', 'brand', 'proof', 'age', 'status', 'fill', 'pick', 'photos', 'details'].sort(),
     );
+  for (const card of shelf.cards) {
+    assert.ok(Object.keys(card.details).every((k) => ['release', 'size', 'barrelNumber'].includes(k)));
+  }
+  assert.equal(shelf.cards[0].details.barrelNumber, '2168');
   assert.ok(!JSON.stringify(shelf).includes(bob.get('name')));
   for (const p of [page, other]) {
     await p.waitForFunction(() => !document.querySelector('.owner-workspace'));

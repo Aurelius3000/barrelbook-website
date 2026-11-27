@@ -2,7 +2,15 @@
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import type { BottleRecord } from '../lib/records';
-import { DEFAULT_DISPLAY, selectShelf, type Settings, type Shelf } from '../lib/bar-display';
+import {
+  DEFAULT_DISPLAY,
+  guestFactEntries,
+  guestFields,
+  type GuestField,
+  selectShelf,
+  type Settings,
+  type Shelf,
+} from '../lib/bar-display';
 import { api, ownerHeaders, requestDisplay, startDisplay } from '../lib/display-client';
 
 function PreviewPhoto({
@@ -117,10 +125,15 @@ export function DisplaySetup({ bottles, onClose }: { bottles: BottleRecord[]; on
         <fieldset disabled={busy}>
           {!preview ? (
             <>
-              <label>
-                Shelf
+              <div className="setup-row">
+                <div>
+                  <label htmlFor="display-shelf">Shelf</label>
+                  <small role="status">
+                    {count} eligible {count === 1 ? 'bottle' : 'bottles'}
+                  </small>
+                </div>
                 <select
-                  aria-label="Shelf"
+                  id="display-shelf"
                   value={settings.shelf}
                   onChange={(e) => change({ shelf: e.target.value as Settings['shelf'] })}
                 >
@@ -128,7 +141,7 @@ export function DisplaySetup({ bottles, onClose }: { bottles: BottleRecord[]; on
                   <option value="open">Open only</option>
                   <option value="flight">A flight</option>
                 </select>
-              </label>
+              </div>
               {settings.shelf === 'flight' && (
                 <fieldset className="flight-picker">
                   <legend>Choose flight bottles</legend>
@@ -150,46 +163,65 @@ export function DisplaySetup({ bottles, onClose }: { bottles: BottleRecord[]; on
                   ))}
                 </fieldset>
               )}
-              <label>
-                <input
-                  type="checkbox"
-                  checked={settings.values}
-                  onChange={(e) => change({ values: e.target.checked })}
-                />
-                Show estimated bottle value
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={settings.ratings}
-                  onChange={(e) => change({ ratings: e.target.checked })}
-                />
-                Show star ratings
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={settings.photos}
-                  onChange={(e) => change({ photos: e.target.checked })}
-                />
-                Include bottle photos
-              </label>
-              <label>
-                Change bottles every
-                <select
-                  value={settings.seconds}
-                  onChange={(e) => change({ seconds: Number(e.target.value) as Settings['seconds'] })}
-                >
-                  {[8, 12, 30].map((n) => (
-                    <option key={n} value={n}>
-                      {n} seconds
-                    </option>
+              <div className="setup-row">
+                <span id="display-fields">Show guests</span>
+                <div role="group" aria-labelledby="display-fields" className="setup-fields">
+                  {(
+                    [
+                      ['photos', 'Bottle photos', 'Include bottle photos'],
+                      ['ratings', 'Star ratings', 'Show star ratings'],
+                      ['values', 'Estimated value', 'Show estimated bottle value'],
+                    ] as const
+                  ).map(([key, label, name]) => (
+                    <label key={key}>
+                      <input
+                        type="checkbox"
+                        aria-label={name}
+                        checked={settings[key]}
+                        onChange={(e) => change({ [key]: e.target.checked })}
+                      />
+                      {label}
+                    </label>
                   ))}
-                </select>
-              </label>
-              <p>
-                {count} eligible {count === 1 ? 'bottle' : 'bottles'}
-              </p>
+                </div>
+              </div>
+              <details className="setup-more">
+                <summary>Choose bottle details</summary>
+                <div className="setup-fields">
+                  {(Object.keys(guestFields) as GuestField[]).map((key) => (
+                    <label key={key}>
+                      <input
+                        type="checkbox"
+                        checked={!settings.excluded?.includes(key)}
+                        onChange={(e) =>
+                          change({
+                            excluded: e.target.checked
+                              ? settings.excluded?.filter((k) => k !== key)
+                              : [...(settings.excluded ?? []), key],
+                          })
+                        }
+                      />
+                      {guestFields[key]}
+                    </label>
+                  ))}
+                </div>
+              </details>
+              <div className="setup-row">
+                <span id="display-interval">Change bottle every</span>
+                <div role="radiogroup" aria-labelledby="display-interval" className="setup-interval">
+                  {([8, 12, 30] as const).map((seconds) => (
+                    <label key={seconds}>
+                      <input
+                        type="radio"
+                        name="display-seconds"
+                        checked={settings.seconds === seconds}
+                        onChange={() => change({ seconds })}
+                      />
+                      <span>{seconds} sec</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
             </>
           ) : (
             <>
@@ -204,19 +236,9 @@ export function DisplaySetup({ bottles, onClose }: { bottles: BottleRecord[]; on
                   <li key={i}>
                     <strong>{c.name}</strong>
                     <p>
-                      {[
-                        c.brand,
-                        c.type,
-                        c.age,
-                        c.proof !== null && c.proof + ' proof',
-                        c.status,
-                        c.fill !== null && c.fill + '% full',
-                        c.pick && 'Store pick',
-                        c.rating != null && c.rating + ' / 5 stars',
-                        c.estimatedValue != null && 'Estimated value $' + c.estimatedValue.toFixed(2),
-                      ]
-                        .filter(Boolean)
-                        .join(' · ')}
+                      {guestFactEntries(c)
+                        .map(([label, value]) => label + ' · ' + value)
+                        .join(' / ')}
                     </p>
                     {c.photos.length
                       ? c.photos.map((id, n) => (
@@ -257,17 +279,19 @@ export function DisplaySetup({ bottles, onClose }: { bottles: BottleRecord[]; on
               </button>
             </>
           )}
-          <button type="button" onClick={onClose}>
-            Cancel
-          </button>
           {preview && !allPreviewed && (
             <p role="status">
               Waiting for all photos to load. If a photo is unavailable, change settings and turn photos off.
             </p>
           )}
-          <button disabled={!count || busy || (!!preview && !allPreviewed)}>
-            {busy ? 'Preparing display…' : preview ? 'Start guest display' : 'Preview the display'}
-          </button>
+          <div className="setup-actions">
+            <button type="button" onClick={onClose}>
+              Cancel
+            </button>
+            <button className="setup-primary" disabled={!count || busy || (!!preview && !allPreviewed)}>
+              {busy ? 'Preparing display…' : preview ? 'Start guest display' : 'Preview the display'}
+            </button>
+          </div>
         </fieldset>
       </form>
       {error && <p role="alert">{error}</p>}

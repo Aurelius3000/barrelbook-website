@@ -20,6 +20,27 @@ const button = (name) => page.getByRole('button', { name, exact: true });
 const hero = page.getByRole('region', { name: 'Bottle showcase' });
 const heading = (name) => hero.getByRole('heading', { name, exact: true });
 const shot = (name) => page.screenshot({ path: resolve(output, name + '.png') });
+async function assertFittedPhoto() {
+  const image = page.locator('.viewer-canvas img');
+  await image.evaluate((img) => img.decode());
+  const fit = await image.evaluate((img) => {
+    const stage = img.closest('.viewer-viewport'),
+      box = img.getBoundingClientRect(),
+      bounds = stage.getBoundingClientRect();
+    return (
+      getComputedStyle(img).objectFit === 'contain' &&
+      img.naturalHeight > 0 &&
+      box.height > 100 &&
+      Math.abs(box.width - stage.clientWidth) <= 2 &&
+      Math.abs(box.height - stage.clientHeight) <= 2 &&
+      Math.abs(box.top - bounds.top) <= 2 &&
+      Math.abs(box.left - bounds.left) <= 2 &&
+      stage.scrollHeight <= stage.clientHeight + 2 &&
+      stage.scrollWidth <= stage.clientWidth + 2
+    );
+  });
+  assert.ok(fit, 'Fit must center the complete photograph inside the visible stage');
+}
 let checkTraffic = false;
 const privateRequests = [];
 page.on('request', (r) => {
@@ -37,6 +58,18 @@ try {
   await button('Log in').click();
   await button('Bar Display').click();
   const picker = page.getByLabel('Shelf', { exact: true });
+  await page.setViewportSize({ width: 474, height: 748 });
+  const setup = page.getByRole('dialog', { name: 'Start Bar Display' });
+  assert.ok(await setup.evaluate((el) => el.scrollWidth <= el.clientWidth + 1));
+  await shot('setup-narrow');
+  const interval = page.getByRole('radio', { name: '12 sec', exact: true });
+  await interval.focus();
+  await page.keyboard.press('ArrowRight');
+  assert.ok(await page.getByRole('radio', { name: '30 sec', exact: true }).isChecked());
+  await page.keyboard.press('ArrowLeft');
+  assert.ok(await interval.isChecked());
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  await setup.screenshot({ path: resolve(output, 'setup.png') });
   await picker.selectOption('open');
   await page.getByText('78 eligible bottles').waitFor();
   await page.getByLabel('Include bottle photos').uncheck();
@@ -73,6 +106,54 @@ try {
   await button('Resume').click();
   await page.clock.fastForward(12001);
   await heading(stagg).waitFor();
+  await page.clock.fastForward(12001);
+  const weller = 'William Larue Weller';
+  await heading(weller).waitFor();
+  await button('Pause on ' + weller).click();
+  await page.clock.fastForward(24001);
+  await heading(weller).waitFor();
+  await button('Resume').waitFor();
+  assert.equal(await page.locator('.d1-viewer').count(), 0);
+  await button('Bottle details').click();
+  const facts = page.getByRole('dialog', { name: 'Bottle facts' });
+  await facts.getByText('125.5', { exact: true }).waitFor();
+  await facts.getByText('55% full').waitFor();
+  await page.keyboard.press('Escape');
+  await button('Enlarge photo').click();
+  const photos = page.locator('.d1-viewer');
+  await photos.getByRole('heading', { name: weller }).waitFor();
+  assert.equal(await photos.getByText(/Photo 1 of 1/).count(), 0);
+  await assertFittedPhoto();
+  await shot('weller-fit');
+  await button('Zoom in').click();
+  await photos.getByText('150%', { exact: true }).waitFor();
+  await button('Fit to screen').click();
+  await assertFittedPhoto();
+  await button('Close photo viewer').click();
+  await heading(weller).waitFor();
+  assert.ok(await button('Enlarge photo').evaluate((el) => el === document.activeElement));
+  await button('Show ' + bookers).click();
+  await button('Resume').click();
+  await button('Enlarge photo').press('Enter');
+  await photos.getByText('Photo 1 of 3', { exact: false }).waitFor();
+  await assertFittedPhoto();
+  await page.keyboard.press('ArrowRight');
+  await photos.getByText('Photo 2 of 3', { exact: true }).waitFor();
+  await assertFittedPhoto();
+  await button('Zoom in').click();
+  await photos.getByText('150%', { exact: true }).waitFor();
+  await shot('bookers-batch');
+  await page.keyboard.press('Escape');
+  await page.clock.fastForward(24001);
+  await heading(bookers).waitFor();
+  await button('Resume').waitFor();
+  await button('Bottle details').click();
+  await facts.getByText('7 years, 2 months, 4 days', { exact: true }).waitFor();
+  await facts.getByText('125.7', { exact: true }).waitFor();
+  await facts.getByText('2025-01 · Barry’s Batch', { exact: true }).waitFor();
+  await facts.getByText('750 mL', { exact: true }).waitFor();
+  await shot('bookers-details');
+  await page.keyboard.press('Escape');
   await button('Show ' + blantons).click();
   await page.clock.fastForward(30000);
   await heading(blantons).waitFor();

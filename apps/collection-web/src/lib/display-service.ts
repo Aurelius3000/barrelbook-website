@@ -136,8 +136,9 @@ async function prepare(app: App, uid: string, settings: Settings) {
   if (!settingsValid(settings)) return reject(400);
   const db = getFirestore(app);
   const all = await db.collection('users').doc(uid).collection('bottles').get();
+  const sourceById = new Map(all.docs.map((doc) => [doc.id, doc.data()]));
   const selected = selectShelf(
-    all.docs.map((d) => decodeBottle(d.id, d.data(), uid)),
+    Array.from(sourceById, ([id, source]) => decodeBottle(id, source, uid)),
     settings,
   );
   if (!selected.length || (settings.shelf === 'flight' && selected.length !== settings.flight.length))
@@ -147,7 +148,7 @@ async function prepare(app: App, uid: string, settings: Settings) {
   const purgeAt = Timestamp.fromMillis(Date.now() + PREVIEW_LIFETIME + DISPLAY_LIFETIME);
   const cards = [];
   for (const bottle of selected) {
-    const card = guestCard(bottle, settings);
+    const card = guestCard(bottle, settings, sourceById.get(bottle.id), cards.length + 1);
     const ordered = [bottle.photos[bottle.primaryImageIndex], ...bottle.photos].filter(Boolean);
     for (const location of settings.photos ? new Set(ordered) : []) {
       const path = ownedPhotoPath(location, uid, process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET!);

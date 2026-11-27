@@ -49,6 +49,49 @@ describe('guest projection', () => {
       }).estimatedValue,
     ).toBeNull();
   });
+  it('publishes known bottle facts only and enforces all owner exclusions before the snapshot', () => {
+    const data = {
+      ...raw,
+      release: '2025-01',
+      warehouse: 'H',
+      floor: 2,
+      isFinished: false,
+      bottlingDate: { toDate: () => new Date('2025-01-03T00:00:00Z') },
+      tastingNotes: 'private',
+      unknownField: 'private',
+      tags: ['Favorite'],
+    };
+    const card = guestCard(
+      record('a'),
+      { ...DEFAULT_DISPLAY, excluded: ['proof', 'brand', 'warehouse'] },
+      data,
+    );
+    expect(card.details).toEqual({
+      release: '2025-01',
+      floor: '2',
+      isFinished: 'No',
+      bottlingDate: '2025-01-03',
+      tags: 'Favorite',
+    });
+    expect(card).not.toHaveProperty('proof');
+    expect(card).not.toHaveProperty('brand');
+    expect(JSON.stringify(card)).not.toContain('private');
+    const { excluded, ...legacy } = DEFAULT_DISPLAY;
+    expect(excluded).toEqual([]);
+    expect(guestCard(record('a'), legacy, data)).not.toHaveProperty('details');
+    expect(settingsValid({ ...DEFAULT_DISPLAY, excluded: ['notes'] as never })).toBe(false);
+  });
+  it('removes excluded brand and release from generated names for legacy records', () => {
+    for (const name of [undefined, '   ', 42]) {
+      const raw = { userId: 'fixture', name, brand: 'Private brand', release: 'Visible release' };
+      const bottle = decodeBottle('id', raw, 'fixture');
+      expect(guestCard(bottle, { ...DEFAULT_DISPLAY, excluded: ['brand'] }, raw).name).toBe('Visible release');
+      expect(guestCard(bottle, { ...DEFAULT_DISPLAY, excluded: ['release'] }, raw).name).toBe('Private brand');
+      expect(guestCard(bottle, { ...DEFAULT_DISPLAY, excluded: ['release', 'brand'] }, raw, 3).name).toBe(
+        'Bottle 3',
+      );
+    }
+  });
   it('keeps flight and open shelf selections inside the eligible collection', () => {
     const records = ['Unopened', 'Opened', 'Finished', 'Archived', 'Unknown'].map((status, i) =>
       record(String(i), status),

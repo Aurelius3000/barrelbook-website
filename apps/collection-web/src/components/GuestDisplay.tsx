@@ -14,7 +14,14 @@ import {
   Star,
   Wine,
 } from 'lucide-react';
-import { categories, inCategory, type Card, type Shelf } from '../lib/bar-display';
+import {
+  categories,
+  detailEntries,
+  guestFactEntries,
+  inCategory,
+  type Card,
+  type Shelf,
+} from '../lib/bar-display';
 import { api } from '../lib/display-client';
 import { LeaveDisplay } from './DisplayBoundary';
 import { PhotoViewer } from './PhotoViewer';
@@ -69,7 +76,7 @@ function Facts({ card }: { card: Card }) {
             </div>
           ))}
       </dl>
-      {card.fill !== null && (
+      {card.fill != null && (
         <div className="bar-fill">
           <span>{card.fill}% full</span>
           <meter aria-label="Bottle fill" min={0} max={100} value={card.fill} />
@@ -249,7 +256,13 @@ function Gallery({ shelf }: { shelf: Shelf }) {
           </div>
           <div className="bar-categories" role="group" aria-label="Bottle categories">
             {categories
-              .filter((c) => shelf.ratings || c !== 'Five stars')
+              .filter((c) => {
+                if (c === 'Five stars') return shelf.ratings;
+                if (c === 'Bourbon' || c === 'Rye') return shelf.cards.some((card) => 'type' in card);
+                if (c === 'Store picks') return shelf.cards.some((card) => 'pick' in card);
+                if (c === 'Open to pour') return shelf.cards.some((card) => 'status' in card);
+                return true;
+              })
               .map((c) => (
                 <button
                   key={c}
@@ -299,13 +312,9 @@ function Gallery({ shelf }: { shelf: Shelf }) {
         <>
           <section className="bar-hero" aria-label="Bottle showcase">
             <div className="bar-art">
-              {card.photos.length ? (
-                <button aria-label="View bottle photos" onClick={openPhoto}>
-                  {heroImage}
-                </button>
-              ) : (
-                heroImage
-              )}
+              <button aria-label={'Pause on ' + card.name} onClick={() => setPaused(true)}>
+                {heroImage}
+              </button>
             </div>
             <div className="bar-copy">
               <span className="bar-counter">
@@ -325,6 +334,27 @@ function Gallery({ shelf }: { shelf: Shelf }) {
                   {paused ? <Play /> : <Pause />}
                   {paused ? 'Resume' : 'Pause'}
                 </button>
+                <button
+                  onClick={(e) => {
+                    e.currentTarget.focus();
+                    setPaused(true);
+                    setDetail(true);
+                  }}
+                >
+                  Bottle details
+                </button>
+                {card.photos.length > 0 && (
+                  <button
+                    onClick={(e) => {
+                      e.currentTarget.focus();
+                      setPaused(true);
+                      openPhoto();
+                    }}
+                  >
+                    <Expand />
+                    Enlarge photo
+                  </button>
+                )}
               </div>
             </div>
           </section>
@@ -374,7 +404,22 @@ function Gallery({ shelf }: { shelf: Shelf }) {
             <button onClick={() => setDetail(false)}>Close</button>
             <h2>{card.name}</h2>
             <p>{[card.brand, card.type, card.pick && 'Store pick'].filter(Boolean).join(' · ')}</p>
-            <Facts card={card} />
+            <div className="bar-detail-body">
+              <div className="bar-detail-cover">{heroImage}</div>
+              <div>
+                <Facts card={card} />
+              </div>
+            </div>
+            {card.details && (
+              <dl className="bar-more-facts">
+                {detailEntries(card).map(([label, value]) => (
+                  <div key={label}>
+                    <dt>{label}</dt>
+                    <dd>{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
             {card.photos.length > 0 && (
               <button
                 onClick={(e) => {
@@ -385,10 +430,12 @@ function Gallery({ shelf }: { shelf: Shelf }) {
                 View bottle photos
               </button>
             )}
-            <button onClick={toShowcase}>
-              Back to showcase
-              <ArrowRight />
-            </button>
+            {browse && (
+              <button onClick={toShowcase}>
+                Back to showcase
+                <ArrowRight />
+              </button>
+            )}
           </article>
         </Modal>
       )}
@@ -399,13 +446,19 @@ function Gallery({ shelf }: { shelf: Shelf }) {
               name: card.name,
               photos: card.photos,
               primaryImageIndex: 0,
-              proof: card.proof,
+              proof: card.proof ?? null,
               ageStatement: card.age,
             }}
+            displayFacts={guestFactEntries(card)}
+            compactSinglePhoto
             index={photo}
             onSelect={setPhoto}
             onClose={() => setPhoto(null)}
-            renderPhoto={(id, name) => <Picture key={id} id={id} name={name} />}
+            renderPhoto={(id, name) => (
+              <span className="photo" key={id}>
+                <Picture id={id} name={name} />
+              </span>
+            )}
           />
         </Modal>
       )}

@@ -2,7 +2,9 @@
 import { useCallback,useEffect,useRef,useState,type ReactNode } from 'react';
 import {Check,ChevronLeft,ChevronRight,Maximize2,X,ZoomIn,ZoomOut} from 'lucide-react';
 import { clampZoom, MAX_ZOOM, pinchZoom, zoomedOffset } from '../lib/photo-viewer';
-export function PhotoViewer({bottle,index,onSelect,onClose,renderPhoto}:{
+export function PhotoViewer({bottle,index,onSelect,onClose,renderPhoto,compactSinglePhoto=false,displayFacts}:{
+  displayFacts?:[string,string][];
+  compactSinglePhoto?:boolean;
   bottle:{name:string;photos:string[];primaryImageIndex:number;proof:number|null;ageStatement?:string|null;release?:string;distilledBy?:string|null;size?:string|null};
   index:number;onSelect:(index:number)=>void;onClose:()=>void;renderPhoto:(location:string,name:string)=>ReactNode;
 }) {
@@ -42,8 +44,9 @@ export function PhotoViewer({bottle,index,onSelect,onClose,renderPhoto}:{
   }, [zoomTo]);
   const photoCount = bottle.photos.length;
   const multiple = photoCount > 1;
+  const compact = compactSinglePhoto && !multiple;
   const photoLabel = (i: number) => i === bottle.primaryImageIndex ? 'Cover photo' : `Photo ${i + 1}`;
-  const facts = [
+  const facts = displayFacts ?? [
     ['Proof', bottle.proof?.toString()], ['Age', bottle.ageStatement], ['Release', bottle.release],
     ['Distilled by', bottle.distilledBy], ['Size', bottle.size],
   ].filter(([, value]) => value);
@@ -55,7 +58,7 @@ export function PhotoViewer({bottle,index,onSelect,onClose,renderPhoto}:{
     const body = viewport.current?.closest('.d1-body');
     if (body) body.scrollTop = 0;
   };
-  return <section ref={root} className="fullscreen-photo-viewer d1-viewer" role="dialog" aria-modal="true" aria-labelledby="photo-viewer-title" aria-describedby="photo-viewer-help"
+  return <section ref={root} className={`fullscreen-photo-viewer d1-viewer${compact ? ' guest-single-photo' : ''}`} role="dialog" aria-modal="true" aria-labelledby="photo-viewer-title" aria-describedby="photo-viewer-help"
     onClickCapture={event => {
       // WebKit leaves clicked buttons unfocused. Keep subsequent keyboard input inside the viewer.
       (event.target as Element).closest('button')?.focus({ preventScroll: true });
@@ -73,7 +76,7 @@ export function PhotoViewer({bottle,index,onSelect,onClose,renderPhoto}:{
     <header className="d1-header">
       <div>
         <h2 id="photo-viewer-title">{bottle.name}</h2>
-        <p role="status">Photo {index + 1} of {photoCount}{index === bottle.primaryImageIndex && ' · Cover photo'}</p>
+        {!compact && <p role="status">Photo {index + 1} of {photoCount}{index === bottle.primaryImageIndex && ' · Cover photo'}</p>}
       </div>
       <button className="d1-control" aria-label="Close photo viewer" onClick={onClose}><X size={20} /> Close</button>
     </header>
@@ -119,7 +122,7 @@ export function PhotoViewer({bottle,index,onSelect,onClose,renderPhoto}:{
           <span>{index === i && <Check size={16} aria-hidden="true" />}{photoLabel(i)}</span>
         </button>)}
       </div>}
-      {facts.length > 0 && <section className="d1-facts"><h3>About this bottle</h3>
+      {!compact && facts.length > 0 && <section className="d1-facts"><h3>About this bottle</h3>
         <dl>{facts.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
       </section>}
     </aside>
