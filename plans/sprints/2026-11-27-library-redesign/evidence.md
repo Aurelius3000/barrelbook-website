@@ -86,6 +86,12 @@ Chrome decoded both images at 1086×1448. On each image, two Zoom in clicks chan
 
 Restored the two original references and the original CORS configuration. Fresh reads verified all Firestore document fields matched the pre-test baseline and the staging bucket again had zero CORS rules. After Refresh collection, the 106-proof record showed the expected original unavailable-photo fallback. No staging image objects were modified.
 
+## Production pilot rollout · November 27, 2026
+
+Pete approved web revision `5db208e` and backend revision `954812eda` for the existing pilot group. Production Firestore released ruleset `3c92d3d3-a28e-4544-af95-684a7f8413ef`. Its source hash matched the approved rule. The operator’s ordered catalog query returned an owned bottle and the feature flag document was readable. Pete then confirmed Catalog loaded on the iPhone.
+
+After rechecking the active rule, Vercel project, previous alias and production admission configuration metadata, promoted `dpl_3MPsMsEE6drgDiRMVJBmCBL4Exo7`. Readback confirmed app.barrelbook.app serves that Ready deployment. The public root returned 200 with noindex. The admission endpoint returned 401 when signed out and 403 for the wrong origin, both private and no-store. The first five-minute log query returned zero 5xx records. The marketing homepage returned 200 with its pricing anchor, and the standalone Plans URL returned its baseline 404. Authenticated browser checks are pending. The web rollback target is `dpl_CNV4sSbabM5oPMqaGHpr18JgHsyR`.
+
 ## Revised Collection Table · local Alice review
 
 Branch `codex/collection-table-rows` is based on pilot candidate `5db208e`. One named button opens the existing detail dialog per row. Pointer clicks on the row use that opener. The focus outline covers the row and Back restores the opener. The preview eye is retired from Table. Titles and subtitles wrap together, rows grow, and fill percentages use the reading-size setting.
@@ -95,3 +101,15 @@ The review runs at http://127.0.0.1:4180/ on the local Firebase emulators with A
 - Passed lint, TypeScript and all 156 unit and emulator tests. The optimized Next.js 16.4.6 build and the synthetic browser regression suite also passed.
 - Checked Standard and Extra Large, the 721px and 820px desktop column layouts, a 390px phone layout, photo and rating-cell clicks, keyboard entry, focus and scroll return, and photo zoom in Chromium and WebKit. Review surfaced a narrow-width heading collision and a WebKit hit-testing issue. Both were corrected and retested.
 - Screenshot names: `table-standard.png`, `table-extra-large.png`, `table-phone.png`. Local visual approval is the next step before any staging release.
+
+## Revised Table staging check
+
+Promoted c5f9707 to the established localhost:4182 preview against barrelbook-staging-v2. Verified the served HTML identified build bEVCxlcpHIS6QEuDs3ioy and the served client used the staging Firebase configuration. Previous build SH99oz8atPKMJxL1PiD2h is retained. The initial archive was empty when Git ran inside the nested app directory. Rebuilt from the repository root and verified source and build before switching the preview.
+
+Refreshed Pete’s signed-in Chrome tab and verified the read-only collection loaded 297 records and 299 bottles. On the Peerless Double Oak row, the 95% full label grew from 16px at Large to 19px at Extra Large with an 8px gap before its bar. Clicking that fill cell opened Peerless Double Oak, and Back focused its name. The Thirteenth Colony Distilleries Cask Strength Rye Whiskey Waffle House title occupied two 27.5px lines with no horizontal overflow. Clicking the unavailable-photo placeholder and pressing Enter on the name each opened the correct bottle and returned focus to its row. Left the staging review in Table at Extra Large.
+
+## Revised Table production pilot
+
+Promoted collection app c5f9707 to app.barrelbook.app in Vercel project barrelbook-collection-web. Verified Ready deployment dpl_3jKnWpTfn1ibosY5yVBYuXWPsNuK on the production domain. The previous release dpl_3MPsMsEE6drgDiRMVJBmCBL4Exo7 is the web rollback target. Uploaded the 24 runtime files from the reviewed Git commit. Verified existing production environment metadata and checked HTTP 200 with noindex, signed-out HTTP 401 and wrong-origin HTTP 403 with private, no-store before and after promotion.
+
+In Pete's authenticated production Chrome session, 310 records / 311 bottles loaded with read-only access. At Extra Large, clicking the 95% fill cell opened Peerless Double Oak. The full Thirteenth Colony Cask Strength Rye Whiskey Waffle House title measured two 27.5px lines, 55px high with matching scroll and client widths. Clicking its loaded thumbnail and pressing Enter on its name opened the correct detail. Back restored focus to each opener. The fill label grew from 15px at Standard to 19px at Extra Large and left an 8px gap before the bar. Restored Standard, observed save completion and verified the label returned to 15px.
