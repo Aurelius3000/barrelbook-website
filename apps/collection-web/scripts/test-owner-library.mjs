@@ -1,5 +1,6 @@
 // Run against the seeded, loopback-only Alice demo; no hosted targets are accepted.
 import assert from 'node:assert/strict';
+import { checkDialogKeyboard } from './check-dialog-keyboard.mjs';
 import { createHash } from 'node:crypto';
 import { mkdir, readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
@@ -250,6 +251,7 @@ try {
     await phone.context().close();
   }
   const page = await visit('alice');
+  await checkDialogKeyboard(page);
   if (!webkitSmoke) {
     await reviewBookers(page, 'laptop');
     await checkViewerLayouts(page);
