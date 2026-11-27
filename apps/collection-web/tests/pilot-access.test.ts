@@ -35,13 +35,14 @@ beforeEach(() => {
   vi.stubEnv('NEXT_PUBLIC_FIREBASE_APP_ID', appId);
   vi.stubEnv('BARRELBOOK_PILOT_ORIGIN', origin);
   vi.stubEnv('BARRELBOOK_PILOT_UIDS', 'invited');
+  vi.stubEnv('BARRELBOOK_WEB_ACCESS_MODE', 'pilot');
   vi.stubEnv('BARRELBOOK_PILOT_WIF_PROVIDER', provider);
   vi.stubEnv('BARRELBOOK_PILOT_SERVICE_ACCOUNT', serviceAccount);
   fromJSON.mockReset().mockReturnValue({});
   verifyIdToken.mockReset().mockResolvedValue(account);
   verifyToken.mockReset().mockResolvedValue({ appId });
 });
-afterEach(() => vi.unstubAllEnvs());
+afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); });
 
 describe('pilot access route', () => {
   it('requires admission for a production client even without the staging switch', () => {
@@ -124,5 +125,68 @@ describe('pilot access route', () => {
     expect((await POST(request({ origin: 'http://localhost:4181' }))).status).toBe(204);
     expect(applicationDefault).toHaveBeenCalledOnce();
     expect(fromJSON).not.toHaveBeenCalled();
+  });
+});
+
+describe('existing member admission', () => {
+  const read = vi.fn<typeof fetch>();
+  beforeEach(() => {
+    read.mockReset();
+    vi.stubGlobal('fetch', read);
+    vi.stubEnv('BARRELBOOK_WEB_ACCESS_MODE', 'members');
+    verifyIdToken.mockResolvedValue({ ...account, uid: 'outside-pilot' });
+  });
+  it('admits an unlisted member using only their own profile and caller credentials', async () => {
+    read.mockResolvedValue(new Response('{}'));
+    expect((await POST(request({ 'x-uid': 'different-person' }))).status).toBe(204);
+    const [url, options] = read.mock.calls[0];
+    expect(String(url)).toBe('https://firestore.googleapis.com/v1/projects/barrelbook-273cd/databases/(default)/documents/users/outside-pilot?fields=name');
+    expect(options).toMatchObject({ cache: 'no-store', redirect: 'error', headers: {
+      Authorization: 'Bearer fixture-id-token', 'X-Firebase-AppCheck': 'fixture-app-token',
+    } });
+  });
+  it.each([[404, 403], [403, 403], [401, 401], [503, 503]])('fails closed on profile status %d', async (source, expected) => {
+    read.mockResolvedValue(new Response(null, { status: source }));
+    expect((await POST(request())).status).toBe(expected);
+  });
+  it('denies missing profiles even for original pilot users and handles an unavailable service', async () => {
+    verifyIdToken.mockResolvedValue(account);
+    read.mockResolvedValueOnce(new Response(null, { status: 404 })).mockRejectedValueOnce(new Error('offline'));
+    expect((await POST(request())).status).toBe(403);
+    expect((await POST(request())).status).toBe(503);
+  });
+  it('rejects anonymous, revoked, unattested and unverified sessions before reading a profile', async () => {
+    verifyIdToken.mockResolvedValueOnce({ ...account, firebase: { sign_in_provider: 'anonymous' } });
+    expect((await POST(request())).status).toBe(401);
+    verifyIdToken.mockRejectedValueOnce(new Error('revoked'));
+    expect((await POST(request())).status).toBe(401);
+    verifyToken.mockResolvedValueOnce({ appId: 'foreign' });
+    expect((await POST(request())).status).toBe(401);
+    verifyIdToken.mockResolvedValueOnce({ ...account, email_verified: false });
+    expect((await POST(request())).status).toBe(401);
+    expect(read).not.toHaveBeenCalled();
+  });
+  it('only enables the explicit members mode and preserves the pilot rollback', async () => {
+    vi.stubEnv('BARRELBOOK_WEB_ACCESS_MODE', 'typo');
+    expect((await POST(request())).status).toBe(503);
+    vi.stubEnv('BARRELBOOK_WEB_ACCESS_MODE', undefined);
+    expect((await POST(request())).status).toBe(403);
+    verifyIdToken.mockResolvedValue(account);
+    expect((await POST(request())).status).toBe(204);
+    expect(read).not.toHaveBeenCalled();
+  });
+  it('uses admission on canonical staging and requires the registered app and local origin', async () => {
+    const projectId = 'barrelbook-staging-v2', appId = '1:387460631515:web:d70b9207059b90c55075fe';
+    const origin = 'http://localhost:4182';
+    expect(parseEnvironment({ projectId, appId, apiKey: 'fixture', storageBucket: 'bucket', authDomain: 'example.org', appCheckSiteKey: 'fixture' }, 'production', 'localhost', origin).pilotRequired).toBe(true);
+    vi.stubEnv('NEXT_PUBLIC_FIREBASE_PROJECT_ID', projectId);
+    vi.stubEnv('NEXT_PUBLIC_FIREBASE_APP_ID', appId);
+    vi.stubEnv('BARRELBOOK_PILOT_ORIGIN', origin);
+    verifyToken.mockResolvedValue({ appId });
+    read.mockResolvedValue(new Response('{}'));
+    expect((await POST(request({ origin }))).status).toBe(204);
+    expect((await POST(request())).status).toBe(403);
+    vi.stubEnv('NEXT_PUBLIC_FIREBASE_APP_ID', 'different');
+    expect((await POST(request({ origin }))).status).toBe(503);
   });
 });

@@ -26,7 +26,7 @@ export function parseEnvironment(env: WebEnvironment, mode: string, hostname: st
   const emulators = env.emulators === 'true';
   if (emulators && (mode === 'production' || !projectId!.startsWith('demo-') || !['localhost', '127.0.0.1', '::1', '[::1]'].includes(hostname))) throw new ConfigurationError();
   if (!emulators && (!env.appCheckSiteKey?.trim() || projectId!.startsWith('demo-'))) throw new ConfigurationError();
-  const pilotRequired = projectId === 'barrelbook-273cd' || (projectId === 'barrelbook-staging' && env.stagingPilot === 'true');
+  const pilotRequired = projectId === 'barrelbook-273cd' || projectId === 'barrelbook-staging-v2' || (projectId === 'barrelbook-staging' && env.stagingPilot === 'true');
   return {
     firebase: { apiKey: apiKey!, authDomain: authDomain!, projectId: projectId!, storageBucket: storageBucket!, appId: appId! },
     functionsOrigin: emulators ? `http://127.0.0.1:9501/${projectId}/${region}` : `https://${region}-${projectId}.cloudfunctions.net`,
