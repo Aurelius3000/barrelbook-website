@@ -16,6 +16,7 @@ const photo = 'gs://barrelbook-273cd.appspot.com/users/alice/bottles/owned/';
 const records = new Map([
   ['config/feature_flags', { sommelier_enabled: true, ask_your_shelf_enabled: false, ask_your_shelf_beta_enabled: true, lists_enabled: true }],
   ['users/alice', { userId: 'alice', displayName: 'Synthetic Alice', planTier: 'pro' }],
+  ['users/empty', { userId: 'empty', displayName: 'Empty shelf', planTier: 'free' }],
   ['users/bob', { userId: 'bob', displayName: 'Synthetic Bob', planTier: 'free' }],
   ['users/alice/bottles/owned', { userId: 'alice', name: bottle, brand: 'Fixture', status: 'Opened', proof: 125, imageURLs: [photo + 'front.png', photo + 'back.png'] }],
   ['users/alice/bottles/wrong-owner', { userId: 'bob', name: 'Other owner', status: 'Archived' }],
@@ -82,7 +83,7 @@ export async function testAskBBBrowser({ browser, origin, output, capture }) {
     if (['firebaseappcheck.googleapis.com', 'content-firebaseappcheck.googleapis.com'].includes(url.hostname)) return send(200, { token: 'synthetic-appcheck', ttl: '3600s' });
     if (url.hostname === 'identitytoolkit.googleapis.com') {
       if (url.pathname.endsWith(':signInWithPassword')) {
-        uid = request.postDataJSON().email.startsWith('bob') ? 'bob' : 'alice';
+        uid = request.postDataJSON().email.split('@')[0];
         return send(200, { localId: uid, email: `${uid}@synthetic.invalid`, idToken: token(uid), refreshToken: 'synthetic-refresh', expiresIn: '3600' });
       }
       if (url.pathname.endsWith(':lookup')) return send(200, { users: [{ localId: uid, email: `${uid}@synthetic.invalid`, emailVerified: true, providerUserInfo: [{ providerId: 'password', rawId: `${uid}@synthetic.invalid` }] }] });
@@ -334,6 +335,10 @@ export async function testAskBBBrowser({ browser, origin, output, capture }) {
     assert.equal(await draft.inputValue(), '');
     assert.ok(await draft.isDisabled());
     assert.equal(await page.getByText('Private draft in flight').count(), 0);
+    await click('Sign out');
+    await signIn('empty');
+    await page.getByRole('heading', { name: 'Your collection starts in the app.' }).waitFor();
+    await waitText('Showing 0 of 0 records');
     await click('Sign out');
     await page.getByRole('button', { name: 'Log in' }).waitFor();
     assert.equal(await page.getByRole('log', { name: 'Conversation' }).count(), 0);

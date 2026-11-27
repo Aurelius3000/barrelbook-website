@@ -70,3 +70,30 @@ describe('private Lists reads against local emulators', () => {
     await assertFails(getDoc(doc(db, 'users', 'rules-alice', 'lists', 'want', 'items', '000')));
   });
 });
+
+describe('owner reading preference', () => {
+  const path = ['users', 'rules-alice', 'webPreferences', 'reading'] as const;
+  it('persists only a known size and keeps existing bottle fields intact', async () => {
+    const db = env.authenticatedContext('rules-alice').firestore();
+    const pref = doc(db, ...path);
+    const bottle = doc(db, 'users', 'rules-alice', 'bottles', 'one');
+    const before = (await getDoc(bottle)).data();
+    for (const textSize of ['Standard', 'Extra large', 'Large']) {
+      await assertSucceeds(setDoc(pref, { textSize }));
+      expect((await assertSucceeds(getDoc(pref))).data()).toEqual({ textSize });
+    }
+    for (const invalid of [{}, { textSize: false }, { textSize: 'X' }, { textSize: 'Large', planTier: 'pro' }]) {
+      await assertFails(setDoc(pref, invalid));
+    }
+    await assertFails(setDoc(doc(db, 'users', 'rules-alice', 'webPreferences', 'other'), { textSize: 'Large' }));
+    expect((await getDoc(bottle)).data()).toEqual(before);
+  });
+  it('rejects another owner, a guest and a signed-out visitor', async () => {
+    for (const visitor of [env.authenticatedContext('rules-bob'), env.unauthenticatedContext(),
+      env.authenticatedContext('rules-alice', { firebase: { sign_in_provider: 'anonymous', identities: {} } })]) {
+      const ref = doc(visitor.firestore(), ...path);
+      await assertFails(getDoc(ref));
+      await assertFails(setDoc(ref, { textSize: 'Standard' }));
+    }
+  });
+});
