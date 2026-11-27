@@ -104,13 +104,10 @@ function PhotoViewer({ bottle, runtime, index, onSelect, onClose }: { bottle: Bo
       // WebKit leaves clicked buttons unfocused. Keep subsequent keyboard input inside the viewer.
       (event.target as Element).closest('button')?.focus({ preventScroll: true });
     }} onKeyDown={e => {
+    // The enclosing modal layer handles Tab for whichever dialog is active.
+    if (e.key === 'Tab') return;
     e.stopPropagation();
     if (e.key === 'Escape') { e.preventDefault(); onClose(); return; }
-    if (e.key === 'Tab') {
-      const controls = [...(root.current?.querySelectorAll<HTMLElement>('button:not(:disabled),[tabindex="0"]') || [])].filter(el => el.getClientRects().length);
-      if (e.shiftKey && document.activeElement === controls[0]) { e.preventDefault(); controls.at(-1)?.focus(); }
-      else if (!e.shiftKey && document.activeElement === controls.at(-1)) { e.preventDefault(); controls[0]?.focus(); }
-    }
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     if (e.key === '+' || e.key === '=') { e.preventDefault(); zoomTo(zoomValue.current + 0.5); }
     if (e.key === '-') { e.preventDefault(); zoomTo(zoomValue.current - 0.5); }
@@ -181,6 +178,7 @@ function BottleDetails({ bottle, origin = 'collection', runtime, onClose, onSave
   const viewerTrigger = useRef<HTMLElement | null>(null);
   const openViewer = (trigger: HTMLElement) => { viewerTrigger.current = trigger; setViewerOpen(true); };
   const closeViewer = () => { setViewerOpen(false); requestAnimationFrame(() => { const trigger = viewerTrigger.current?.isConnected ? viewerTrigger.current : root.current?.querySelector<HTMLElement>('[aria-label="Open photo viewer"]'); trigger?.focus({ preventScroll: true }); }); };
+  const layer = useRef<HTMLDivElement>(null);
   const root = useRef<HTMLDivElement>(null);
   const sections = ['Details', 'Tasting', 'Photos'];
   useEffect(() => {
@@ -191,19 +189,27 @@ function BottleDetails({ bottle, origin = 'collection', runtime, onClose, onSave
     const key = (e: KeyboardEvent) => {
       if (e.defaultPrevented) return;
       if (e.key === 'Escape') { e.preventDefault(); requestClose(); }
-      if (e.key === 'Tab') {
-        const scope = root.current?.querySelector<HTMLElement>('[role=alertdialog]') || root.current;
-        const controls = [...(scope?.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],input:not(:disabled),select:not(:disabled),textarea:not(:disabled)') || [])].filter(el => el.getClientRects().length && !el.closest('[inert]'));
-        if (e.shiftKey && document.activeElement === controls[0]) { e.preventDefault(); controls.at(-1)?.focus(); }
-        else if (!e.shiftKey && document.activeElement === controls.at(-1)) { e.preventDefault(); controls[0]?.focus(); }
-      }
+      if (e.key !== 'Tab' || e.ctrlKey || e.altKey || e.metaKey) return;
+      const dialog = layer.current?.querySelector<HTMLElement>('[role="dialog"]:not([inert])');
+      const scope = dialog?.querySelector<HTMLElement>('[role="alertdialog"]') || dialog;
+      if (!scope) return;
+      // WebKit may skip ordinary buttons during native Tab traversal. Advance
+      // every step within the active dialog, including its roving tab list.
+      const controls = [...scope.querySelectorAll<HTMLElement>('button, a[href], input, select, textarea, [tabindex]')]
+        .filter(el => el.tabIndex >= 0 && !el.matches(':disabled') && !el.closest('[inert], [hidden]') && el.getClientRects().length > 0);
+      e.preventDefault();
+      if (!controls.length) return;
+      const index = controls.findIndex(el => el === document.activeElement);
+      const firstOrLast = e.shiftKey ? controls.length - 1 : 0;
+      const next = index < 0 ? firstOrLast : (index + (e.shiftKey ? -1 : 1) + controls.length) % controls.length;
+      controls[next].focus();
     };
     document.addEventListener('keydown', key);
     return () => { document.body.style.overflow = overflow; document.removeEventListener('keydown', key); previous?.focus({ preventScroll: true }); };
   }, [requestClose]);
   const money = (value: number | null) => value === null ? 'Not recorded' : new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
   const rows = [['Brand', bottle.brand], ['Release', bottle.release], ['Edition', bottle.edition], ['Distilled by', bottle.distilledBy], ['Type', bottle.type], ['Proof', bottle.proof?.toFixed(1)], ['Size', bottle.size], ['Quantity', String(bottle.quantity)], ['Barrel number', bottle.barrelNumber], ['Warehouse', bottle.warehouse], ['Purchase price', money(bottle.purchasePrice)], ['MSRP', money(bottle.msrp)], ['Secondary estimate', money(bottle.secondaryPrice)], ['Storage location', bottle.storageLocation]];
-  return <div className="modal-layer" onMouseDown={e => { if (e.target === e.currentTarget) requestClose(); }}>
+  return <div ref={layer} className="modal-layer" onMouseDown={e => { if (e.target === e.currentTarget) requestClose(); }}>
     <section ref={root} role="dialog" aria-modal="true" aria-labelledby="bottle-title" className="bottle-dialog" inert={viewerOpen} aria-hidden={viewerOpen || undefined}>
       <header className="spread-back"><button onClick={requestClose}><ArrowLeft size={20} />Back to {origin}</button><button className="icon-button" aria-label="Close bottle details" onClick={requestClose}><X /></button></header>
       <div className="spread-layout">
