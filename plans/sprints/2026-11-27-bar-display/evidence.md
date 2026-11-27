@@ -17,11 +17,11 @@ The first implementation used ordinary recovery auth and could enable Start afte
 
 ## Local captures
 
-- [Showcase in Chromium](../../../apps/collection-web/.cache/bar-display/chromium/showcase.png)
-- [Full-HD browse in Chromium](../../../apps/collection-web/.cache/bar-display/chromium/browse-desktop.png)
-- [Tablet browse in WebKit](../../../apps/collection-web/.cache/bar-display/webkit/browse-tablet.png)
+- [Showcase in Chromium](assets/showcase.png)
+- [Full-HD browse in Chromium](assets/browse-desktop.png)
+- [Tablet browse in WebKit](assets/browse-tablet.png)
 
-The capture files live in the ignored worktree review directory. The browser scripts reproduce them.
+These three captures are included for PR review. The browser scripts reproduce them in the local review directory.
 
 ## Before hosted enablement
 
