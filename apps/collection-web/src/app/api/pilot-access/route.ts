@@ -19,6 +19,10 @@ function pilotConfiguration() {
   if (projectId === 'barrelbook-273cd' && origin === 'https://app.barrelbook.app') {
     return { projectId, appId, origin };
   }
+  if (projectId === 'barrelbook-staging-v2' && appId === '1:387460631515:web:d70b9207059b90c55075fe' &&
+      origin === 'http://localhost:4182') {
+    return { projectId, appId, origin };
+  }
   if (projectId === 'barrelbook-staging' && process.env.NEXT_PUBLIC_BARRELBOOK_STAGING_PILOT === 'true' &&
       origin === 'http://localhost:4181') {
     return { projectId, appId, origin };
@@ -65,7 +69,9 @@ export async function POST(request: Request) {
   if (!idToken || !appToken) return response(401);
 
   const allowedUids = (process.env.BARRELBOOK_PILOT_UIDS || '').split(',').map(uid => uid.trim()).filter(Boolean);
-  if (!allowedUids.length) return response(403);
+  const mode = process.env.BARRELBOOK_WEB_ACCESS_MODE ?? 'pilot';
+  if (mode !== 'pilot' && mode !== 'members') return response(503);
+  if (mode === 'pilot' && !allowedUids.length) return response(403);
 
   const name = `collection-web-pilot-${config.projectId}`;
   try {
@@ -80,7 +86,26 @@ export async function POST(request: Request) {
     const provider = identity.firebase.sign_in_provider;
     if (attestation.appId !== config.appId || provider === 'anonymous' ||
         (provider === 'password' && identity.email_verified !== true)) return response(401);
-    return response(allowedUids.includes(identity.uid) ? 204 : 403);
+    if (mode === 'pilot') return response(allowedUids.includes(identity.uid) ? 204 : 403);
+
+    // Use the member's own credentials so Firestore applies the same rules as the app.
+    // Request only the document name and discard the response body.
+    const uid = identity.uid;
+    if (!uid || uid === '.' || uid === '..' || uid.includes('/')) return response(403);
+    const profile = new URL(`https://firestore.googleapis.com/v1/projects/${config.projectId}/databases/(default)/documents/users/${encodeURIComponent(uid)}`);
+    profile.searchParams.set('fields', 'name');
+    try {
+      const result = await fetch(profile, {
+        headers: { Authorization: `Bearer ${idToken}`, 'X-Firebase-AppCheck': appToken },
+        cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(5000),
+      });
+      await result.body?.cancel();
+      if (result.status === 200) return response(204);
+      if (result.status === 403 || result.status === 404) return response(403);
+      return response(result.status === 401 ? 401 : 503);
+    } catch {
+      return response(503);
+    }
   } catch {
     return response(401);
   }
