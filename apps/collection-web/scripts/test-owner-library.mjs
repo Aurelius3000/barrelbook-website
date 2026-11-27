@@ -261,10 +261,15 @@ try {
   for (const view of ['Grid', 'Table']) {
     await click(page, view + ' view');
     for (const name of ['Blanton’s Straight from the Barrel', 'Local fixture bottle 12']) {
-      const thumbnail = page.getByRole('button', { name: 'Open bottle details for ' + name, exact: true });
+      const thumbnail = page.getByRole('button', { name: view === 'Grid' ? 'Open bottle details for ' + name : name, exact: true });
       await thumbnail.scrollIntoViewIfNeeded();
       const scroll = await page.evaluate(() => window.scrollY);
-      if (name === 'Blanton’s Straight from the Barrel') await thumbnail.click();
+      if (view === 'Table' && name === 'Blanton’s Straight from the Barrel') {
+        const row = page.getByRole('row').filter({ has: thumbnail });
+        assert.equal(await row.getByRole('button').count(), 1);
+        const photo = await row.locator('.photo').boundingBox();
+        await page.mouse.click(photo.x + photo.width / 2, photo.y + photo.height / 2);
+      } else if (name === 'Blanton’s Straight from the Barrel') await thumbnail.click();
       else await thumbnail.press('Enter');
       const detail = page.getByRole('dialog', { name, exact: true });
       await detail.getByRole('tab', { name: 'Details', selected: true }).waitFor();
@@ -286,6 +291,54 @@ try {
       assert.ok(Math.abs(await page.evaluate(() => window.scrollY) - scroll) <= 2);
     }
   }
+  const firstRow = page.locator('.collection-table tbody tr').first();
+  const opener = firstRow.getByRole('button');
+  const firstName = await opener.innerText();
+  await firstRow.scrollIntoViewIfNeeded();
+  const rating = await firstRow.locator('.rating-cell').boundingBox();
+  await page.mouse.click(rating.x + rating.width - 4, rating.y + rating.height / 2);
+  await page.getByRole('dialog', { name: firstName, exact: true }).waitFor();
+  await page.goBack();
+  await page.waitForFunction(el => document.activeElement === el, await opener.elementHandle());
+  const label = page.locator('.collection-table .fill').first();
+  const originalSize = await size(page).inputValue();
+  await change(page, 'Standard');
+  const standard = await label.evaluate(el => parseFloat(getComputedStyle(el).fontSize));
+  await firstRow.scrollIntoViewIfNeeded();
+  await shot(page, 'table-standard');
+  await change(page, 'Extra large');
+  assert.ok(await label.evaluate(el => parseFloat(getComputedStyle(el).fontSize)) > standard);
+  for (const width of [721, 820]) {
+    await page.setViewportSize({ width, height: 850 });
+    await page.waitForFunction(expected => innerWidth === expected, width);
+    assert.ok(await fits(page));
+    const proof = page.getByRole('columnheader', { name: 'Proof' });
+    const end = await proof.evaluate(el => {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      return range.getBoundingClientRect().right;
+    });
+    const status = await page.getByRole('columnheader', { name: 'Status' }).boundingBox();
+    assert.ok(end + 2 < status.x, 'Proof and Status headings need separation');
+    assert.ok((await label.locator('.fill-track').boundingBox()).width >= 28);
+  }
+  await firstRow.scrollIntoViewIfNeeded();
+  await shot(page, 'table-extra-large');
+  const titleMetrics = await opener.evaluate(el => ({
+    height: el.getBoundingClientRect().height,
+    width: el.getBoundingClientRect().width,
+    lineHeight: parseFloat(getComputedStyle(el).lineHeight),
+    fontSize: getComputedStyle(el).fontSize,
+  }));
+  assert.ok(titleMetrics.height >= 1.9 * titleMetrics.lineHeight,
+    'Expected the long Blanton’s title to wrap: ' + JSON.stringify(titleMetrics));
+  await page.setViewportSize({ width: 390, height: 844 });
+  assert.ok(await fits(page));
+  assert.ok(await label.isVisible());
+  await firstRow.scrollIntoViewIfNeeded();
+  await shot(page, 'table-phone');
+  await page.setViewportSize(viewport);
+  await change(page, originalSize);
   await click(page, 'Grid view');
   console.log('Alice Grid and Table thumbnails, Details, second photo, zoom, empty photo, focus and scroll passed.');
   if (!webkitSmoke) {

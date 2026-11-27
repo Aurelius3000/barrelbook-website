@@ -85,3 +85,13 @@ Confirmed Pete’s signed-in Google staging session. On barrelbook-staging-v2 on
 Chrome decoded both images at 1086×1448. On each image, two Zoom in clicks changed the level from 100% to 200% and doubled the rendered image element from about 892×624 to 1784×1249 CSS pixels. Keyboard panning changed both horizontal and vertical offsets on the zoomed cover from (446,312) to (483,348), and on the second image from (446,312) to (410,275), rounded. Next and Fit restored 100% and zero offsets. Escape returned focus to the detail photo and Back returned to the filtered Grid thumbnail. Pointer dragging was verified locally in the earlier Chromium suite; this live staging browser verified panning with arrow keys.
 
 Restored the two original references and the original CORS configuration. Fresh reads verified all Firestore document fields matched the pre-test baseline and the staging bucket again had zero CORS rules. After Refresh collection, the 106-proof record showed the expected original unavailable-photo fallback. No staging image objects were modified.
+
+## Revised Collection Table · local Alice review
+
+Branch `codex/collection-table-rows` is based on pilot candidate `5db208e`. One named button opens the existing detail dialog per row. Pointer clicks on the row use that opener. The focus outline covers the row and Back restores the opener. The preview eye is retired from Table. Titles and subtitles wrap together, rows grow, and fill percentages use the reading-size setting.
+
+The review runs at http://127.0.0.1:4180/ on the local Firebase emulators with Alice's 103 sample records (104 bottles). Restarted local Auth and Storage and restored their synthetic test users and photos. The browser suite compares local bottle and list document versions before and after browsing.
+
+- Passed lint, TypeScript and all 156 unit and emulator tests. The optimized Next.js 16.4.6 build and the synthetic browser regression suite also passed.
+- Checked Standard and Extra Large, the 721px and 820px desktop column layouts, a 390px phone layout, photo and rating-cell clicks, keyboard entry, focus and scroll return, and photo zoom in Chromium and WebKit. Review surfaced a narrow-width heading collision and a WebKit hit-testing issue. Both were corrected and retested.
+- Screenshot names: `table-standard.png`, `table-extra-large.png`, `table-phone.png`. Local visual approval is the next step before any staging release.

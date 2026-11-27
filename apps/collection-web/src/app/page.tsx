@@ -372,11 +372,10 @@ function Workspace({ runtime, session, onSignOut, onExpired }: { runtime: Runtim
     setReferencedBottles(records => new Map(records).set(bottle.id, bottle));
     update({ detailId: bottle.id }, true);
   };
-  const selected = matches.find(b => b.id === browse.selectedId);
   const detail = showLists || showAskBB ? undefined : bottles.find(b => b.id === browse.detailId);
   const complete = !!page && !page.hasMore && !loading && !loadError;
   const filterCount = Number(browse.chip !== 'All') + Number(browse.status !== 'Active') + Number(browse.rating !== '0') + Number(!!browse.tag);
-  const filter = (patch: Partial<CollectionView>) => update({ ...patch, limit: RENDER_PAGE_SIZE, selectedId: null });
+  const filter = (patch: Partial<CollectionView>) => update({ ...patch, limit: RENDER_PAGE_SIZE });
   const resetFilters = () => filter({ chip: 'All', query: '', status: 'Active', rating: '0', tag: '' });
   const openDetails = (bottle: BottleRecord, trigger: HTMLButtonElement) => {
     // WebKit does not focus a clicked button. Capture the opener for Back navigation.
@@ -433,7 +432,6 @@ function Workspace({ runtime, session, onSignOut, onExpired }: { runtime: Runtim
         <span>Showing {visible.length} of {matches.length} {complete ? 'records' : 'loaded records'}</span>
         {(browse.query || filterCount > 0) && <button className="text-button" onClick={resetFilters}>Clear search &amp; filters</button>}
       </div>
-      {selected && <section className="selected-summary" aria-label="Selected bottle"><Photo runtime={runtime} uid={uid} location={selected.photos[selected.primaryImageIndex]} name={selected.name} /><div className="summary-main"><span className="eyebrow">SELECTED BOTTLE</span><h2>{selected.name}</h2><dl>{[['Barrel', selected.barrelNumber], ['Warehouse', selected.warehouse], ['Proof', selected.proof?.toFixed(1)], ['Type', selected.type]].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value || 'Not recorded'}</dd></div>)}</dl><div className="tags">{selected.tags.map(tag => <button key={tag} onClick={() => filter({ tag })}>{tag}</button>)}</div></div><button className="text-button" onClick={event => openDetails(selected, event.currentTarget)}>View details<ArrowRight size={15} /></button><button className="icon-button" aria-label="Clear selected bottle" onClick={() => update({ selectedId: null })}><X size={16} /></button></section>}
       {loading && !bottles.length ? <div className="loading-state" role="status"><RefreshCw className="spinning" /><p>Loading your collection…</p></div> : !matches.length ? <section className="empty-state"><Wine size={30} /><h2>{!complete ? 'No matches in loaded records yet' : bottles.length || browse.query || filterCount ? 'No matching bottles' : 'Your collection starts in the app.'}</h2><p>{!complete ? 'Results are incomplete until your collection finishes loading.' : bottles.length || browse.query || filterCount ? 'Try another search or filter.' : 'Bottles saved in BarrelBook will appear here.'}</p>{(browse.query || filterCount > 0) && <Button secondary onClick={resetFilters}>Clear filters</Button>}</section> : browse.view === 'grid' ? <div className="bottle-grid" aria-label="Collection grid">{visible.map(bottle =>
         <article key={bottle.id} className="library-tile">
           <button className="tile-photo" aria-label={`Open bottle details for ${bottle.name}`} onClick={event => openDetails(bottle, event.currentTarget)}>
@@ -448,7 +446,31 @@ function Workspace({ runtime, session, onSignOut, onExpired }: { runtime: Runtim
             {bottle.secondaryPrice !== null && <p className="tile-value">Est. value <strong>{formatMoney(bottle.secondaryPrice)}</strong></p>}
             <div className="tile-fill">{bottle.fillLevel === null ? 'Fill not recorded' : <Fill value={bottle.fillLevel} />}</div>
           </div>
-        </article>)}</div> : <div className="collection-table"><table><caption className="sr-only">Your private collection, {matches.length} matching records</caption><thead><tr><th scope="col">Bottle</th><th scope="col">Proof</th><th scope="col">Status</th><th scope="col">Fill</th><th scope="col">My rating</th></tr></thead><tbody>{visible.map(bottle => <tr key={bottle.id} className={selected?.id === bottle.id ? 'selected' : ''}><td className="bottle-cell"><button className="bottle-photo-button" aria-label={`Open bottle details for ${bottle.name}`} onClick={event => openDetails(bottle, event.currentTarget)}><Photo runtime={runtime} uid={uid} location={bottle.photos[bottle.primaryImageIndex]} name={bottle.name} /></button><div><button className="bottle-name" onClick={event => openDetails(bottle, event.currentTarget)}>{bottle.name}</button><span className="bottle-subtitle">{[bottle.edition, bottle.barrelNumber ? `Barrel ${bottle.barrelNumber}` : null, bottle.brand].filter(Boolean).join(' · ') || bottle.type || 'Bottle details'}{bottle.quantity > 1 ? ` · Qty ${bottle.quantity}` : ''}</span><span className="mobile-meta">{bottle.proof === null ? 'Proof unknown' : `${bottle.proof.toFixed(1)} proof`}<Status value={bottle.status} /></span></div></td><td className="proof-cell">{bottle.proof?.toFixed(1) ?? '—'}</td><td className="status-cell"><Status value={bottle.status} /></td><td className="fill-cell"><Fill value={bottle.fillLevel} /></td><td className="rating-cell"><Rating value={bottle.rating} /><button className="icon-button preview-button" aria-label={`Preview ${bottle.name}`} aria-pressed={selected?.id === bottle.id} onClick={() => update({ selectedId: selected?.id === bottle.id ? null : bottle.id })}><Eye size={16} /></button><button className="mobile-details text-button" onClick={event => openDetails(bottle, event.currentTarget)} aria-label={`Details for ${bottle.name}`}>Details<ArrowRight size={12} /></button></td></tr>)}</tbody></table></div>}
+        </article>)}</div> : <div className="collection-table">
+        <table>
+          <caption className="sr-only">Your private collection, {matches.length} matching records</caption>
+          <thead><tr>{['Bottle', 'Proof', 'Status', 'Fill', 'My rating'].map(label => <th key={label} scope="col">{label}</th>)}</tr></thead>
+          <tbody>{visible.map(bottle => <tr key={bottle.id} onClick={event => {
+            const opener = event.currentTarget.querySelector('button');
+            if (opener) openDetails(bottle, opener);
+          }}>
+            <td className="bottle-cell">
+              <div className="table-identity">
+                <Photo runtime={runtime} uid={uid} location={bottle.photos[bottle.primaryImageIndex]} name={bottle.name} />
+                <div className="table-name-block">
+                  <button className="bottle-name" type="button" aria-haspopup="dialog">{bottle.name}</button>
+                  <span className="bottle-subtitle">{[bottle.edition, bottle.barrelNumber ? `Barrel ${bottle.barrelNumber}` : null, bottle.brand].filter(Boolean).join(' · ') || bottle.type || 'Bottle details'}{bottle.quantity > 1 ? ` · Qty ${bottle.quantity}` : ''}</span>
+                  <span className="mobile-meta">{bottle.proof === null ? 'Proof unknown' : `${bottle.proof.toFixed(1)} proof`}<Status value={bottle.status} /></span>
+                </div>
+              </div>
+            </td>
+            <td className="proof-cell">{bottle.proof?.toFixed(1) ?? '—'}</td>
+            <td className="status-cell"><Status value={bottle.status} /></td>
+            <td className="fill-cell"><Fill value={bottle.fillLevel} /></td>
+            <td className="rating-cell"><Rating value={bottle.rating} /></td>
+          </tr>)}</tbody>
+        </table>
+      </div>}
       {nextCount > 0 && <div className="pagination"><p>Showing {visible.length} of {matches.length} matching records.</p><Button secondary onClick={() => update({ limit: browse.limit + RENDER_PAGE_SIZE })}>Show {nextCount} more bottles<ChevronDown size={16} /></Button></div>}
       <footer className="collection-footer"><span><LockKeyhole size={12} />Your shelf stays private.</span><span><Smartphone size={14} />{runtime.config.emulators && runtime.config.localEditingEnabled ? 'Add bottles in the iPhone app.' : 'Add and manage bottles in the iPhone app.'}</span></footer>
     </main>{detail && <BottleDetails key={detail.id} bottle={detail} runtime={runtime} onClose={closeDetails} navigationGuard={leaveGuard} onSaved={next => setBottles(previous => previous.map(record => record.id === next.id ? next : record))} />}
