@@ -1,0 +1,10 @@
+node_modules/
+.next/
+.next-staging/
+.cache/
+coverage/
+*.tsbuildinfo
+*-debug.log
+next-env.d.ts
+.env*
+!.env.example

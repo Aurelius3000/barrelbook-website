@@ -1,0 +1,254 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is authenticated (includes both registered and guest users)
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user owns the document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isNonEmptyString(value) {
+      return value is string && value.size() > 0;
+    }
+    
+    // Ensure ownedBottleCount only moves by ±1 (or is unchanged) and never below 0
+    function validOwnedBottleCountUpdate() {
+      let hasNext = 'ownedBottleCount' in request.resource.data;
+      let rawNext = hasNext ? request.resource.data.ownedBottleCount : 0;
+      let nextValid = !hasNext || ((request.resource.data.ownedBottleCount is int) && (request.resource.data.ownedBottleCount >= 0));
+      let nextCount = nextValid ? rawNext : 0;
+      let prevExists = ('ownedBottleCount' in resource.data) && (resource.data.ownedBottleCount is int);
+      let prevCount = prevExists ? resource.data.ownedBottleCount : 0;
+      let deltaOk = !hasNext || (
+        nextValid && (
+          nextCount == prevCount ||
+          nextCount == prevCount + 1 ||
+          nextCount == prevCount - 1
+        )
+      );
+      return deltaOk;
+    }
+
+    function preservesServerManagedUserProfileFields() {
+      let affectedKeys = request.resource.data.diff(resource.data).affectedKeys();
+      return !affectedKeys.hasAny(['socialCohortEnabled', 'featureAccess']);
+    }
+    
+    // Common field validation used by both create and update
+    function hasValidBottleCore(data) {
+      let hasValidMsrp = !('msrp' in data) || (data.msrp is number && data.msrp >= 0);
+      let hasValidSecondary = !('secondaryPrice' in data) || (data.secondaryPrice is number && data.secondaryPrice >= 0);
+      return 'brand' in data && data.brand is string && data.brand.size() > 0 &&
+             'release' in data && data.release is string &&
+             'proof' in data && data.proof is number && data.proof >= 0 &&
+             'size' in data && data.size is string &&
+             'fillLevel' in data && data.fillLevel is int && data.fillLevel >= 0 && data.fillLevel <= 100 &&
+             hasValidMsrp && hasValidSecondary &&
+             'userId' in data && data.userId == request.auth.uid &&
+             'updatedAt' in data && data.updatedAt is timestamp;
+    }
+
+    // Create requires createdAt in request
+    function isValidBottleCreate() {
+      let data = request.resource.data;
+      return hasValidBottleCore(data) && 'createdAt' in data && data.createdAt is timestamp;
+    }
+
+    // Update must preserve createdAt and userId; createdAt can be omitted in request
+    function isValidBottleUpdate() {
+      let data = request.resource.data;
+      let hasExistingCreated = 'createdAt' in resource.data && resource.data.createdAt is timestamp;
+      let createdUnchanged = !('createdAt' in data) || data.createdAt == resource.data.createdAt;
+      let userUnchanged = 'userId' in resource.data && data.userId == resource.data.userId && data.userId == request.auth.uid;
+      return hasExistingCreated && createdUnchanged && userUnchanged && hasValidBottleCore(data);
+    }
+
+    function hasValidUserBottleListCore(data, userId) {
+      return 'userId' in data && data.userId == userId &&
+             'name' in data && isNonEmptyString(data.name) &&
+             (!('description' in data) || (data.description is string && data.description.size() <= 240)) &&
+             'type' in data && data.type in ['want', 'tried'] &&
+             (!('shareState' in data) || data.shareState in ['private', 'active', 'revoked']) &&
+             'itemCount' in data && data.itemCount is int && data.itemCount >= 0 &&
+             'updatedAt' in data && data.updatedAt is timestamp &&
+             (!('sortOrder' in data) || data.sortOrder is int) &&
+             (!('archivedAt' in data) || data.archivedAt is timestamp);
+    }
+
+    function userBottleListServerManagedShareFields() {
+      return ['publicShareToken', 'publicShareTokenHash', 'publicShareUpdatedAt'];
+    }
+
+    function hasNoServerManagedShareFieldsOnCreate(data) {
+      return !data.keys().hasAny(userBottleListServerManagedShareFields()) &&
+             (!('shareState' in data) || data.shareState == 'private');
+    }
+
+    function preservesServerManagedShareFieldsOnUpdate() {
+      let affectedKeys = request.resource.data.diff(resource.data).affectedKeys();
+      return !affectedKeys.hasAny(userBottleListServerManagedShareFields()) &&
+             !affectedKeys.hasAny(['shareState']);
+    }
+
+    function isValidUserBottleListCreate(userId) {
+      let data = request.resource.data;
+      return hasValidUserBottleListCore(data, userId) &&
+             hasNoServerManagedShareFieldsOnCreate(data) &&
+             'createdAt' in data && data.createdAt is timestamp;
+    }
+
+    function isValidUserBottleListUpdate(userId) {
+      let data = request.resource.data;
+      return hasValidUserBottleListCore(data, userId) &&
+             preservesServerManagedShareFieldsOnUpdate() &&
+             'createdAt' in resource.data && resource.data.createdAt is timestamp &&
+             (!('createdAt' in data) || data.createdAt == resource.data.createdAt) &&
+             'userId' in resource.data && data.userId == resource.data.userId && data.userId == userId &&
+             'type' in resource.data && data.type == resource.data.type;
+    }
+
+    function hasValidUserBottleListItemCore(data, userId, listId) {
+      return 'userId' in data && data.userId == userId &&
+             'listId' in data && data.listId == listId &&
+             'displayName' in data && isNonEmptyString(data.displayName) &&
+             'photoMode' in data && data.photoMode in ['placeholder', 'userPhoto', 'linkedCatalogPhoto', 'publicThumbnail'] &&
+             'updatedAt' in data && data.updatedAt is timestamp &&
+             (!('brand' in data) || data.brand is string) &&
+             (!('bottleType' in data) || data.bottleType is string) &&
+             (!('normalizedBottleKey' in data) || data.normalizedBottleKey is string) &&
+             (!('linkedBottleId' in data) || data.linkedBottleId is string) &&
+             (!('photoURL' in data) || data.photoURL is string) &&
+             (!('photoStoragePath' in data) || data.photoStoragePath is string) &&
+             (!('placeholderSeed' in data) || data.placeholderSeed is string) &&
+             (!('sortOrder' in data) || (data.sortOrder is int && data.sortOrder >= 0)) &&
+             (!('wantFields' in data) || data.wantFields is map) &&
+             (!('triedFields' in data) || data.triedFields is map);
+    }
+
+    function isValidUserBottleListItemCreate(userId, listId) {
+      let data = request.resource.data;
+      return hasValidUserBottleListItemCore(data, userId, listId) &&
+             'createdAt' in data && data.createdAt is timestamp;
+    }
+
+    function isValidUserBottleListItemUpdate(userId, listId) {
+      let data = request.resource.data;
+      return hasValidUserBottleListItemCore(data, userId, listId) &&
+             'createdAt' in resource.data && resource.data.createdAt is timestamp &&
+             (!('createdAt' in data) || data.createdAt == resource.data.createdAt) &&
+             'userId' in resource.data && data.userId == resource.data.userId && data.userId == userId &&
+             'listId' in resource.data && data.listId == resource.data.listId && data.listId == listId;
+    }
+    
+    // Users (both registered and guest) can only read and write their own data.
+    // SOC-008: Authenticated users can also read discoverable profiles for friend search.
+    match /users/{userId} {
+      allow read: if isOwner(userId) ||
+        (isAuthenticated() &&
+         resource.data.privacySettings.discoverable == true &&
+         resource.data.privacySettings.socialEnabled == true);
+      allow create: if isOwner(userId) &&
+        // Server-managed profile access fields cannot be set by the client
+        !('socialCohortEnabled' in request.resource.data) &&
+        !('featureAccess' in request.resource.data);
+      allow update: if isOwner(userId) &&
+        // Prevent changing username if one already exists (unless it's the same)
+        (!('username' in resource.data) ||
+         !('username' in request.resource.data) ||
+         resource.data.username == request.resource.data.username) &&
+        // Plan fields are server-controlled
+        (!('planTier' in request.resource.data) || request.resource.data.planTier == resource.data.planTier) &&
+        (!('planCycle' in request.resource.data) || request.resource.data.planCycle == resource.data.planCycle) &&
+        // Server-managed profile access fields cannot be changed or deleted by the client
+        preservesServerManagedUserProfileFields() &&
+        // Only allow ownedBottleCount to change by ±1 (or be unchanged), and never below 0
+        validOwnedBottleCountUpdate();
+      allow delete: if false; // Never allow user deletion via client
+      
+      // Bottles subcollection - accessible to both registered and guest users
+      match /bottles/{bottleId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidBottleCreate();
+        allow update: if isOwner(userId) && isValidBottleUpdate();
+        allow delete: if isOwner(userId);
+      }
+
+      // Private user-named non-owned bottle lists. These do not affect Catalog bottles or ownedBottleCount.
+      match /lists/{listId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidUserBottleListCreate(userId);
+        allow update: if isOwner(userId) && isValidUserBottleListUpdate(userId);
+        allow delete: if isOwner(userId);
+
+        match /items/{itemId} {
+          allow read: if isOwner(userId);
+          allow create: if isOwner(userId) && isValidUserBottleListItemCreate(userId, listId);
+          allow update: if isOwner(userId) && isValidUserBottleListItemUpdate(userId, listId);
+          allow delete: if isOwner(userId);
+        }
+      }
+      
+      // Balances are server-managed: client may read their own, but never write
+      match /balances/{balanceId} {
+        allow read: if isOwner(userId);
+        allow write: if false;
+      }
+      
+      // Ledger and analytics are server-managed only
+      match /credit_ledger/{entryId} {
+        allow read, write: if false;
+      }
+      match /analytics_events/{entryId} {
+        allow read, write: if false;
+      }
+    }
+    
+    // Username reservations - new collection for username uniqueness
+    match /usernames/{username} {
+      allow read: if true; // Anyone can check if a username is taken
+      allow create: if isAuthenticated() && 
+        request.resource.data.uid == request.auth.uid &&
+        request.resource.data.usernameLower == username; // Ensure lowercase matches doc ID
+      allow update: if false; // Never allow updates to prevent hijacking
+      allow delete: if false; // Only allow admin deletion via backend
+    }
+
+    // Admin-managed entitlements are server-only
+    match /admin_entitlements/{userId} {
+      allow read, write: if false;
+    }
+
+    // Ask B.B. review data is a separate server-only research system.
+    // Consent and transcript operations must use authenticated, App Check-protected
+    // Cloud Functions; reviewer reads must use the separately authorized reporting API.
+    match /ask_bb_review_consents/{document=**} {
+      allow read, write: if false;
+    }
+    match /ask_bb_review_conversations/{document=**} {
+      allow read, write: if false;
+    }
+    match /ask_bb_review_turns/{document=**} {
+      allow read, write: if false;
+    }
+    match /ask_bb_review_access_logs/{document=**} {
+      allow read, write: if false;
+    }
+
+    // Config documents (feature flags, etc.) — read-only for authenticated users
+    match /config/{document} {
+      allow read: if isAuthenticated();
+      allow write: if false;
+    }
+
+    // SOC-007: Friendships — users can read their own records; all writes via Cloud Functions
+    match /friendships/{friendshipId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create, update, delete: if false;
+    }
+  }
+}

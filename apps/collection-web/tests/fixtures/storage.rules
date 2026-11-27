@@ -1,0 +1,35 @@
+rules_version = '2';
+
+// Firebase Storage Rules for BarrelBook
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Users can read/write/delete their own photos
+    match /users/{userId}/bottles/{allPaths=**} {
+      // Allow authenticated users to read their own photos
+      allow read: if request.auth != null && request.auth.uid == userId;
+      // Allow authenticated users to write/create their own photos
+      allow write, create: if request.auth != null && request.auth.uid == userId
+        && request.resource.size < 10 * 1024 * 1024 // 10MB limit
+        && request.resource.contentType.matches('image/.*'); // Images only
+      // Allow authenticated users to delete their own photos
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Users can read/write/delete their own private list-item photos
+    match /users/{userId}/lists/{listId}/items/{itemId}/{allPaths=**} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write, create: if request.auth != null && request.auth.uid == userId
+        && request.resource.size < 10 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Optional: Allow users to read their own photos with a signed URL (for persistence)
+    // This is handled automatically by Firebase Storage download URLs
+    
+    // Deny all other access
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
