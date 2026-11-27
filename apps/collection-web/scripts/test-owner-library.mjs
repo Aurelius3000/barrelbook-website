@@ -19,7 +19,7 @@ async function collectionVersions() {
   return [lists, ...groups].flatMap(snapshot => snapshot.docs.map(doc =>
     [doc.ref.path, doc.updateTime.seconds, doc.updateTime.nanoseconds])).sort();
 }
-const origin = 'http://127.0.0.1:4180';
+const origin = 'http://127.0.0.1:' + Number(process.env.BB_LOCAL_WEB_PORT || 4180);
 const output = resolve(process.env.BB_REVIEW_OUTPUT || '.cache/library-review');
 await mkdir(output, { recursive: true });
 const webkitSmoke = process.argv.includes('--webkit-smoke');

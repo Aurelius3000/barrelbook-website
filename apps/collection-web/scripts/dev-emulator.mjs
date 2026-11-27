@@ -2,10 +2,15 @@
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-const child = spawn(process.execPath, [fileURLToPath(new URL('../node_modules/next/dist/bin/next', import.meta.url)), 'dev', '--port', '4180', '--hostname', '127.0.0.1'], {
+const child = spawn(process.execPath, [fileURLToPath(new URL('../node_modules/next/dist/bin/next', import.meta.url)), 'dev', '--port', process.env.BB_LOCAL_WEB_PORT || '4180', '--hostname', '127.0.0.1'], {
   cwd: fileURLToPath(new URL('..', import.meta.url)), stdio: 'inherit',
   env: {
     ...process.env,
+    NEXT_PUBLIC_BAR_DISPLAY_ENABLED: 'true',
+    FIREBASE_AUTH_EMULATOR_HOST: '127.0.0.1:9409',
+    FIRESTORE_EMULATOR_HOST: '127.0.0.1:9480',
+    STORAGE_EMULATOR_HOST: 'http://127.0.0.1:9499',
+    FIREBASE_STORAGE_EMULATOR_HOST: '127.0.0.1:9499',
     NEXT_PUBLIC_FIREBASE_API_KEY: 'local-emulator-key',
     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: 'demo-barrelbook-web.firebaseapp.com',
     NEXT_PUBLIC_FIREBASE_PROJECT_ID: 'demo-barrelbook-web',
