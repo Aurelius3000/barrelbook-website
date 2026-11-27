@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { collectPages, collectionResults, collectionSummary, INITIAL_VIEW } from '../src/lib/collection';
+import { collectPages, collectionResults, collectionSummary, visiblePage, money, shelfTotals, priceComparison, QUICK_FILTERS, INITIAL_VIEW } from '../src/lib/collection';
 import { decodeBottle, type BottleRecord } from '../src/lib/records';
 
 const bottle = (id: string, values: Record<string, unknown> = {}) => decodeBottle(id, { userId: 'alice', name: `Bottle ${id}`, status: 'Opened', ...values }, 'alice');
@@ -43,4 +43,46 @@ describe('complete collection browsing', () => {
     expect(visible).toHaveLength(1);
     await expect(collectPages<number>(async () => ({ bottles: [], cursor: 1, hasMore: true }), () => true, () => {})).rejects.toThrow('did not advance');
   });
+});
+
+describe('Library shelf and detail facts', () => {
+  const stock = [
+    bottle('a', { type: 'Straight Bourbon Whiskey', isStorePick: true, ageStatement: 'NAS', secondaryPrice: 172, msrp: 100, quantity: 2, rating: 5 }),
+    bottle('b', { type: 'Rye Whiskey', status: 'Unopened', secondaryPrice: 0 }),
+    bottle('c', { status: 'Unopened' }), bottle('d', { status: 'Finished', secondaryPrice: 300 }),
+    bottle('e', { status: 'Archived' })
+  ];
+  it('counts physical units and reports partial valuation across eligible inventory', () => {
+    expect(shelfTotals(stock)).toEqual({ units: 4, unopened: 2, storePicks: 2, estimated: 344, priced: 3 });
+    expect(stock[0].ageStatement).toBe('NAS');
+    expect(shelfTotals([]).priced).toBe(0);
+  });
+  it('maps every quick filter and intersects it with existing filters', () => {
+    const expected = [['a','b','c','d'], ['a'], ['b'], ['a'], ['b','c'], ['a'], ['a']];
+    QUICK_FILTERS.forEach((chip, index) => {
+      expect(collectionResults(stock, { ...INITIAL_VIEW, chip }).map(b => b.id)).toEqual(expected[index]);
+    });
+    expect(collectionResults(stock, { ...INITIAL_VIEW, chip: 'Bourbon', status: 'Unopened' })).toEqual([]);
+  });
+  it('preserves missing and zero values in the price comparison', () => {
+    expect([172, 83, 100, 0, null].map(value => priceComparison(value, 100)))
+      .toEqual(['+72% vs. MSRP', '-17% vs. MSRP', '0% vs. MSRP', '-100% vs. MSRP', null]);
+    expect(priceComparison(100, 0)).toBeNull();
+    expect(priceComparison(100, null)).toBeNull();
+    expect(INITIAL_VIEW.limit).toBe(24);
+  });
+});
+
+
+it.each([0, 1, 24, 25, 48, 49])('reveals %i matching records in exact pages', count => {
+  const matches = Array.from({ length: count }, (_, i) => bottle(String(i)));
+  let limit = INITIAL_VIEW.limit;
+  while (true) {
+    const { visible, nextCount } = visiblePage(matches, limit);
+    expect(visible.map(b => b.id)).toEqual(matches.slice(0, Math.min(limit, count)).map(b => b.id));
+    expect(nextCount).toBe(Math.min(24, count - visible.length));
+    if (!nextCount) break;
+    limit += nextCount;
+  }
+  expect(money(195.3)).toBe('$195.30');
 });

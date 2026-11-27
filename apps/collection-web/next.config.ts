@@ -3,6 +3,7 @@ import path from 'node:path';
 
 const config: NextConfig = {
   poweredByHeader: false,
+  ...(process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true' && { devIndicators: false as const }),
   // Keep the separately configured local staging preview out of the emulator cache.
   distDir: process.env.BARRELBOOK_WEB_LOCAL_STAGING === 'true' ? '.next-staging' : '.next',
   turbopack: { root: path.resolve(__dirname) },

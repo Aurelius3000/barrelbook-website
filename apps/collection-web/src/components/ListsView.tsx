@@ -50,7 +50,7 @@ interface ListsViewProps {
   onOpenList: (id: string) => void;
   onCloseList: () => void;
   onOpenItem: (id: string) => void;
-  renderBottle: (bottle: BottleRecord) => ReactNode;
+  renderBottle: (bottle: BottleRecord, listName: string) => ReactNode;
 }
 
 export default function ListsView(props: ListsViewProps) {
@@ -148,6 +148,6 @@ function ListDetails({ runtime, uid, list, itemId, accountPanel, onCloseList, on
         </>}
       <footer className="collection-footer"><span><Smartphone size={14} />Manage lists in the iPhone app.</span></footer>
     </main>
-    {bottle && renderBottle(bottle)}
+    {bottle && renderBottle(bottle, list.name)}
   </>;
 }

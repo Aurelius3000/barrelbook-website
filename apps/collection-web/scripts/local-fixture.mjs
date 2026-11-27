@@ -39,6 +39,10 @@ try { await auth.createUser({ uid: 'web-qa-no-profile', email: 'unlinked@web-tes
 catch (error) { if (error.code !== 'auth/uid-already-exists' && error.code !== 'auth/email-already-exists') throw error; }
 for (const [index, [asset]] of samples.entries()) {
   const bytes = await readFile(new URL(`../../../plans/sprints/2026-10-24-web-collection/prototype/public/bottles/${asset}.png`, import.meta.url));
+  if (index === 0) {
+    const label = await readFile(new URL('../tests/fixtures/blantons-label.jpg', import.meta.url));
+    await bucket.file('users/web-qa-alice/bottles/bottle-000/label.jpg').save(label, { metadata: { contentType: 'image/jpeg' } });
+  }
   await bucket.file(`users/web-qa-alice/bottles/bottle-${String(index).padStart(3, '0')}/front.png`).save(bytes, { metadata: { contentType: 'image/png' } });
 }
 const batch = db.batch();
@@ -47,11 +51,13 @@ for (let index = 0; index < 103; index++) {
   const id = `bottle-${String(index).padStart(3, '0')}`;
   batch.set(db.doc(`users/web-qa-alice/bottles/${id}`), {
     userId: 'web-qa-alice', name: sample?.[1] || `Local fixture bottle ${index + 1}`, brand: sample?.[2] || 'Local Fixture', release: index === 0 ? 'Straight from the Barrel' : 'Sample release',
+    type: sample || index % 2 ? 'Bourbon' : 'Rye',
+    isStorePick: index === 0, ...(index === 5 && { ageStatement: '13 years' }),
     proof: sample?.[3] || 100, size: '750 mL', quantity: index === 0 ? 2 : 1, status: index % 4 === 3 ? 'Unopened' : 'Opened', fillLevel: index % 4 === 3 ? 100 : 65 - index % 6 * 5,
-    rating: index % 3 === 0 ? 4.5 : 4, tags: index === 0 ? ['Store pick', 'Buffalo Trace'] : ['Local test'],
+    rating: index === 1 ? 5 : index === 2 ? null : index % 3 === 0 ? 4.5 : 4, tags: index === 0 ? ['Store pick', 'Buffalo Trace'] : ['Local test'],
     notes: 'Illustrative local emulator fixture. No live collection was copied.', tastingNotes: 'Nose: caramel and oak.\nPalate: cherry and vanilla.\nFinish: warm spice.',
     ...(index === 0 ? { barrelNumber: '2168', warehouse: 'H', purchasePrice: 150, msrp: 150, secondaryPrice: 195.30 } : {}),
-    ...(sample ? { imageURLs: [`gs://${projectId}.appspot.com/users/web-qa-alice/bottles/${id}/front.png`], primaryImageIndex: 0 } : {}),
+    ...(sample ? { imageURLs: [`gs://${projectId}.appspot.com/users/web-qa-alice/bottles/${id}/front.png`, ...(index === 0 ? [`gs://${projectId}.appspot.com/users/web-qa-alice/bottles/${id}/label.jpg`] : [])], primaryImageIndex: 0 } : {}),
     createdAt: Timestamp.fromDate(new Date('2026-10-24T12:00:00Z')), updatedAt: Timestamp.fromDate(new Date('2026-10-24T12:00:00Z')),
   });
 }

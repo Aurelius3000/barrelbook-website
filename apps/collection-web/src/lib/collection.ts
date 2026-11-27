@@ -1,8 +1,23 @@
 import { statusLabel, type BottleRecord } from './records';
 
-export const RENDER_PAGE_SIZE = 48;
+export const RENDER_PAGE_SIZE = 24;
 export const SORTS = ['Collection order', 'Name A–Z', 'Highest proof', 'Highest rated', 'Lowest fill'] as const;
+export const QUICK_FILTERS = ['All', 'Bourbon', 'Rye', 'Store picks', 'Unopened', 'Open', 'Five stars'] as const;
+type QuickFilter = typeof QUICK_FILTERS[number];
+
+function qualifies(bottle: BottleRecord, chip: QuickFilter) {
+  switch (chip) {
+    case 'All': return true;
+    case 'Bourbon': case 'Rye': return (bottle.type || '').toLowerCase().split(/[^a-z]+/).includes(chip.toLowerCase());
+    case 'Open': return bottle.status === 'Opened';
+    case 'Unopened': return bottle.status === 'Unopened';
+    case 'Store picks': return bottle.isStorePick === true;
+    case 'Five stars': return bottle.rating === 5;
+  }
+}
+
 export interface CollectionView {
+  chip: QuickFilter;
   query: string;
   status: string;
   rating: string;
@@ -14,13 +29,14 @@ export interface CollectionView {
   detailId: string | null;
   photoViewer: boolean;
 }
-export const INITIAL_VIEW: CollectionView = { query: '', status: 'Active', rating: '0', tag: '', sort: 'Collection order', view: 'grid', limit: RENDER_PAGE_SIZE, selectedId: null, detailId: null, photoViewer: false };
+export const INITIAL_VIEW: CollectionView = { chip: 'All', query: '', status: 'Active', rating: '0', tag: '', sort: 'Collection order', view: 'grid', limit: RENDER_PAGE_SIZE, selectedId: null, detailId: null, photoViewer: false };
 
 const normalize = (value: string) => value.normalize('NFKD').replace(/\p{Diacritic}/gu, '').toLocaleLowerCase();
 
 export function collectionResults(bottles: BottleRecord[], view: CollectionView): BottleRecord[] {
   const terms = normalize(view.query).trim().split(/\s+/).filter(Boolean);
   const matches = bottles.filter(b => {
+    if (!qualifies(b, view.chip)) return false;
     if (view.status !== 'All' && (view.status === 'Active' ? b.status === 'Archived' : b.status !== view.status)) return false;
     if (Number(view.rating) > 0 && (b.rating === null || b.rating < Number(view.rating))) return false;
     if (view.tag && !b.tags.includes(view.tag)) return false;
@@ -58,4 +74,35 @@ export async function collectPages<T>(read: (cursor: T | null) => Promise<Record
     if (!page.hasMore) return;
     cursor = page.cursor;
   }
+}
+
+
+export function shelfTotals(bottles: BottleRecord[]) {
+  const totals = { units: 0, unopened: 0, storePicks: 0, estimated: 0, priced: 0 };
+  for (const b of bottles) {
+    if (b.status !== 'Opened' && b.status !== 'Unopened') continue;
+    totals.units += b.quantity;
+    if (b.status === 'Unopened') totals.unopened += b.quantity;
+    if (b.isStorePick) totals.storePicks += b.quantity;
+    if (b.secondaryPrice !== null) {
+      totals.estimated += b.quantity * b.secondaryPrice;
+      totals.priced += b.quantity;
+    }
+  }
+  return totals;
+}
+
+export const money = (amount: number) => new Intl.NumberFormat('en-US', {
+  style: 'currency', currency: 'USD', minimumFractionDigits: Number.isInteger(amount) ? 0 : 2, maximumFractionDigits: 2
+}).format(amount);
+
+export function priceComparison(estimate: number | null, msrp: number | null) {
+  if (estimate === null || msrp === null || msrp <= 0) return null;
+  const percent = Math.round((estimate / msrp - 1) * 100);
+  return (percent > 0 ? '+' : '') + percent + '% vs. MSRP';
+}
+
+
+export function visiblePage(matches: BottleRecord[], limit: number) {
+  return { visible: matches.slice(0, limit), nextCount: Math.min(RENDER_PAGE_SIZE, Math.max(0, matches.length - limit)) };
 }

@@ -171,6 +171,16 @@ service cloud.firestore {
       allow delete: if false; // Never allow user deletion via client
       
       // Bottles subcollection - accessible to both registered and guest users
+      match /webPreferences/reading {
+        function registeredOwner() {
+          return isOwner(userId) && request.auth.token.firebase.sign_in_provider != 'anonymous';
+        }
+        allow get: if registeredOwner();
+        allow create, update: if registeredOwner()
+          && request.resource.data.keys().hasOnly(['textSize'])
+          && request.resource.data.textSize in ['Standard', 'Large', 'Extra large'];
+      }
+
       match /bottles/{bottleId} {
         allow read: if isOwner(userId);
         allow create: if isOwner(userId) && isValidBottleCreate();

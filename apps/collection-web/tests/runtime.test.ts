@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('firebase/app', async original => ({ ...await original<typeof import('firebase/app')>(), getApps: vi.fn(() => []), initializeApp: vi.fn(() => ({})) }));
 vi.mock('firebase/auth', async original => ({ ...await original<typeof import('firebase/auth')>(), getAuth: vi.fn(() => ({})), setPersistence: vi.fn(async () => undefined), connectAuthEmulator: vi.fn() }));
-vi.mock('firebase/firestore', async original => ({ ...await original<typeof import('firebase/firestore')>(), getFirestore: vi.fn(() => ({})), connectFirestoreEmulator: vi.fn() }));
+vi.mock('firebase/firestore', async original => ({ ...await original<typeof import('firebase/firestore')>(), getFirestore: vi.fn(() => ({})), initializeFirestore: vi.fn(() => ({})), connectFirestoreEmulator: vi.fn() }));
 vi.mock('firebase/storage', async original => ({ ...await original<typeof import('firebase/storage')>(), getStorage: vi.fn(() => ({})), ref: vi.fn(() => ({})), connectStorageEmulator: vi.fn(), getMetadata: vi.fn(), getBlob: vi.fn() }));
 vi.mock('firebase/app-check', async original => ({ ...await original<typeof import('firebase/app-check')>(), initializeAppCheck: vi.fn(() => ({})), getToken: vi.fn(async () => ({ token: 'local-unit-token' })) }));
 

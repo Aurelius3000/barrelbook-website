@@ -1,6 +1,7 @@
 export type BottleStatus = 'Unopened' | 'Opened' | 'Finished' | 'Archived' | 'Unknown';
 export interface BottleRecord {
   id: string; ownerId: string; name: string; brand: string; release: string;
+  ageStatement?: string | null; isStorePick?: boolean;
   edition: string | null; type: string | null; proof: number | null; size: string | null;
   status: BottleStatus; fillLevel: number | null; quantity: number; rating: number | null;
   tags: string[]; notes: string | null; tastingNotes: string | null;
@@ -29,6 +30,7 @@ export function decodeBottle(id: string, data: Record<string, unknown>, ownerId:
   const status = ['Unopened', 'Opened', 'Finished', 'Archived'].includes(String(data.status)) ? data.status as BottleStatus : 'Unknown';
   return {
     id, ownerId, name: text(data.name) || [brand, release].filter(Boolean).join(' ') || 'Unnamed bottle', brand, release,
+    ageStatement: text(data.ageStatement), isStorePick: data.isStorePick === true,
     edition: text(data.edition), type: text(data.type), proof: number(data.proof), size: text(data.size), status,
     fillLevel: Number.isInteger(data.fillLevel) ? number(data.fillLevel, 0, 100) : null,
     quantity: typeof data.quantity === 'number' && Number.isInteger(data.quantity) ? Math.max(data.quantity, 1) : 1,

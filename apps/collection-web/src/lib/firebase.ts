@@ -3,7 +3,7 @@
 import { getApps, initializeApp } from 'firebase/app';
 import { initializeAppCheck, ReCaptchaEnterpriseProvider, getToken, type AppCheck } from 'firebase/app-check';
 import { getAuth, setPersistence, browserSessionPersistence, connectAuthEmulator, onAuthStateChanged, getRedirectResult, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, GoogleAuthProvider, OAuthProvider, signOut, type User } from 'firebase/auth';
-import { getFirestore, connectFirestoreEmulator, collection, doc, getDocFromServer, getDocsFromServer, query, orderBy, documentId, limit, startAfter, type QueryDocumentSnapshot, type Firestore } from 'firebase/firestore';
+import { getFirestore, initializeFirestore, connectFirestoreEmulator, collection, doc, getDocFromServer, getDocsFromServer, query, orderBy, documentId, limit, startAfter, type QueryDocumentSnapshot, type Firestore } from 'firebase/firestore';
 import { getStorage, connectStorageEmulator, ref, getBlob, getMetadata, type FirebaseStorage } from 'firebase/storage';
 import { browserEnvironment, parseEnvironment, canEditBottle, type WebConfig } from './config';
 import { decodeBottle, decodeProfile, ownedPhotoPath, type BottleRecord, type PlanSnapshot } from './records';
@@ -21,7 +21,9 @@ export function getRuntime(): Promise<Runtime> {
     globalThis.barrelBookWebRuntime = (async () => {
       const config = parseEnvironment(browserEnvironment(), process.env.NODE_ENV, window.location.hostname, window.location.origin);
       const app = getApps().find(a => a.name === 'collection-web') || initializeApp(config.firebase, 'collection-web');
-      const auth = getAuth(app), db = getFirestore(app), storage = getStorage(app);
+      const auth = getAuth(app), storage = getStorage(app);
+      // WebKit can buffer the emulator's loopback streaming response indefinitely.
+      const db = config.emulators ? initializeFirestore(app, { experimentalForceLongPolling: true }) : getFirestore(app);
       storage.maxOperationRetryTime = 15000;
       if (config.emulators) {
         connectAuthEmulator(auth, 'http://127.0.0.1:9409', { disableWarnings: true });
