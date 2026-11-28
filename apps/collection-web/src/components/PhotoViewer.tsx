@@ -2,9 +2,9 @@
 import { useCallback,useEffect,useRef,useState,type ReactNode } from 'react';
 import {Check,ChevronLeft,ChevronRight,Maximize2,X,ZoomIn,ZoomOut} from 'lucide-react';
 import { clampZoom, MAX_ZOOM, pinchZoom, zoomedOffset } from '../lib/photo-viewer';
-export function PhotoViewer({bottle,index,onSelect,onClose,renderPhoto,compactSinglePhoto=false,displayFacts}:{
+export function PhotoViewer({bottle,index,onSelect,onClose,renderPhoto,guestDisplay=false,displayFacts}:{
   displayFacts?:[string,string][];
-  compactSinglePhoto?:boolean;
+  guestDisplay?:boolean;
   bottle:{name:string;photos:string[];primaryImageIndex:number;proof:number|null;ageStatement?:string|null;release?:string;distilledBy?:string|null;size?:string|null};
   index:number;onSelect:(index:number)=>void;onClose:()=>void;renderPhoto:(location:string,name:string)=>ReactNode;
 }) {
@@ -44,7 +44,7 @@ export function PhotoViewer({bottle,index,onSelect,onClose,renderPhoto,compactSi
   }, [zoomTo]);
   const photoCount = bottle.photos.length;
   const multiple = photoCount > 1;
-  const compact = compactSinglePhoto && !multiple;
+  const compact = guestDisplay && !multiple;
   const photoLabel = (i: number) => i === bottle.primaryImageIndex ? 'Cover photo' : `Photo ${i + 1}`;
   const facts = displayFacts ?? [
     ['Proof', bottle.proof?.toString()], ['Age', bottle.ageStatement], ['Release', bottle.release],
@@ -76,7 +76,7 @@ export function PhotoViewer({bottle,index,onSelect,onClose,renderPhoto,compactSi
     <header className="d1-header">
       <div>
         <h2 id="photo-viewer-title">{bottle.name}</h2>
-        {!compact && <p role="status">Photo {index + 1} of {photoCount}{index === bottle.primaryImageIndex && ' · Cover photo'}</p>}
+        {!compact && <p role="status">Photo {index + 1} of {photoCount}{!guestDisplay && index === bottle.primaryImageIndex && ' · Cover photo'}</p>}
       </div>
       <button className="d1-control" aria-label="Close photo viewer" onClick={onClose}><X size={20} /> Close</button>
     </header>
@@ -119,7 +119,9 @@ export function PhotoViewer({bottle,index,onSelect,onClose,renderPhoto,compactSi
       {multiple && <div className="d1-photos" role="group" aria-label="All bottle photos">
         {bottle.photos.map((location, i) => <button key={i} aria-label={`Show photo ${i + 1}${i === bottle.primaryImageIndex ? ', cover photo' : ''}`} aria-pressed={index === i} onClick={() => choose(i)}>
           {renderPhoto(location,photoLabel(i))}
-          <span>{index === i && <Check size={16} aria-hidden="true" />}{photoLabel(i)}</span>
+          {guestDisplay
+            ? index === i && <Check className="bar-photo-check" size={22} aria-hidden="true" />
+            : <span>{index === i && <Check size={16} aria-hidden="true" />}{photoLabel(i)}</span>}
         </button>)}
       </div>}
       {!compact && facts.length > 0 && <section className="d1-facts"><h3>About this bottle</h3>

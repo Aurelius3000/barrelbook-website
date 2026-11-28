@@ -17,6 +17,15 @@ The first implementation used ordinary recovery auth and could enable Start afte
 
 Both Chromium and WebKit verified the compact setup (including a 474-pixel viewport), keyboard interval selection, Weller at Fit and after zoom reset, and Booker’s three-photo viewer. Enlarge and Close/Escape returned to the same paused bottle. Booker’s fact card showed its release, age and bottle size. Both engines verified that excluding type, warehouse and tags removed them from the flight payload, and hiding type removed Bourbon and Rye filters. Unit tests exercised private fields, older clients and hidden fields in generated titles for unnamed legacy bottles.
 
+## Showcase and thumbnail verification, November 28
+
+The local display flow passed in Chromium and WebKit at 1366 × 768 and 1024 × 768. Each run opened William Larue Weller and Booker’s Barry’s Batch, checked that the showcase photo and actions fit the viewport, and exercised keyboard navigation, pause, zoom, Fit and focus return. Booker’s had three image-only buttons with accessible names and a selected indicator. The checks measure the decoded thumbnails on screen to catch a WebKit sizing regression. Weller opened directly to its single photo.
+
+Run `scripts/test-display-flow.mjs` with Node and `BB_LOCAL_WEB_PORT=4187`. The default is Chromium at laptop size. Use `--webkit` for WebKit and `--tablet` for 1024 × 768. The script saves captures separately for each browser and size.
+
+- [Booker’s borderless showcase on a Chromium laptop](assets/bookers-showcase.png)
+- [Booker’s image-only photo selection on a WebKit tablet](assets/bookers-thumbnails.png)
+
 ## Local captures
 
 - [Setup](assets/setup.png)

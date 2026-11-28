@@ -145,7 +145,6 @@ function Gallery({ shelf }: { shelf: Shelf }) {
   const filtered = shelf.cards.map((b, i) => (inCategory(b, category) ? i : -1)).filter((i) => i >= 0);
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize)),
     currentPage = Math.min(page, totalPages - 1);
-  const firstThumb = Math.floor(index / 6) * 6;
   const browseReturn = useRef<HTMLButtonElement>(null),
     showcaseBrowse = useRef<HTMLButtonElement>(null),
     previousBrowse = useRef(browse);
@@ -309,94 +308,74 @@ function Gallery({ shelf }: { shelf: Shelf }) {
           </nav>
         </section>
       ) : (
-        <>
-          <section className="bar-hero" aria-label="Bottle showcase">
-            <div className="bar-art">
-              <button aria-label={'Pause on ' + card.name} onClick={() => setPaused(true)}>
-                {heroImage}
+        <section className="bar-hero" aria-label="Bottle showcase">
+          <div className="bar-art">
+            <button aria-label={'Pause on ' + card.name} onClick={() => setPaused(true)}>
+              {heroImage}
+            </button>
+          </div>
+          <div className="bar-copy">
+            <nav className="bar-navigation" aria-label="Showcase bottles">
+              <button
+                aria-label="Previous bottle"
+                disabled={count < 2}
+                onClick={() => {
+                  select((index + count - 1) % count);
+                  setPaused(true);
+                }}
+              >
+                <ChevronLeft />
               </button>
-            </div>
-            <div className="bar-copy">
-              <span className="bar-counter">
-                On the shelf · {index + 1} of {count}
-              </span>
-              <h1>{card.name}</h1>
-              <p className="bar-subtitle">
-                {[card.brand, card.type, card.pick && 'Store pick'].filter(Boolean).join(' · ')}
-              </p>
-              <Facts card={card} />
-              <div className="bar-actions">
-                <button ref={showcaseBrowse} className="bar-primary" onClick={showBrowse}>
-                  <Grid2X2 />
-                  Browse shelf
-                </button>
-                <button onClick={() => setPaused((v) => !v)}>
-                  {paused ? <Play /> : <Pause />}
-                  {paused ? 'Resume' : 'Pause'}
-                </button>
+              <span className="bar-counter">On the shelf · {index + 1} of {count}</span>
+              <button
+                aria-label="Next bottle"
+                disabled={count < 2}
+                onClick={() => {
+                  select((index + 1) % count);
+                  setPaused(true);
+                }}
+              >
+                <ChevronRight />
+              </button>
+            </nav>
+            <h1>{card.name}</h1>
+            <p className="bar-subtitle">
+              {[card.brand, card.type, card.pick && 'Store pick'].filter(Boolean).join(' · ')}
+            </p>
+            <Facts card={card} />
+            <div className="bar-actions">
+              <button ref={showcaseBrowse} className="bar-primary" onClick={showBrowse}>
+                <Grid2X2 />
+                Browse shelf
+              </button>
+              <button onClick={() => setPaused((v) => !v)}>
+                {paused ? <Play /> : <Pause />}
+                {paused ? 'Resume' : 'Pause'}
+              </button>
+              <button
+                onClick={(e) => {
+                  e.currentTarget.focus();
+                  setPaused(true);
+                  setDetail(true);
+                }}
+              >
+                Bottle details
+              </button>
+              {card.photos.length > 0 && (
                 <button
                   onClick={(e) => {
                     e.currentTarget.focus();
                     setPaused(true);
-                    setDetail(true);
+                    openPhoto();
                   }}
                 >
-                  Bottle details
+                  <Expand />
+                  Enlarge photo
                 </button>
-                {card.photos.length > 0 && (
-                  <button
-                    onClick={(e) => {
-                      e.currentTarget.focus();
-                      setPaused(true);
-                      openPhoto();
-                    }}
-                  >
-                    <Expand />
-                    Enlarge photo
-                  </button>
-                )}
-              </div>
+              )}
             </div>
-          </section>
-          <nav className="bar-strip" aria-label="Showcase bottles">
-            <button
-              aria-label="Previous bottle"
-              disabled={count < 2}
-              onClick={() => {
-                select((index + count - 1) % count);
-                setPaused(true);
-              }}
-            >
-              <ChevronLeft />
-            </button>
-            <div>
-              {shelf.cards.slice(firstThumb, firstThumb + 6).map((b, n) => (
-                <button
-                  aria-label={'Show ' + b.name}
-                  aria-pressed={index === firstThumb + n}
-                  key={firstThumb + n}
-                  onClick={() => {
-                    select(firstThumb + n);
-                    setPaused(true);
-                  }}
-                >
-                  <Picture name="" id={b.photos[0]} />
-                  <span>{b.name}</span>
-                </button>
-              ))}
-            </div>
-            <button
-              aria-label="Next bottle"
-              disabled={count < 2}
-              onClick={() => {
-                select((index + 1) % count);
-                setPaused(true);
-              }}
-            >
-              <ChevronRight />
-            </button>
-          </nav>
-        </>
+          </div>
+        </section>
       )}
       {detail && (
         <Modal label="Bottle facts" onClose={() => setDetail(false)}>
@@ -450,7 +429,7 @@ function Gallery({ shelf }: { shelf: Shelf }) {
               ageStatement: card.age,
             }}
             displayFacts={guestFactEntries(card)}
-            compactSinglePhoto
+            guestDisplay
             index={photo}
             onSelect={setPhoto}
             onClose={() => setPhoto(null)}

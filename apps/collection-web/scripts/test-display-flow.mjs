@@ -7,7 +7,9 @@ import { chromium, webkit } from 'playwright';
 const engine = process.argv.includes('--webkit') ? webkit : chromium;
 const reduced = engine === webkit;
 const origin = 'http://127.0.0.1:' + Number(process.env.BB_LOCAL_WEB_PORT ?? 4185);
-const output = resolve(process.env.BB_REVIEW_OUTPUT || '.cache/bar-display', engine.name());
+const tablet = process.argv.includes('--tablet');
+const showcaseSize = tablet ? { width: 1024, height: 768 } : { width: 1366, height: 768 };
+const output = resolve(process.env.BB_REVIEW_OUTPUT || '.cache/bar-display', engine.name(), tablet ? 'tablet' : 'laptop');
 await mkdir(output, { recursive: true });
 const browser = await engine.launch();
 const ctx = await browser.newContext({
@@ -20,6 +22,25 @@ const button = (name) => page.getByRole('button', { name, exact: true });
 const hero = page.getByRole('region', { name: 'Bottle showcase' });
 const heading = (name) => hero.getByRole('heading', { name, exact: true });
 const shot = (name) => page.screenshot({ path: resolve(output, name + '.png') });
+async function assertShowcaseFit(name) {
+  const image = button('Pause on ' + name).locator('img');
+  await image.evaluate((img) => img.decode());
+  const fits = await image.evaluate((img) => {
+    const bounds = img.getBoundingClientRect();
+    const controls = document.querySelector('.bar-actions').getBoundingClientRect();
+    const unframed = [img, img.parentElement, img.closest('.bar-art')].every((element) => {
+      const style = getComputedStyle(element);
+      return style.borderWidth === '0px' && style.padding === '0px' &&
+        style.backgroundImage === 'none' && style.backgroundColor === 'rgba(0, 0, 0, 0)';
+    });
+    return unframed && getComputedStyle(img).objectFit === 'contain' &&
+      img.naturalWidth > 0 && img.naturalHeight > 0 && bounds.height > innerHeight / 2 &&
+      bounds.width > 0 && bounds.left >= 0 && bounds.top >= 0 &&
+      bounds.right <= innerWidth && bounds.bottom <= innerHeight + 1 &&
+      controls.bottom <= innerHeight + 1 && document.documentElement.scrollWidth <= innerWidth;
+  });
+  assert.ok(fits, name + ' should fit borderless in the viewport with all showcase controls');
+}
 async function assertFittedPhoto() {
   const image = page.locator('.viewer-canvas img');
   await image.evaluate((img) => img.decode());
@@ -96,10 +117,10 @@ try {
   checkTraffic = true;
   assert.equal(await hero.getByText('$195.30', { exact: true }).count(), 1);
   assert.equal(await hero.getByText('122.6', { exact: true }).count(), 1);
-  assert.equal(
-    await page.getByRole('navigation', { name: 'Showcase bottles' }).locator('[aria-pressed]').count(),
-    6,
-  );
+  await page.setViewportSize(showcaseSize);
+  const navigation = hero.getByRole('navigation', { name: 'Showcase bottles' });
+  assert.equal(await navigation.getByRole('button').count(), 2);
+  assert.equal(await page.locator('.bar-strip').count(), 0);
   // Start a new interval after installing the deterministic browser clock.
   await page.clock.install();
   if (!reduced) await button('Pause').click();
@@ -114,6 +135,8 @@ try {
   await heading(weller).waitFor();
   await button('Resume').waitFor();
   assert.equal(await page.locator('.d1-viewer').count(), 0);
+  await assertShowcaseFit(weller);
+  await shot('weller-showcase');
   await button('Bottle details').click();
   const facts = page.getByRole('dialog', { name: 'Bottle facts' });
   await facts.getByText('125.5', { exact: true }).waitFor();
@@ -123,6 +146,7 @@ try {
   const photos = page.locator('.d1-viewer');
   await photos.getByRole('heading', { name: weller }).waitFor();
   assert.equal(await photos.getByText(/Photo 1 of 1/).count(), 0);
+  assert.equal(await photos.getByRole('group', { name: 'All bottle photos' }).count(), 0);
   await assertFittedPhoto();
   await shot('weller-fit');
   await button('Zoom in').click();
@@ -132,14 +156,34 @@ try {
   await button('Close photo viewer').click();
   await heading(weller).waitFor();
   assert.ok(await button('Enlarge photo').evaluate((el) => el === document.activeElement));
-  await button('Show ' + bookers).click();
+  await button('Next bottle').press('Enter');
+  await button('Next bottle').press('Space');
+  await heading(bookers).waitFor();
+  await assertShowcaseFit(bookers);
+  await shot('bookers-showcase');
   await button('Resume').click();
   await button('Enlarge photo').press('Enter');
   await photos.getByText('Photo 1 of 3', { exact: false }).waitFor();
   await assertFittedPhoto();
-  await page.keyboard.press('ArrowRight');
+  const thumbnails = photos.getByRole('group', { name: 'All bottle photos' }).getByRole('button');
+  assert.equal(await thumbnails.count(), 3);
+  assert.deepEqual(await thumbnails.allTextContents(), ['', '', '']);
+  for (const thumb of await thumbnails.all()) {
+    const visible = await thumb.locator('img').evaluate(async (img) => {
+      await img.decode();
+      const box = img.getBoundingClientRect();
+      return box.width >= 60 && box.height >= 60 &&
+        box.left >= 0 && box.right <= innerWidth && box.top >= 0 && box.bottom <= innerHeight;
+    });
+    assert.ok(visible, 'Each thumbnail must show a visible, touch-sized photograph');
+  }
+  assert.equal(await button('Show photo 1, cover photo').getAttribute('aria-pressed'), 'true');
+  await button('Show photo 2').press('Enter');
+  assert.equal(await button('Show photo 2').getAttribute('aria-pressed'), 'true');
+  assert.equal(await thumbnails.locator('.bar-photo-check').count(), 1);
   await photos.getByText('Photo 2 of 3', { exact: true }).waitFor();
   await assertFittedPhoto();
+  await shot('bookers-thumbnails');
   await button('Zoom in').click();
   await photos.getByText('150%', { exact: true }).waitFor();
   await shot('bookers-batch');
@@ -154,10 +198,11 @@ try {
   await facts.getByText('750 mL', { exact: true }).waitFor();
   await shot('bookers-details');
   await page.keyboard.press('Escape');
-  await button('Show ' + blantons).click();
+  for (let i = 0; i < 4; i++) await button('Previous bottle').press('Enter');
   await page.clock.fastForward(30000);
   await heading(blantons).waitFor();
   await shot('showcase');
+  await page.setViewportSize({ width: 1920, height: 1080 });
   await button('Browse shelf').click();
   const tiles = page.locator('.bar-tile');
   assert.equal(await tiles.count(), 10);
@@ -224,7 +269,7 @@ try {
   await button('End display').click();
   await page.getByLabel('Email address').waitFor();
   console.log(
-    engine.name() +
+    engine.name() + ' ' + showcaseSize.width + 'x' + showcaseSize.height +
       ' display passed: rotation, manual pause, 103 bottles, 11 pages, filters, photo zoom and focus, tablet layout, idle return, PIN exit.',
   );
 } finally {
