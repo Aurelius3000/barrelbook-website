@@ -4,9 +4,11 @@ import { getApps, initializeApp, type App } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore, Timestamp, type DocumentReference } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
+import { Firestore } from '@google-cloud/firestore';
+import { Storage, type Bucket } from '@google-cloud/storage';
 import sharp from 'sharp';
 import { decodeBottle, ownedPhotoPath } from './records';
-import { authorizeWebOwner, hostedDisplayApp } from './web-admission';
+import { authorizeWebOwner, federationOptions, pilotAuthApp, pilotConfiguration } from './web-admission';
 import {
   DISPLAY_LIFETIME,
   PREVIEW_LIFETIME,
@@ -44,23 +46,46 @@ const json = (body: unknown, status = 200) => Response.json(body, { status, head
 const token = () => randomBytes(32).toString('hex');
 const hash = (s: string) => createHash('sha256').update(s).digest('hex');
 
-function displayApp(request: Request) {
+type DisplayResources = { app: App; db: Firestore; bucket: Bucket };
+
+let hostedResources: DisplayResources | undefined;
+
+function displayResources(request: Request): DisplayResources {
   const url = new URL(request.url);
   if (local() && ['localhost', '127.0.0.1'].includes(url.hostname)) {
-    return (
-      getApps().find((a) => a.name === 'bar-display-local') ??
-      initializeApp({ projectId: demo }, 'bar-display-local')
-    );
+    const app = getApps().find((a) => a.name === 'bar-display-local') ??
+      initializeApp({ projectId: demo }, 'bar-display-local');
+    return {
+      app,
+      db: getFirestore(app),
+      bucket: getStorage(app).bucket(process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET!),
+    };
   }
   // Hosted admission and storage access require explicit provisioning before rollout.
   if (
     process.env.BARRELBOOK_DISPLAY_HOSTED !== 'true' ||
     url.origin !== process.env.BARRELBOOK_PILOT_ORIGIN ||
     url.protocol !== 'https:' ||
-    process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true'
+    process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true' ||
+    process.env.FIRESTORE_EMULATOR_HOST || process.env.FIREBASE_AUTH_EMULATOR_HOST ||
+    process.env.STORAGE_EMULATOR_HOST || process.env.FIREBASE_STORAGE_EMULATOR_HOST
   )
     reject(404);
-  return hostedDisplayApp();
+  const config = pilotConfiguration();
+  if (!config) return reject(404);
+  const app = pilotAuthApp(config);
+  const bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+  if (!bucketName) return reject(503);
+  if (hostedResources?.app !== app || hostedResources.bucket.name !== bucketName) {
+    // Each Cloud client consumes the external-account configuration using its own auth library.
+    const options = { projectId: config.projectId, credentials: federationOptions(config.projectId) };
+    hostedResources = {
+      app,
+      db: new Firestore({ ...options, preferRest: true }),
+      bucket: new Storage(options).bucket(bucketName),
+    };
+  }
+  return hostedResources;
 }
 
 function cookieName(request: Request, preview: boolean) {
@@ -92,7 +117,7 @@ function setCookie(response: Response, request: Request, preview: boolean, value
       (new URL(request.url).protocol === 'https:' ? '; Secure' : ''),
   );
 }
-async function owner(app: App, request: Request) {
+async function owner({ app, db }: DisplayResources, request: Request) {
   if (!local()) {
     const result = await authorizeWebOwner(request);
     if (result.status !== 204) reject(result.status);
@@ -107,11 +132,11 @@ async function owner(app: App, request: Request) {
     (identity.firebase.sign_in_provider === 'password' && !identity.email_verified)
   )
     reject(403);
-  if (!(await getFirestore(app).collection('users').doc(identity.uid).get()).exists) reject(403);
+  if (!(await db.collection('users').doc(identity.uid).get()).exists) reject(403);
   return identity;
 }
-async function snapshotPhoto(app: App, path: string, target: DocumentReference, purgeAt: Timestamp) {
-  const file = getStorage(app).bucket(process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET!).file(path);
+async function snapshotPhoto(bucket: Bucket, path: string, target: DocumentReference, purgeAt: Timestamp) {
+  const file = bucket.file(path);
   const [metadata] = await file.getMetadata();
   if (
     !Number.isFinite(Number(metadata.size)) ||
@@ -132,9 +157,8 @@ async function snapshotPhoto(app: App, path: string, target: DocumentReference, 
   return true;
 }
 
-async function prepare(app: App, uid: string, settings: Settings) {
+async function prepare({ db, bucket }: DisplayResources, uid: string, settings: Settings) {
   if (!settingsValid(settings)) return reject(400);
-  const db = getFirestore(app);
   const all = await db.collection('users').doc(uid).collection('bottles').get();
   const sourceById = new Map(all.docs.map((doc) => [doc.id, doc.data()]));
   const selected = selectShelf(
@@ -151,11 +175,11 @@ async function prepare(app: App, uid: string, settings: Settings) {
     const card = guestCard(bottle, settings, sourceById.get(bottle.id), cards.length + 1);
     const ordered = [bottle.photos[bottle.primaryImageIndex], ...bottle.photos].filter(Boolean);
     for (const location of settings.photos ? new Set(ordered) : []) {
-      const path = ownedPhotoPath(location, uid, process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET!);
+      const path = ownedPhotoPath(location, uid, bucket.name);
       if (!path?.startsWith('users/' + uid + '/bottles/' + bottle.id + '/')) continue;
       const photo = ref.collection('webDisplayPhotos').doc();
       // An unavailable or unsupported photo produces a silhouette in the preview.
-      if (await snapshotPhoto(app, path, photo, purgeAt).catch(() => false)) card.photos.push(photo.id);
+      if (await snapshotPhoto(bucket, path, photo, purgeAt).catch(() => false)) card.photos.push(photo.id);
     }
     cards.push(card);
   }
@@ -201,8 +225,8 @@ export async function displayRequest(request: Request) {
         : process.env.BARRELBOOK_PILOT_ORIGIN;
     if (request.method === 'POST' && (!expectedOrigin || request.headers.get('origin') !== expectedOrigin))
       return json({}, 403);
-    const app = displayApp(request),
-      db = getFirestore(app);
+    const resources = displayResources(request);
+    const { db } = resources;
     const body = request.method === 'POST' ? await request.json().catch(() => reject(400)) : {};
     if (!body || typeof body !== 'object' || Array.isArray(body)) return reject(400);
     const action =
@@ -216,8 +240,8 @@ export async function displayRequest(request: Request) {
     const current = cookie(request, false);
     if (action === 'preview') {
       if (current) return reject(409);
-      const identity = await owner(app, request);
-      const { shelf, secret, revision } = await prepare(app, identity.uid, body.settings);
+      const identity = await owner(resources, request);
+      const { shelf, secret, revision } = await prepare(resources, identity.uid, body.settings);
       const result = json({ shelf, revision });
       setCookie(result, request, true, secret);
       return result;
@@ -248,7 +272,7 @@ export async function displayRequest(request: Request) {
       return json({ wait: Math.max(0, nextSecond - Date.now()) });
     }
     if (action === 'arm') {
-      const identity = await owner(app, request);
+      const identity = await owner(resources, request);
       if (
         current ||
         body.revision !== ref.id ||
@@ -303,7 +327,7 @@ export async function displayRequest(request: Request) {
       if (!['active', 'locking'].includes(record.phase)) return reject(403);
       let correct = false;
       if (action === 'recover') {
-        const identity = await owner(app, request);
+        const identity = await owner(resources, request);
         correct = identity.uid === record.uid && identity.auth_time > Math.floor(record.armedAt / 1000);
         if (!correct) return reject(403);
       } else {
@@ -334,7 +358,7 @@ export async function displayRequest(request: Request) {
       if (
         record.phase !== 'preview' ||
         body.revision !== ref.id ||
-        (await owner(app, request)).uid !== record.uid
+        (await owner(resources, request)).uid !== record.uid
       )
         return reject(403);
     } else if (record.phase !== 'active') return reject(403);

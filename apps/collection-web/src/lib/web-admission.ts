@@ -8,7 +8,10 @@ function response(status: number) {
   return new Response(null, { status, headers: { 'Cache-Control': 'private, no-store' } });
 }
 
-function pilotConfiguration() {
+const stagingOrigin = 'https://app-staging.barrelbook.app';
+const stagingProject = 'barrelbook-staging-v2';
+
+export function pilotConfiguration() {
   const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
   const appId = process.env.NEXT_PUBLIC_FIREBASE_APP_ID;
   const origin = process.env.BARRELBOOK_PILOT_ORIGIN;
@@ -17,9 +20,14 @@ function pilotConfiguration() {
   if (projectId === 'barrelbook-273cd' && origin === 'https://app.barrelbook.app') {
     return { projectId, appId, origin };
   }
-  if (projectId === 'barrelbook-staging-v2' && appId === '1:387460631515:web:d70b9207059b90c55075fe' &&
-      origin === 'http://localhost:4182') {
-    return { projectId, appId, origin };
+  if (projectId === stagingProject && appId === '1:387460631515:web:d70b9207059b90c55075fe') {
+    if (origin === 'http://localhost:4182') return { projectId, appId, origin };
+    const fixturePilot = (process.env.BARRELBOOK_WEB_ACCESS_MODE ?? 'pilot') === 'pilot' &&
+      process.env.BARRELBOOK_PILOT_UIDS?.split(',').some(uid => uid.trim());
+    if (origin === stagingOrigin && fixturePilot &&
+        process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET === stagingProject + '.firebasestorage.app') {
+      return { projectId, appId, origin };
+    }
   }
   if (projectId === 'barrelbook-staging' && process.env.NEXT_PUBLIC_BARRELBOOK_STAGING_PILOT === 'true' &&
       origin === 'http://localhost:4181') {
@@ -28,42 +36,47 @@ function pilotConfiguration() {
   return null;
 }
 
-function productionCredential(): Credential {
+export function federationOptions(projectId: string) {
   const provider = process.env.BARRELBOOK_PILOT_WIF_PROVIDER;
   const serviceAccount = process.env.BARRELBOOK_PILOT_SERVICE_ACCOUNT;
   if (!provider || !/^projects\/\d+\/locations\/global\/workloadIdentityPools\/[a-z0-9-]+\/providers\/[a-z0-9-]+$/.test(provider) ||
-      !serviceAccount || !/^[a-z0-9-]+@barrelbook-273cd\.iam\.gserviceaccount\.com$/.test(serviceAccount)) {
-    throw new Error('Production pilot credentials are not configured');
+      !serviceAccount || !/^[a-z0-9-]+@[a-z0-9-]+\.iam\.gserviceaccount\.com$/.test(serviceAccount) ||
+      !serviceAccount.endsWith('@' + projectId + '.iam.gserviceaccount.com')) {
+    throw new Error('Pilot federation is not configured for this project');
   }
 
-  const client = ExternalAccountClient.fromJSON({
+  return {
+    client_email: serviceAccount,
     type: 'external_account',
     audience: `//iam.googleapis.com/${provider}`,
     subject_token_type: 'urn:ietf:params:oauth:token-type:jwt',
     token_url: 'https://sts.googleapis.com/v1/token',
     service_account_impersonation_url: `https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${serviceAccount}:generateAccessToken`,
     subject_token_supplier: { getSubjectToken: () => getVercelOidcToken() },
-  });
-  if (!client) throw new Error('Production pilot credential could not be initialized');
+  };
+}
+
+function federatedCredential(projectId: string): Credential {
+  const client = ExternalAccountClient.fromJSON(federationOptions(projectId));
+  if (!client) throw new Error('Pilot credential could not be initialized');
 
   return {
     async getAccessToken() {
       const { token } = await client.getAccessToken();
       const expiry = client.credentials.expiry_date;
       const expiresIn = expiry ? Math.floor((expiry - Date.now()) / 1000) : 0;
-      if (!token || expiresIn <= 0) throw new Error('Production pilot credential expired');
+      if (!token || expiresIn <= 0) throw new Error('Pilot credential expired');
       return { access_token: token, expires_in: expiresIn };
     },
   };
 }
 
-export function hostedDisplayApp() {
-  const config = pilotConfiguration();
-  if (!config) throw new Error('Hosted display unavailable');
-  const name = 'collection-web-pilot-' + config.projectId;
+export function pilotAuthApp(config: NonNullable<ReturnType<typeof pilotConfiguration>>) {
+  const hosted = config.origin.startsWith('https://');
+  const name = 'collection-web-pilot-' + config.projectId + (hosted ? '-hosted' : '-local');
   return getApps().find(entry => entry.name === name) ?? initializeApp({
     projectId: config.projectId,
-    credential: config.projectId === 'barrelbook-273cd' ? productionCredential() : applicationDefault(),
+    credential: hosted ? federatedCredential(config.projectId) : applicationDefault(),
   }, name);
 }
 
@@ -82,7 +95,7 @@ export async function authorizeWebOwner(request: Request) {
   if (mode === 'pilot' && !allowedUids.length) return response(403);
 
   try {
-    const app = hostedDisplayApp();
+    const app = pilotAuthApp(config);
     const [identity, attestation] = await Promise.all([
       getAuth(app).verifyIdToken(idToken, true),
       getAppCheck(app).verifyToken(appToken),
