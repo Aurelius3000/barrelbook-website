@@ -152,3 +152,5 @@
   .ask-bb-heading { flex-wrap: wrap; gap: 12px; }
   .ask-bb-welcome, .ask-bb-composer, .ask-bb-transcript:not(:empty) { padding-inline: 15px; }
 }
+
+html[data-display-checking] .display-protected, html[data-display-checking] .display-protected * { visibility:hidden !important; }
